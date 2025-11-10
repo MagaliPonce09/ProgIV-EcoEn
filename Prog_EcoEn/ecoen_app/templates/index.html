@@ -158,7 +158,7 @@
                         <div class="card-body">
                         <h5 class="card-title">Paneles Solares</h5>
                         <p class="card-text">Alta eficiencia para hogares y empresas. Tecnología fotovoltaica de última generación.</p>
-                        <p class="text-success fw-bold">Precio: $1299 USD</p>
+                        <p class="text-success fw-bold">Precio: $1.234.050 ARS</p>
                     <div class="rating mb-2">
                         <span class="star" data-value="1">★</span>
                         <span class="star" data-value="2">★</span>
@@ -179,7 +179,7 @@
             <div class="card-body">
                 <h5 class="card-title">Turbinas Eólicas</h5>
                 <p class="card-text">Genera energía limpia con el viento. Ideal para zonas rurales o costeras.</p>
-                <p class="text-success fw-bold">Precio: $1890 USD</p>
+                <p class="text-success fw-bold">Precio: $1.795.500 ARS</p>
             <div class="rating mb-2">
                 <span class="star" data-value="1">★</span>
                 <span class="star" data-value="2">★</span>
@@ -200,7 +200,7 @@
             <div class="card-body">
                 <h5 class="card-title">Baterías de Almacenamiento</h5>
                 <p class="card-text">Guarda energía para cuando más la necesitas. Compatible con sistemas solares y eólicos.</p>
-                <p class="text-success fw-bold">Precio: $950 USD</p>
+                <p class="text-success fw-bold">Precio: $902.500 ARS</p>
                 <div class="rating mb-2">
                     <span class="star" data-value="1">★</span>
                     <span class="star" data-value="2">★</span>
@@ -292,39 +292,9 @@
     <section id="carrito" class="card">
         <h2 class="text-center mb-4">🛒 Tu Carrito</h2>
         <ul id="carrito-lista" class="list-group mb-3"></ul>
-        <p class="fw-bold">Total: $<span id="carrito-total">0</span> USD</p>
+        <p class="fw-bold">Total: <span id="carrito-total">0</span> ARS</p>
         <button id="btn-comprar" class="btn btn-success w-100">Comprar</button>
     </section>
-    {% if user.is_authenticated %}
-        <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" id="carritoMenu" role="button" data-bs-toggle="dropdown">
-                🛒 Carrito
-            </a>
-            <ul class="dropdown-menu">
-        {% for item in carrito %}
-        <li class="dropdown-item">{{ item.nombre }} - ${{ item.precio }}</li>
-            {% endfor %}
-        <li class="dropdown-item fw-bold">Total: ${{ total }}</li>
-        </ul>
-    </li>
-{% endif %}
-    {% if mostrar_pago %}
-    <section class="card metodo-pago mt-4">
-        <h3>Método de pago</h3>
-        <form action="{% url 'procesar_pago' %}" method="POST">
-        {% csrf_token %}
-            <label for="nombre">Nombre en la tarjeta</label>
-            <input type="text" name="nombre" class="form-control" required>
-            <label for="numero">Número de tarjeta</label>
-            <input type="text" name="numero" class="form-control" required>
-            <label for="vencimiento">Vencimiento</label>
-            <input type="text" name="vencimiento" class="form-control" placeholder="MM/AA" required>
-            <label for="cvv">CVV</label>
-            <input type="text" name="cvv" class="form-control" required>
-            <button type="submit" class="btn btn-primary mt-3">Pagar ahora</button>
-        </form>
-    </section>
-{% endif %}
 
 
 
@@ -371,6 +341,67 @@
     </div>
 </div>
 
+
+    <!-- ✅ SCRIPT FUNCIONAL DEL CARRITO (en pesos argentinos) -->
+    <script>
+    const TASA_PESO = 950; // 1 USD = 950 ARS
+    let carrito = JSON.parse(localStorage.getItem('carrito')) || [];
+
+    function guardarCarrito() {
+        localStorage.setItem('carrito', JSON.stringify(carrito));
+    }
+
+    function actualizarCarrito() {
+        const lista = document.getElementById('carrito-lista');
+        const totalElemento = document.getElementById('carrito-total');
+        lista.innerHTML = '';
+
+        let total = 0;
+        carrito.forEach((item, index) => {
+            const li = document.createElement('li');
+            li.className = 'list-group-item d-flex justify-content-between align-items-center';
+            li.innerHTML = `
+                ${item.producto} - $${item.precioARS.toLocaleString('es-AR')} ARS
+                <button class="btn btn-sm btn-danger" onclick="eliminarItem(${index})">🗑</button>
+            `;
+            lista.appendChild(li);
+            total += item.precioARS;
+        });
+
+        totalElemento.textContent = total.toLocaleString('es-AR');
+        guardarCarrito();
+    }
+
+    function eliminarItem(index) {
+        carrito.splice(index, 1);
+        actualizarCarrito();
+    }
+
+    document.querySelectorAll('.add-to-cart').forEach(boton => {
+        boton.addEventListener('click', () => {
+            const producto = boton.dataset.product;
+            const precioUSD = parseFloat(boton.dataset.price);
+            const precioARS = precioUSD * TASA_PESO;
+
+            carrito.push({ producto, precioARS });
+            actualizarCarrito();
+
+            alert(`${producto} agregado al carrito 🛒`);
+        });
+    });
+
+    document.getElementById('btn-comprar').addEventListener('click', () => {
+        if (carrito.length === 0) {
+            alert('El carrito está vacío.');
+            return;
+        }
+        alert('¡Gracias por tu compra! 🪙');
+        carrito = [];
+        actualizarCarrito();
+    });
+
+    document.addEventListener('DOMContentLoaded', actualizarCarrito);
+    </script>
 
 <!-- Scripts -->
 <script>
