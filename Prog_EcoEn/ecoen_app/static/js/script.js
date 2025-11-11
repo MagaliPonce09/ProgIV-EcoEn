@@ -120,13 +120,8 @@ document.addEventListener("DOMContentLoaded", () => {
 // === MENÚ LATERAL ===
 function toggleMenu() {
   const menu = document.getElementById("menu-lateral");
-  const icon = document.getElementById("menu-icon");
+  const toggle = document.getElementById("menu-toggle");
 
   menu.classList.toggle("active");
-
-  if (menu.classList.contains("active")) {
-    icon.textContent = "✖";
-  } else {
-    icon.textContent = icon.dataset.default || "☰";
-  }
+  toggle.classList.toggle("active");
 }

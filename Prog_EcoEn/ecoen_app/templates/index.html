@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    {% load socialaccount %}
     {% load static %}
+    {% load socialaccount %}
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>EcoEn</title>
@@ -19,16 +19,57 @@
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
 
     <style>
-        .menu-toggle {
+        :root {
+            --bg-light: #f9f9f9;
+            --bg-dark: #1e1e1e;
+            --text-light: #333;
+            --text-dark: #f0f0f0;
+            --accent: #4caf50;
+        }
+
+        body.light-mode {
+            background-color: var(--bg-light);
+            color: var(--text-light);
+        }
+
+        body.dark-mode {
+            background-color: var(--bg-dark);
+            color: var(--text-dark);
+        }
+
+        .hamburger {
             position: fixed;
             top: 20px;
             right: 20px;
-            background: #333;
-            color: white;
-            padding: 10px 15px;
-            border-radius: 50px;
+            width: 30px;
+            height: 25px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            background: none;
+            border: none;
             cursor: pointer;
-            z-index: 1000;
+            z-index: 1001;
+        }
+
+        .hamburger span {
+            display: block;
+            height: 3px;
+            background-color: var(--accent);
+            border-radius: 2px;
+            transition: all 0.3s ease;
+        }
+
+        .hamburger.active span:nth-child(1) {
+            transform: rotate(45deg) translateY(8px);
+        }
+
+        .hamburger.active span:nth-child(2) {
+            opacity: 0;
+        }
+
+        .hamburger.active span:nth-child(3) {
+            transform: rotate(-45deg) translateY(-8px);
         }
 
         .menu-lateral {
@@ -37,11 +78,12 @@
             right: -300px;
             width: 300px;
             height: 100%;
-            background: white;
+            background-color: var(--bg-light);
+            color: var(--text-light);
             box-shadow: -2px 0 5px rgba(0,0,0,0.3);
             padding: 20px;
             transition: right 0.3s ease;
-            z-index: 999;
+            z-index: 1000;
         }
 
         .menu-lateral.active {
@@ -52,470 +94,375 @@
             position: absolute;
             top: 10px;
             right: 15px;
-            font-size: 20px;
+            font-size: 24px;
             cursor: pointer;
         }
 
-        .dark-mode {
-            background-color: #121212;
+        body.dark-mode .menu-lateral {
+            background-color: var(--bg-dark);
+            color: var(--text-dark);
+        }
+
+        body.dark-mode .menu-lateral .btn {
+            background-color: #333;
             color: #f0f0f0;
+            border: none;
+        }
+
+        body.dark-mode .menu-lateral .btn:hover {
+            background-color: #444;
         }
     </style>
 </head>
 
 <body class="light-mode">
-    <!-- Header -->
-    <header class="text-center p-4 bg-azul d-flex justify-content-between align-items-center">
-        <h1 class="m-0">🌱 Energía Renovable</h1>
-    </header>
 
-    <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg bg-azul">
-        <div class="container-fluid">
-            <ul class="navbar-nav mx-auto">
-                <li class="nav-item"><a class="nav-link" href="#inicio">Inicio</a></li>
-                <li class="nav-item"><a class="nav-link" href="#productos">Productos</a></li>
-                <li class="nav-item"><a class="nav-link" href="#reseñas">Reseñas</a></li>
-                <li class="nav-item"><a class="nav-link" href="#contacto">Contacto</a></li>
-            </ul>
+  <!-- Header -->
+  <header class="text-center p-4 bg-azul d-flex justify-content-between align-items-center">
+    <h1 class="m-0">🌱 Energía Renovable</h1>
+  </header>
+
+<!-- Botón hamburguesa -->
+<div class="hamburger-wrapper">
+  <button id="menu-toggle" class="hamburger" onclick="toggleMenu()" aria-label="Abrir menú">
+    <span></span><span></span><span></span>
+  </button>
+</div>
+
+<!-- Menú lateral -->
+<div id="menu-lateral" class="menu-lateral">
+  <div class="menu-content">
+    {% if user.is_authenticated %}
+      <div class="menu-section">
+        <p class="menu-greeting">👋 Hola, {{ user.username }}</p>
+        <a href="{% url 'logout' %}" class="menu-btn btn-logout">Cerrar sesión</a>
+      </div>
+    {% else %}
+      <div class="menu-section">
+        <button onclick="toggleLoginForm()" class="menu-btn btn-login">🔐 Iniciar sesión</button>
+        <div id="login-form" style="display: none;" class="login-form">
+          <form method="POST" action="{% url 'login' %}">
+            {% csrf_token %}
+            <input type="text" name="username" placeholder="Usuario" required class="form-control mb-2">
+            <input type="password" name="password" placeholder="Contraseña" required class="form-control mb-2">
+            <button type="submit" class="btn btn-success w-100">Entrar</button>
+          </form>
         </div>
-    </nav>
+        <p class="menu-text">¿No tienes cuenta? <a href="{% url 'registro' %}" class="menu-link">Regístrate aquí</a></p>
+      </div>
+    {% endif %}
 
-    <main>
-        <!-- Hero con video -->
-        <section id="inicio" class="text-center p-5 bg-solar">
-            <h2 class="mb-3">Impulsa el futuro con energía limpia</h2>
-            <p class="mb-4">Descubre soluciones solares, eólicas y más para un mundo sostenible.</p>
-            <div class="container" style="max-width: 700px;">
-                <div class="ratio ratio-16x9">
-                    <iframe src="https://www.youtube.com/embed/EK4KskGp39o"
-                            title="Introducción a las Energías Renovables"
-                            frameborder="0"
-                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                            allowfullscreen>
-                    </iframe>
-                </div>
+    <div class="menu-section">
+      <button onclick="toggleDarkMode()" class="menu-btn btn-config">🌙 Modo oscuro / claro</button>
+    </div>
+  </div>
+</div>
 
-                <!-- Carrusel de imágenes -->
-                <div id="carouselEcoEn" class="carousel slide mt-5" data-bs-ride="carousel">
-                    <div class="carousel-indicators">
-                        <button type="button" data-bs-target="#carouselEcoEn" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Imagen 1"></button>
-                        <button type="button" data-bs-target="#carouselEcoEn" data-bs-slide-to="1" aria-label="Imagen 2"></button>
-                        <button type="button" data-bs-target="#carouselEcoEn" data-bs-slide-to="2" aria-label="Imagen 3"></button>
-                    </div>
-                    <div class="carousel-inner">
-                        <div class="carousel-item active">
-                            <img src="{% static 'images/panel-solar2.jpg' %}" class="d-block w-100 rounded" alt="Panel solar">
-                        </div>
-                        <div class="carousel-item">
-                            <img src="{% static 'images/turbina-real1.jpg' %}" class="d-block w-100 rounded" alt="Turbina eólica">
-                        </div>
-                        <div class="carousel-item">
-                            <img src="{% static 'images/bateria.jpg' %}" class="d-block w-100 rounded" alt="Batería de almacenamiento">
-                        </div>
-                    </div>
-                    <button class="carousel-control-prev" type="button" data-bs-target="#carouselEcoEn" data-bs-slide="prev">
-                        <span class="carousel-control-prev-icon"></span>
-                    </button>
-                    <button class="carousel-control-next" type="button" data-bs-target="#carouselEcoEn" data-bs-slide="next">
-                        <span class="carousel-control-next-icon"></span>
-                    </button>
-                </div>
+  <!-- Hero con video -->
+  <main>
+    <section id="inicio" class="text-center p-5 bg-solar">
+      <h2 class="mb-3">Impulsa el futuro con energía limpia</h2>
+      <p class="mb-4">Descubre soluciones solares, eólicas y más para un mundo sostenible.</p>
+      <div class="container" style="max-width: 700px;">
+        <div class="ratio ratio-16x9">
+          <iframe src="https://www.youtube.com/embed/EK4KskGp39o"
+                  title="Introducción a las Energías Renovables"
+                  frameborder="0"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowfullscreen>
+          </iframe>
+        </div>
+
+        <!-- Carrusel de imágenes -->
+        <div id="carouselEcoEn" class="carousel slide mt-5" data-bs-ride="carousel">
+          <div class="carousel-indicators">
+            <button type="button" data-bs-target="#carouselEcoEn" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Imagen 1"></button>
+            <button type="button" data-bs-target="#carouselEcoEn" data-bs-slide-to="1" aria-label="Imagen 2"></button>
+            <button type="button" data-bs-target="#carouselEcoEn" data-bs-slide-to="2" aria-label="Imagen 3"></button>
+          </div>
+          <div class="carousel-inner">
+            <div class="carousel-item active">
+              <img src="{% static 'images/panel-solar2.jpg' %}" class="d-block w-100 rounded" alt="Panel solar">
             </div>
-        </section>
+            <div class="carousel-item">
+              <img src="{% static 'images/turbina-real1.jpg' %}" class="d-block w-100 rounded" alt="Turbina eólica">
+            </div>
+            <div class="carousel-item">
+              <img src="{% static 'images/bateria.jpg' %}" class="d-block w-100 rounded" alt="Batería de almacenamiento">
+            </div>
+          </div>
+          <button class="carousel-control-prev" type="button" data-bs-target="#carouselEcoEn" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon"></span>
+          </button>
+          <button class="carousel-control-next" type="button" data-bs-target="#carouselEcoEn" data-bs-slide="next">
+            <span class="carousel-control-next-icon"></span>
+          </button>
+        </div>
+      </div>
+    </section>
 
         <section id="productos" class="container py-5">
-            {% if user.is_authenticated and user.perfil.es_vendedor %}
-            <section id="cargar-producto" class="container py-5">
-                <h3 class="mb-4">📦 Cargar nuevo producto</h3>
-                <form method="POST" action="{% url 'crear_producto' %}" enctype="multipart/form-data">
-                    {% csrf_token %}
-                    <div class="mb-3">
-                        <input type="text" name="nombre" class="form-control" placeholder="Nombre del producto" required>
-                    </div>
-                    <div class="mb-3">
-                        <textarea name="descripcion" class="form-control" placeholder="Descripción" required></textarea>
-                    </div>
-                    <div class="mb-3">
-                        <input type="number" name="precio" step="0.01" class="form-control" placeholder="Precio en USD" required>
-                    </div>
-                    <div class="mb-3">
-                        <input type="file" name="imagen" accept="image/*" class="form-control" required>
-                    </div>
-                    <button type="submit" class="btn btn-success">Guardar producto</button>
-                </form>
-            </section>
-            {% endif %}
+      {% if user.is_authenticated and user.perfil.es_vendedor %}
+      <section id="cargar-producto" class="container py-5">
+        <h3 class="mb-4">📦 Cargar nuevo producto</h3>
+        <form method="POST" action="{% url 'crear_producto' %}" enctype="multipart/form-data">
+          {% csrf_token %}
+          <div class="mb-3">
+            <input type="text" name="nombre" class="form-control" placeholder="Nombre del producto" required>
+          </div>
+          <div class="mb-3">
+            <textarea name="descripcion" class="form-control" placeholder="Descripción" required></textarea>
+          </div>
+          <div class="mb-3">
+            <input type="number" name="precio" step="0.01" class="form-control" placeholder="Precio en USD" required>
+          </div>
+          <div class="mb-3">
+            <input type="file" name="imagen" accept="image/*" class="form-control" required>
+          </div>
+          <button type="submit" class="btn btn-success">Guardar producto</button>
+        </form>
+      </section>
+      {% endif %}
 
-            <h2 class="text-center mb-4">🌱 Nuestros Productos</h2>
-            <div class="row g-4">
-                <!-- Cards de productos aquí -->
-                <div class="row g-4">
-                    <div class="col-md-4">
-                    <!-- Card 1 -->
-                    <div class="card h-100 shadow-sm">
-                        <img src="{% static 'images/panel-solar2.jpg' %}" class="card-img-top" alt="Panel solar">
-                        <div class="card-body">
-                        <h5 class="card-title">Paneles Solares</h5>
-                        <p class="card-text">Alta eficiencia para hogares y empresas. Tecnología fotovoltaica de última generación.</p>
-                        <p class="text-success fw-bold">Precio: $1.234.050 ARS</p>
-                    <div class="rating mb-2">
-                        <span class="star" data-value="1">★</span>
-                        <span class="star" data-value="2">★</span>
-                        <span class="star" data-value="3">★</span>
-                        <span class="star" data-value="4">★</span>
-                        <span class="star" data-value="5">★</span>
-                        <small class="ms-2 rating-label">Seleccioná tu puntuación</small>
-                    </div>
-                    <button class="btn btn-outline-success btn-sm add-to-cart" data-product="Paneles Solares" data-price="1299">🛒 Agregar al carrito</button>
-                </div>
-            </div>
-        </div>
-
+      <h2 class="text-center mb-4">🌱 Nuestros Productos</h2>
+      <div class="row g-4">
+        <!-- Card 1 -->
         <div class="col-md-4">
-        <!-- Card 2 -->
-        <div class="card h-100 shadow-sm">
-            <img src="{% static 'images/turbina-real1.jpg' %}" class="card-img-top" alt="Turbina eólica">
+          <div class="card h-100 shadow-sm">
+            <img src="{% static 'images/panel-solar2.jpg' %}" class="card-img-top" alt="Panel solar">
             <div class="card-body">
-                <h5 class="card-title">Turbinas Eólicas</h5>
-                <p class="card-text">Genera energía limpia con el viento. Ideal para zonas rurales o costeras.</p>
-                <p class="text-success fw-bold">Precio: $1.795.500 ARS</p>
-            <div class="rating mb-2">
+              <h5 class="card-title">Paneles Solares</h5>
+              <p class="card-text">Alta eficiencia para hogares y empresas. Tecnología fotovoltaica de última generación.</p>
+              <p class="text-success fw-bold">Precio: $1.234.050 ARS</p>
+              <div class="rating mb-2">
                 <span class="star" data-value="1">★</span>
                 <span class="star" data-value="2">★</span>
                 <span class="star" data-value="3">★</span>
                 <span class="star" data-value="4">★</span>
                 <span class="star" data-value="5">★</span>
                 <small class="ms-2 rating-label">Seleccioná tu puntuación</small>
+              </div>
+              <button class="btn btn-outline-success btn-sm add-to-cart" data-product="Paneles Solares" data-price="1299">🛒 Agregar al carrito</button>
             </div>
-                <button class="btn btn-outline-success btn-sm add-to-cart" data-product="Turbinas Eólicas" data-price="1890">🛒 Agregar al carrito</button>
-            </div>
+          </div>
         </div>
-    </div>
 
-    <div class="col-md-4">
+        <!-- Card 2 -->
+        <div class="col-md-4">
+          <div class="card h-100 shadow-sm">
+            <img src="{% static 'images/turbina-real1.jpg' %}" class="card-img-top" alt="Turbina eólica">
+            <div class="card-body">
+              <h5 class="card-title">Turbinas Eólicas</h5>
+              <p class="card-text">Genera energía limpia con el viento. Ideal para zonas rurales o costeras.</p>
+              <p class="text-success fw-bold">Precio: $1.795.500 ARS</p>
+              <div class="rating mb-2">
+                <span class="star" data-value="1">★</span>
+                <span class="star" data-value="2">★</span>
+                <span class="star" data-value="3">★</span>
+                <span class="star" data-value="4">★</span>
+                <span class="star" data-value="5">★</span>
+                <small class="ms-2 rating-label">Seleccioná tu puntuación</small>
+              </div>
+              <button class="btn btn-outline-success btn-sm add-to-cart" data-product="Turbinas Eólicas" data-price="1890">🛒 Agregar al carrito</button>
+            </div>
+          </div>
+        </div>
+
         <!-- Card 3 -->
-        <div class="card h-100 shadow-sm">
+        <div class="col-md-4">
+          <div class="card h-100 shadow-sm">
             <img src="{% static 'images/bateria.jpg' %}" class="card-img-top" alt="Batería de almacenamiento">
             <div class="card-body">
-                <h5 class="card-title">Baterías de Almacenamiento</h5>
-                <p class="card-text">Guarda energía para cuando más la necesitas. Compatible con sistemas solares y eólicos.</p>
-                <p class="text-success fw-bold">Precio: $902.500 ARS</p>
-                <div class="rating mb-2">
-                    <span class="star" data-value="1">★</span>
-                    <span class="star" data-value="2">★</span>
-                    <span class="star" data-value="3">★</span>
-                    <span class="star" data-value="4">★</span>
-                    <span class="star" data-value="5">★</span>
+              <h5 class="card-title">Baterías de Almacenamiento</h5>
+              <p class="card-text">Guarda energía para cuando más la necesitas. Compatible con sistemas solares y eólicos.</p>
+              <p class="text-success fw-bold">Precio: $902.500 ARS</p>
+              <div class="rating mb-2">
+                <span class="star" data-value="1">★</span>
+                <span class="star" data-value="2">★</span>
+                <span class="star" data-value="3">★</span>
+                <span class="star" data-value="4">★</span>
+                <span class="star" data-value="5">★</span>
                 <small class="ms-2 rating-label">Seleccioná tu puntuación</small>
+              </div>
+              <button class="btn btn-outline-success btn-sm add-to-cart" data-product="Baterías de Almacenamiento" data-price="950">🛒 Agregar al carrito</button>
             </div>
-                <button class="btn btn-outline-success btn-sm add-to-cart" data-product="Baterías de Almacenamiento" data-price="950">🛒 Agregar al carrito</button>
-                </div>
-            </div>
+          </div>
         </div>
-    </div>
-</section>
+      </div>
+    </section>
 
-                <!-- ... (las tres cards que ya tenías) ... -->
+    <!-- Opiniones -->
+    <section class="opiniones py-5">
+      <h2 class="opiniones-titulo text-center mb-4">💬 Opiniones de Clientes</h2>
+      <div class="container">
+        <div class="row row-cols-1 row-cols-md-3 g-4">
+          <div class="col">
+            <div class="p-3 opinion-card shadow-sm rounded">
+              "Los paneles solares redujeron mi factura un 70%." – Ana G.
             </div>
-        </section>
-
-        <!-- Opiniones -->
-        <section class="opiniones">
-            <h2 class="opiniones-titulo text-center mb-4">💬 Opiniones de Clientes</h2>
-            <div class="container">
-                <div class="row row-cols-1 row-cols-md-3 g-4">
-                    <div class="col">
-                        <div class="p-3 opinion-card shadow-sm rounded">
-                            "Los paneles solares redujeron mi factura un 70%." – Ana G.
-                        </div>
-                    </div>
-                    <div class="col">
-                        <div class="p-3 opinion-card shadow-sm rounded">
-                            "La turbina eólica funciona incluso en días nublados." – Carlos M.
-                        </div>
-                    </div>
-                    <div class="col">
-                        <div class="p-3 opinion-card shadow-sm rounded">
-                            "Excelente atención y productos de calidad." – Lucía R.
-                        </div>
-                    </div>
-
-                    {% for op in opiniones %}
-                    <div class="col">
-                        <div class="p-3 opinion-card shadow-sm rounded">
-                            "{{ op.mensaje }}" – {{ op.nombre }}
-                        </div>
-                    </div>
-                    {% endfor %}
-                </div>
+          </div>
+          <div class="col">
+            <div class="p-3 opinion-card shadow-sm rounded">
+              "La turbina eólica funciona incluso en días nublados." – Carlos M.
             </div>
-        </section>
-
-                    <!-- Opiniones dinámicas -->
-                    {% for op in opiniones %}
-                    <div class="col">
-                        <div class="p-3 opinion-card shadow-sm rounded">
-                            "{{ op.mensaje }}" – {{ op.nombre }}
-                        </div>
-                    </div>
-                    {% endfor %}
-                </div>
+          </div>
+          <div class="col">
+            <div class="p-3 opinion-card shadow-sm rounded">
+              "Excelente atención y productos de calidad." – Lucía R.
             </div>
-        </section>
+          </div>
 
-        <div class="contenedor-principal">
-        <!-- Contacto -->
-        <section id="contacto" class="card">
-            <h2 class="text-center mb-4">📬 Contáctanos</h2>
-            <form action="https://formspree.io/f/xjkankyn" method="POST" class="needs-validation" novalidate id="formContacto">
-            <fieldset>
-                <legend>Envíanos tu mensaje</legend>
-                <div class="mb-3">
-                    <label for="nombre">Nombre</label>
-                    <input type="text" class="form-control" id="nombre" name="nombre" required>
-                </div>
-        <div class="mb-3">
+          {% for op in opiniones %}
+          <div class="col">
+            <div class="p-3 opinion-card shadow-sm rounded">
+              "{{ op.mensaje }}" – {{ op.nombre }}
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+    </section>
+
+    <!-- Contacto -->
+    <section id="contacto" class="card container my-5 p-4">
+      <h2 class="text-center mb-4">📬 Contáctanos</h2>
+      <form action="https://formspree.io/f/xjkankyn" method="POST" class="needs-validation" novalidate id="formContacto">
+        <fieldset>
+          <legend>Envíanos tu mensaje</legend>
+          <div class="mb-3">
+            <label for="nombre">Nombre</label>
+            <input type="text" class="form-control" id="nombre" name="nombre" required>
+          </div>
+          <div class="mb-3">
             <label for="email">Correo electrónico</label>
             <input type="email" class="form-control" id="email" name="email" required>
-        </div>
-        <div class="mb-3">
+          </div>
+          <div class="mb-3">
             <label for="mensaje">Mensaje</label>
             <textarea class="form-control" id="mensaje" name="mensaje" rows="4" required></textarea>
-        </div>
-            <button type="submit" class="btn btn-success">Enviar</button>
+          </div>
+          <button type="submit" class="btn btn-success">Enviar</button>
         </fieldset>
-        </form>
+      </form>
     </section>
 
     <!-- Carrito -->
-    <section id="carrito" class="card">
-        <h2 class="text-center mb-4">🛒 Tu Carrito</h2>
-        <ul id="carrito-lista" class="list-group mb-3"></ul>
-        <p class="fw-bold">Total: <span id="carrito-total">0</span> ARS</p>
-        <button id="btn-comprar" class="btn btn-success w-100">Comprar</button>
+    <section id="carrito" class="card container my-5 p-4">
+      <h2 class="text-center mb-4">🛒 Tu Carrito</h2>
+      <ul id="carrito-lista" class="list-group mb-3"></ul>
+      <p class="fw-bold">Total: <span id="carrito-total">0</span> ARS</p>
+      <button id="btn-comprar" class="btn btn-success w-100">Comprar</button>
     </section>
 
-
-
-
-<!-- Botón flotante para abrir el menú -->
-<div id="menu-toggle" onclick="toggleMenu()" class="menu-toggle">
-    {% if user.is_authenticated %}
-        👤 {{ user.username }}
-    {% else %}
-        ☰
-    {% endif %}
-</div>
-
-<!-- Botón flotante para abrir el menú -->
-<div id="menu-toggle" onclick="toggleMenu()" class="menu-toggle">
-    <span id="menu-icon">
-        {% if user.is_authenticated %}
-            👤 {{ user.username }}
-        {% else %}
-            ☰
-        {% endif %}
-    </span>
-</div>
-
-
-<!-- Menú lateral derecho -->
-<div id="menu-lateral" class="menu-lateral">
-    <span class="close-btn" onclick="toggleMenu()">✖</span>
-
-    {% if user.is_authenticated %}
-        <p>👋 Hola, {{ user.username }}</p>
-        <a href="{% url 'logout' %}" class="btn btn-danger w-100 mt-3">Cerrar sesión</a>
-    {% else %}
-        <button onclick="toggleLoginOptions()" class="btn btn-primary w-100 mb-3">🔐 Iniciar sesión</button>
-        <div id="login-options" style="display: none; margin-top: 10px;">
-            <a href="{% url 'login' %}" class="btn btn-outline-primary w-100 mb-2">Iniciar sesión con usuario</a>
-            <a href="{% provider_login_url 'google' %}" class="btn btn-outline-danger w-100 mb-2">Iniciar sesión con Google</a>
-            <p class="text-center mt-3">¿No tienes una cuenta? 
-                <a href="{% url 'registro' %}" class="text-success">Regístrate aquí</a>
-            </p>
-        </div>
-    {% endif %}
-
-    <button onclick="toggleConfig()" class="btn btn-secondary w-100 mt-4">⚙️ Configuración</button>
-    <div id="config-options" style="display: none;" class="mt-2">
-        <button onclick="toggleDarkMode()" class="btn btn-dark w-100">🌙 Modo oscuro / claro</button>
-    </div>
-</div>
-
-<!-- Scripts para el menú -->
-<script>
-    function toggleMenu() {
-        const menu = document.getElementById('menu-lateral');
-        menu.classList.toggle('active');
-    }
-
-    function toggleLoginOptions() {
-        const options = document.getElementById('login-options');
-        options.style.display = options.style.display === 'none' ? 'block' : 'none';
-    }
-
-    function toggleConfig() {
-        const config = document.getElementById('config-options');
-        config.style.display = config.style.display === 'none' ? 'block' : 'none';
-    }
-
-    function toggleDarkMode() {
-        document.body.classList.toggle('dark-mode');
-    }
-</script>
-
-    <!-- ✅ SCRIPT FUNCIONAL DEL CARRITO (en pesos argentinos) -->
+        <!-- Scripts del carrito -->
     <script>
-    const TASA_PESO = 950; // 1 USD = 950 ARS
-    let carrito = JSON.parse(localStorage.getItem('carrito')) || [];
+      const TASA_PESO = 950;
+      let carrito = JSON.parse(localStorage.getItem('carrito')) || [];
 
-    function guardarCarrito() {
+      function guardarCarrito() {
         localStorage.setItem('carrito', JSON.stringify(carrito));
-    }
+      }
 
-    function actualizarCarrito() {
+      function actualizarCarrito() {
         const lista = document.getElementById('carrito-lista');
         const totalElemento = document.getElementById('carrito-total');
         lista.innerHTML = '';
-
         let total = 0;
+
         carrito.forEach((item, index) => {
-            const li = document.createElement('li');
-            li.className = 'list-group-item d-flex justify-content-between align-items-center';
-            li.innerHTML = `
-                ${item.producto} - $${item.precioARS.toLocaleString('es-AR')} ARS
-                <button class="btn btn-sm btn-danger" onclick="eliminarItem(${index})">🗑</button>
-            `;
-            lista.appendChild(li);
-            total += item.precioARS;
+          const li = document.createElement('li');
+          li.className = 'list-group-item d-flex justify-content-between align-items-center';
+          li.innerHTML = `
+            ${item.producto} - $${item.precioARS.toLocaleString('es-AR')} ARS
+            <button class="btn btn-sm btn-danger" onclick="eliminarItem(${index})">🗑</button>
+          `;
+          lista.appendChild(li);
+          total += item.precioARS;
         });
 
         totalElemento.textContent = total.toLocaleString('es-AR');
         guardarCarrito();
-    }
+      }
 
-    function eliminarItem(index) {
+      function eliminarItem(index) {
         carrito.splice(index, 1);
         actualizarCarrito();
-    }
+      }
 
-    document.querySelectorAll('.add-to-cart').forEach(boton => {
+      document.querySelectorAll('.add-to-cart').forEach(boton => {
         boton.addEventListener('click', () => {
-            const producto = boton.dataset.product;
-            const precioUSD = parseFloat(boton.dataset.price);
-            const precioARS = precioUSD * TASA_PESO;
+          const producto = boton.dataset.product;
+          const precioUSD = parseFloat(boton.dataset.price);
+          const precioARS = precioUSD * TASA_PESO;
 
-            carrito.push({ producto, precioARS });
-            actualizarCarrito();
+          carrito.push({ producto, precioARS });
+          actualizarCarrito();
 
-            alert(`${producto} agregado al carrito 🛒`);
+          alert(`${producto} agregado al carrito 🛒`);
         });
-    });
+      });
 
-    document.getElementById('btn-comprar').addEventListener('click', () => {
+      document.getElementById('btn-comprar').addEventListener('click', () => {
         if (carrito.length === 0) {
-            alert('El carrito está vacío.');
-            return;
+          alert('El carrito está vacío.');
+          return;
         }
         alert('¡Gracias por tu compra! 🪙');
         carrito = [];
         actualizarCarrito();
-    });
+      });
 
-    document.addEventListener('DOMContentLoaded', actualizarCarrito);
+      document.addEventListener('DOMContentLoaded', actualizarCarrito);
     </script>
 
-<!-- Scripts -->
-<script>
-function toggleMenu() {
-    document.getElementById("menu-lateral").classList.toggle("active");
-}
+    <!-- Scripts del menú hamburguesa -->
+    <script>
+      const menu = document.getElementById("menu-lateral");
+      const toggleBtn = document.getElementById("menu-toggle");
 
-function toggleDarkMode() {
-    document.body.classList.toggle("dark-mode");
-}
-</script>
+      function toggleMenu() {
+        menu.classList.toggle("active");
+        toggleBtn.classList.toggle("active");
+      }
 
-<!-- Estilos adicionales -->
-<style>
-.menu-toggle {
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    background: #333;
-    color: white;
-    padding: 10px 15px;
-    border-radius: 50px;
-    cursor: pointer;
-    z-index: 1000;
-}
+      function toggleLoginOptions() {
+        const login = document.getElementById("login-options");
+        login.style.display = login.style.display === "none" ? "block" : "none";
+      }
 
-.menu-lateral {
-    position: fixed;
-    top: 0;
-    right: -300px;
-    width: 300px;
-    height: 100%;
-    background: white;
-    box-shadow: -2px 0 5px rgba(0,0,0,0.3);
-    padding: 20px;
-    transition: right 0.3s ease;
-    z-index: 999;
-}
+      function toggleConfig() {
+        const config = document.getElementById("config-options");
+        config.style.display = config.style.display === "none" ? "block" : "none";
+      }
 
-.menu-lateral.active {
-    right: 0;
-}
+      function toggleDarkMode() {
+        document.body.classList.toggle("dark-mode");
+      }
+    </script>
 
-.close-btn {
-    position: absolute;
-    top: 10px;
-    right: 15px;
-    font-size: 20px;
-    cursor: pointer;
-}
+  </main>
+  <script>
+  const menu = document.getElementById("menu-lateral");
+  const toggleBtn = document.getElementById("menu-toggle");
 
-.dark-mode {
-    background-color: #121212;
-    color: #f0f0f0;
-}
+  function toggleMenu() {
+    menu.classList.toggle("active");
+    toggleBtn.classList.toggle("active");
+  }
 
-.dark-mode .menu-lateral {
-    background-color: #1e1e1e;
-    color: #f0f0f0;
-}
-
-.dark-mode .menu-lateral .btn {
-    background-color: #333;
-    color: #f0f0f0;
-    border: none;
-}
-
-.dark-mode .menu-lateral .btn:hover {
-    background-color: #444;
-}
-</style>
-<script>
-function toggleMenu() {
-    document.getElementById("menu-lateral").classList.toggle("active");
-}
-
-function toggleLoginOptions() {
+  function toggleLoginOptions() {
     const login = document.getElementById("login-options");
     login.style.display = login.style.display === "none" ? "block" : "none";
-}
+  }
 
-function toggleConfig() {
+  function toggleConfig() {
     const config = document.getElementById("config-options");
     config.style.display = config.style.display === "none" ? "block" : "none";
-}
+  }
 
-function toggleDarkMode() {
+  function toggleDarkMode() {
     document.body.classList.toggle("dark-mode");
-}
+  }
 </script>
-
 </body>
 </html>

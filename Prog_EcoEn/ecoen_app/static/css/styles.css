@@ -154,44 +154,169 @@ p {
   object-fit: cover;
 }
 
-/*menu hamburguesa*/
-.menu-toggle {
+
+/* Botón hamburguesa */
+.hamburger-wrapper {
   position: fixed;
   top: 20px;
   right: 20px;
-  background: #333;
-  color: white;
-  padding: 10px 15px;
-  border-radius: 50px;
-  cursor: pointer;
-  z-index: 1000;
+  z-index: 9999;
+  pointer-events: auto;
 }
 
+
+.hamburger {
+  width: 45px;
+  height: 45px;
+  background-color: #000;
+  border: none;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  z-index: 9999;
+  outline: 3px solid limegreen !important;
+}
+
+
+.hamburger span {
+  display: block;
+  width: 22px;
+  height: 3px;
+  background-color: #fff;
+  border-radius: 2px;
+  transition: all 0.3s ease;
+}
+
+.hamburger.active span:nth-child(1) {
+  transform: rotate(45deg) translateY(8px);
+}
+.hamburger.active span:nth-child(2) {
+  opacity: 0;
+}
+.hamburger.active span:nth-child(3) {
+  transform: rotate(-45deg) translateY(-8px);
+}
+
+/* Menú lateral */
 .menu-lateral {
   position: fixed;
   top: 0;
-  right: -300px;
-  width: 300px;
+  right: -360px;
+  width: 360px;
   height: 100%;
-  background: white;
-  box-shadow: -2px 0 5px rgba(0,0,0,0.3);
-  padding: 20px;
+  background-color: #fff;
+  box-shadow: -2px 0 8px rgba(0,0,0,0.3);
   transition: right 0.3s ease;
-  z-index: 999;
+  z-index: 1000;
+  padding: 40px 30px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  padding-right: 30px;
+  outline: 2px dashed red;
 }
 
 .menu-lateral.active {
   right: 0;
 }
 
-.close-btn {
-  position: absolute;
-  top: 10px;
-  right: 15px;
-  font-size: 20px;
-  cursor: pointer;
+.menu-content {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  margin-top: 60px;
+  margin-right: 80px;
+  outline: 2px dashed orange;
 }
 
+.menu-section {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.menu-greeting {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.menu-btn {
+  padding: 12px 16px;
+  border-radius: 8px;
+  font-size: 16px;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.btn-login {
+  background-color: #007bff;
+  color: #fff;
+}
+
+.btn-logout {
+  background-color: #dc3545;
+  color: #fff;
+}
+
+.btn-config {
+  background-color: #6c757d;
+  color: #fff;
+}
+
+.menu-text {
+  font-size: 14px;
+  text-align: center;
+}
+
+.menu-link {
+  color: #28a745;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+.menu-link:hover {
+  text-decoration: underline;
+}
+
+.login-form input {
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+.login-form button {
+  margin-top: 10px;
+}
+
+/* Modo oscuro */
+body.dark-mode .menu-lateral {
+  background-color: #1e1e1e;
+  color: #f0f0f0;
+}
+
+body.dark-mode .menu-btn {
+  background-color: #333;
+  color: #f0f0f0;
+}
+
+body.dark-mode .menu-btn:hover {
+  background-color: #444;
+}
+
+body.dark-mode .login-form input {
+  background-color: #222;
+  color: #f0f0f0;
+  border: 1px solid #555;
+}
+
+
+/* Opiniones y tarjetas */
 .opiniones {
   text-align: center;
   padding: 2rem;
@@ -203,6 +328,7 @@ p {
   font-size: 1.1rem;
   max-width: 600px;
 }
+
 .contenedor-principal {
   display: flex;
   flex-wrap: wrap;
