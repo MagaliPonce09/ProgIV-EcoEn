@@ -33,35 +33,36 @@ document.querySelectorAll(".slider").forEach((slider) => {
   }, 5000);
 });
 
-// === MODO OSCURO/CLARO ===
+// === MODO OSCURO/CLARO, CARRITO, PAGO, PUNTUACIÓN ===
 document.addEventListener("DOMContentLoaded", () => {
+  // === MODO OSCURO/CLARO ===
   const toggleBtn = document.getElementById("themeToggle");
   const body = document.body;
 
-  if (!toggleBtn) return;
-
-  if (localStorage.getItem("theme") === "dark") {
-    body.classList.add("dark-mode");
-    body.classList.remove("light-mode");
-    toggleBtn.textContent = "☀️ Modo claro";
-  } else {
-    body.classList.add("light-mode");
-    body.classList.remove("dark-mode");
-    toggleBtn.textContent = "🌙 Modo oscuro";
-  }
-
-  toggleBtn.addEventListener("click", () => {
-    body.classList.toggle("dark-mode");
-    body.classList.toggle("light-mode");
-
-    if (body.classList.contains("dark-mode")) {
+  if (toggleBtn) {
+    if (localStorage.getItem("theme") === "dark") {
+      body.classList.add("dark-mode");
+      body.classList.remove("light-mode");
       toggleBtn.textContent = "☀️ Modo claro";
-      localStorage.setItem("theme", "dark");
     } else {
+      body.classList.add("light-mode");
+      body.classList.remove("dark-mode");
       toggleBtn.textContent = "🌙 Modo oscuro";
-      localStorage.setItem("theme", "light");
     }
-  });
+
+    toggleBtn.addEventListener("click", () => {
+      body.classList.toggle("dark-mode");
+      body.classList.toggle("light-mode");
+
+      if (body.classList.contains("dark-mode")) {
+        toggleBtn.textContent = "☀️ Modo claro";
+        localStorage.setItem("theme", "dark");
+      } else {
+        toggleBtn.textContent = "🌙 Modo oscuro";
+        localStorage.setItem("theme", "light");
+      }
+    });
+  }
 
   // === CARRITO DE COMPRAS ===
   const carritoLista = document.getElementById("carrito-lista");
@@ -69,11 +70,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const monedaSelect = document.getElementById("moneda");
 
   let carrito = [];
-  let tasaCambio = {
-    USD: 1,
-    EUR: 0.92,
-    ARS: 880,
-  };
+  const tasaCambio = { USD: 1, EUR: 0.92, ARS: 880 };
 
   function actualizarCarrito() {
     carritoLista.innerHTML = "";
@@ -81,7 +78,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     carrito.forEach((item, index) => {
       totalUSD += item.precio;
-
       const li = document.createElement("li");
       li.className =
         "list-group-item d-flex justify-content-between align-items-center";
@@ -134,38 +130,29 @@ document.addEventListener("DOMContentLoaded", () => {
   window.mostrarTransferencia = function () {
     datosTransferencia.classList.remove("d-none");
   };
-});
 
-// === MENÚ LATERAL ===
-function toggleMenu() {
-  const menu = document.getElementById("menu-lateral");
-  const icon = document.getElementById("menu-icon");
-
-  menu.classList.toggle("active");
-
-  if (menu.classList.contains("active")) {
-    icon.textContent = "✖";
-  } else {
-    icon.textContent = icon.dataset.default || "☰";
-  }
-}
-document.addEventListener("DOMContentLoaded", () => {
+  // === PUNTUACIÓN DE PRODUCTOS ===
   document.querySelectorAll(".rating").forEach((ratingBlock) => {
     const stars = ratingBlock.querySelectorAll(".star");
     const productName = ratingBlock
       .closest(".card-body")
       ?.querySelector(".card-title")?.textContent;
 
-    stars.forEach((star, index) => {
+    const savedRating = localStorage.getItem(`rating_${productName}`);
+    if (savedRating) {
+      stars.forEach((s, i) => {
+        s.classList.toggle("text-warning", i < parseInt(savedRating));
+      });
+    }
+
+    stars.forEach((star) => {
       star.addEventListener("click", () => {
         const selectedValue = parseInt(star.dataset.value);
-
-        // Visualmente marcar las estrellas seleccionadas
         stars.forEach((s, i) => {
-          s.classList.toggle("text-warning", i < selectedValue);
+          s.classList.remove("text-warning");
+          if (i < selectedValue) s.classList.add("text-warning");
         });
 
-        // Guardar en localStorage (puede adaptarse a backend)
         if (productName) {
           localStorage.setItem(`rating_${productName}`, selectedValue);
           alert(
@@ -175,14 +162,18 @@ document.addEventListener("DOMContentLoaded", () => {
           );
         }
       });
-
-      // Mostrar puntuación guardada al cargar
-      const savedRating = localStorage.getItem(`rating_${productName}`);
-      if (savedRating) {
-        stars.forEach((s, i) => {
-          s.classList.toggle("text-warning", i < parseInt(savedRating));
-        });
-      }
     });
   });
 });
+
+// === MENÚ LATERAL ===
+function toggleMenu() {
+  const menu = document.getElementById("menu-lateral");
+  const icon = document.getElementById("menu-icon");
+
+  menu.classList.toggle("active");
+
+  icon.textContent = menu.classList.contains("active")
+    ? "✖"
+    : icon.dataset.default || "☰";
+}
