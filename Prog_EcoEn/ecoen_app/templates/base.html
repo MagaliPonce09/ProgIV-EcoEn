@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  {% load static %}
+  {% load socialaccount %}
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>EcoEn</title>
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="{% static 'images/faviconTT.png' %}" />
+
+  <!-- Fuentes y Bootstrap -->
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+  <!-- Estilos propios -->
+  <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+<body class="light-mode">
+  <!-- Header -->
+  <header class="text-center p-4 bg-azul d-flex justify-content-between align-items-center">
+    <h1 class="m-0">🌱 Energía Renovable</h1>
+  </header>
+
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg bg-azul">
+    <div class="container-fluid">
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarEcoEn" aria-controls="navbarEcoEn" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarEcoEn">
+        <ul class="navbar-nav mx-auto">
+          <li class="nav-item"><a class="nav-link" href="{% url 'index' %}">Inicio</a></li>
+          <li class="nav-item"><a class="nav-link" href="{% url 'productos' %}">Productos</a></li>
+          <li class="nav-item"><a class="nav-link" href="#reseñas">Reseñas</a></li>
+          <li class="nav-item"><a class="nav-link" href="#contacto">Contacto</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <main>
+    {% block content %}
+    {% endblock %}
+  </main>
+
+    <!-- Botón flotante para abrir el menú -->
+  <div id="menu-toggle" onclick="toggleMenu()" class="menu-toggle">
+    <span id="menu-icon">
+      {% if user.is_authenticated %}
+        👤 {{ user.username }}
+      {% else %}
+        ☰
+      {% endif %}
+    </span>
+  </div>
+
+  <!-- Menú lateral derecho -->
+  <div id="menu-lateral" class="menu-lateral">
+    <span class="close-btn" onclick="toggleMenu()">✖</span>
+
+    {% if user.is_authenticated %}
+      <p class="menu-header">👋 Hola, {{ user.username }}</p>
+      <a href="{% url 'logout' %}" class="btn btn-danger w-100 mt-3">Cerrar sesión</a>
+    {% else %}
+      <button onclick="toggleLoginOptions()" class="btn btn-primary w-100 mb-3">🔐 Iniciar sesión</button>
+      <div id="login-options" style="display: none; margin-top: 10px;">
+        <a href="{% url 'login' %}" class="btn btn-outline-primary w-100 mb-2">Iniciar sesión con usuario</a>
+        <a href="{% provider_login_url 'google' %}" class="btn btn-outline-danger w-100 mb-2">Iniciar sesión con Google</a>
+        <p class="text-center mt-3">¿No tienes una cuenta?
+          <a href="{% url 'registro' %}" class="text-success">Regístrate aquí</a>
+        </p>
+      </div>
+    {% endif %}
+
+    <a href="{% url 'mi_perfil' %}" class="btn btn-outline-secondary w-100 mt-3">👤 Ver perfil</a>
+
+    <button onclick="toggleConfig()" class="btn btn-secondary w-100 mt-4">⚙️ Configuración</button>
+    <div id="config-options" style="display: none;" class="mt-2">
+      <button onclick="toggleDarkMode()" class="btn btn-dark w-100">🌙 Modo oscuro / claro</button>
+    </div>
+  </div>
+
+  <!-- Scripts globales -->
+  <script>
+    function toggleMenu() {
+      document.getElementById("menu-lateral").classList.toggle("active");
+    }
+
+    function toggleLoginOptions() {
+      const login = document.getElementById("login-options");
+      login.style.display = login.style.display === "none" ? "block" : "none";
+    }
+
+    function toggleConfig() {
+      const config = document.getElementById("config-options");
+      config.style.display = config.style.display === "none" ? "block" : "none";
+    }
+
+    function toggleDarkMode() {
+      document.body.classList.toggle("dark-mode");
+    }
+
+    const TASA_PESO = 950;
+    let carrito = JSON.parse(localStorage.getItem('carrito')) || [];
+
+    function guardarCarrito() {
+      localStorage.setItem('carrito', JSON.stringify(carrito));
+    }
+
+    function actualizarCarrito() {
+      const lista = document.getElementById('carrito-lista');
+      const totalElemento = document.getElementById('carrito-total');
+      if (!lista || !totalElemento) return;
+
+      lista.innerHTML = '';
+      let total = 0;
+
+      carrito.forEach((item, index) => {
+        const li = document.createElement('li');
+        li.className = 'list-group-item d-flex justify-content-between align-items-center';
+        li.innerHTML = `
+          ${item.producto} - $${item.precioARS.toLocaleString('es-AR')} ARS
+          <button class="btn btn-sm btn-danger" onclick="eliminarItem(${index})">🗑</button>
+        `;
+        lista.appendChild(li);
+        total += item.precioARS;
+      });
+
+      totalElemento.textContent = total.toLocaleString('es-AR');
+      guardarCarrito();
+
+      const metodos = document.getElementById('metodos-pago');
+      if (metodos) {
+        metodos.classList.toggle('d-none', carrito.length === 0);
+      }
+    }
+
+    function eliminarItem(index) {
+      carrito.splice(index, 1);
+      actualizarCarrito();
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      actualizarCarrito();
+
+      document.querySelectorAll('.add-to-cart').forEach(boton => {
+        boton.addEventListener('click', () => {
+          const producto = boton.dataset.product;
+          const precioUSD = parseFloat(boton.dataset.price);
+          const precioARS = precioUSD * TASA_PESO;
+
+          carrito.push({ producto, precioARS });
+          actualizarCarrito();
+
+          alert(`${producto} agregado al carrito 🛒`);
+        });
+      });
+
+      const btnComprar = document.getElementById('btn-comprar');
+      if (btnComprar) {
+        btnComprar.addEventListener('click', () => {
+          if (carrito.length === 0) {
+            alert('El carrito está vacío.');
+            return;
+          }
+          document.getElementById('metodos-pago').classList.remove('d-none');
+        });
+      }
+
+      document.querySelectorAll('input[name="metodoPago"]').forEach(radio => {
+        radio.addEventListener('change', () => {
+          const transferencia = document.getElementById('pagoTransferencia').checked;
+          document.getElementById('datos-transferencia').classList.toggle('d-none', !transferencia);
+        });
+      });
+
+      const btnConfirmar = document.getElementById('btn-confirmar');
+      if (btnConfirmar) {
+        btnConfirmar.addEventListener('click', () => {
+          const metodo = document.querySelector('input[name="metodoPago"]:checked');
+          if (!metodo) {
+            alert('Seleccioná un método de pago.');
+            return;
+          }
+
+          alert(`Compra confirmada con ${metodo.value}. ¡Gracias!`);
+          carrito = [];
+          actualizarCarrito();
+          document.getElementById('metodos-pago').classList.add('d-none');
+        });
+      }
+    });
+  </script>
+</body>
+</html>

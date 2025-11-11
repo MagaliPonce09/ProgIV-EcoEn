@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="container py-5">
+  <h2 class="mb-4">👤 Mi Perfil</h2>
+
+  <div class="card p-4 shadow-sm mb-4 d-flex flex-column align-items-center">
+    {% if perfil.avatar %}
+      <img src="{{ perfil.avatar.url }}" class="rounded-circle mb-3" style="width: 120px; height: 120px;" alt="Avatar">
+    {% else %}
+      <div class="bg-secondary text-white rounded-circle d-flex justify-content-center align-items-center mb-3" style="width: 120px; height: 120px; font-size: 2rem;">
+        {{ perfil.user.username|slice:":1"|upper }}
+      </div>
+    {% endif %}
+    <p><strong>Usuario:</strong> {{ perfil.user.username }}</p>
+    <p><strong>Email:</strong> {{ perfil.user.email }}</p>
+    <p><strong>Rol:</strong> Cliente</p>
+
+    <a href="{% url 'editar_perfil' %}" class="btn btn-outline-primary mt-3">✏️ Editar perfil</a>
+  </div>
+
+  <h4 class="mt-4">🛒 Compras realizadas</h4>
+  <ul class="list-group mb-4">
+    {% for compra in compras %}
+      <li class="list-group-item">
+        {{ compra.fecha|date:"d/m/Y H:i" }} – {{ compra.metodo_pago }} – ${{ compra.total }} ARS
+      </li>
+    {% empty %}
+      <li class="list-group-item">No hay compras registradas.</li>
+    {% endfor %}
+  </ul>
+
+  <h4 class="mt-4">💬 Opiniones enviadas</h4>
+  <ul class="list-group">
+    {% for op in opiniones %}
+      <li class="list-group-item">
+        {{ op.fecha|date:"d/m/Y H:i" }} – "{{ op.mensaje }}"
+      </li>
+    {% empty %}
+      <li class="list-group-item">No has enviado opiniones aún.</li>
+    {% endfor %}
+  </ul>
+</section>
+{% endblock %}

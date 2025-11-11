@@ -1,0 +1,92 @@
+{% extends "index.html" %}
+{% load static %}
+
+{% block content %}
+<section id="productos" class="container py-5">
+  {% if user.is_authenticated and user.perfil.es_vendedor %}
+  <section id="cargar-producto" class="container py-5">
+    <h3 class="mb-4">📦 Cargar nuevo producto</h3>
+    <form method="POST" action="{% url 'crear_producto' %}" enctype="multipart/form-data">
+      {% csrf_token %}
+      <div class="mb-3">
+        <input type="text" name="nombre" class="form-control" placeholder="Nombre del producto" required>
+      </div>
+      <div class="mb-3">
+        <textarea name="descripcion" class="form-control" placeholder="Descripción" required></textarea>
+      </div>
+      <div class="mb-3">
+        <input type="number" name="precio" step="0.01" class="form-control" placeholder="Precio en USD" required>
+      </div>
+      <div class="mb-3">
+        <input type="file" name="imagen" accept="image/*" class="form-control" required>
+      </div>
+      <button type="submit" class="btn btn-success">Guardar producto</button>
+    </form>
+  </section>
+  {% endif %}
+
+  <h2 class="text-center mb-4">🌱 Nuestros Productos</h2>
+
+
+<form method="GET" class="mb-4">
+  <input type="text" name="q" value="{{ query }}" class="form-control" placeholder="Buscar producto...">
+</form>
+    <!-- Carrusel de productos -->
+  <div id="carouselProductos" class="carousel slide" data-bs-ride="carousel">
+    <div class="carousel-inner">
+      {% for producto in productos %}
+        {% if forloop.counter0|divisibleby:3 %}
+          <div class="carousel-item {% if forloop.first %}active{% endif %}">
+            <div class="row g-4">
+        {% endif %}
+
+        <div class="col-md-4">
+          <div class="card h-100 shadow-sm">
+            <img src="{{ producto.imagen.url }}" class="card-img-top" alt="{{ producto.nombre }}">
+            <div class="card-body">
+              <h5 class="card-title">{{ producto.nombre }}</h5>
+              <p class="card-text">{{ producto.descripcion }}</p>
+              <p class="text-success fw-bold">Precio: ${{ producto.precio|floatformat:0 }} ARS</p>
+              <p class="text-warning">⭐ Promedio: {{ producto.promedio_puntuacion }} / 5</p>
+
+              <div class="rating mb-2" data-product-id="{{ producto.id }}">
+                {% for i in "12345" %}
+                  {% with val=i|stringformat:"i" %}
+                    <span class="star {% if producto.puntuacion_usuario|stringformat:"s" >= val %}selected{% endif %}" data-value="{{ val }}">★</span>
+                  {% endwith %}
+                {% endfor %}
+                <small class="ms-2 rating-label">
+                  {% if producto.puntuacion_usuario %}
+                    Tu puntuación: {{ producto.puntuacion_usuario }} ⭐
+                  {% else %}
+                    Seleccioná tu puntuación
+                  {% endif %}
+                </small>
+              </div>
+
+              <button class="btn btn-outline-success btn-sm add-to-cart"
+                      data-product="{{ producto.nombre }}"
+                      data-price="{{ producto.precio }}"
+                      data-product-id="{{ producto.id }}">
+                🛒 Agregar al carrito
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {% if forloop.counter|divisibleby:3 or forloop.last %}
+            </div>
+          </div>
+        {% endif %}
+      {% endfor %}
+    </div>
+
+    <button class="carousel-control-prev" type="button" data-bs-target="#carouselProductos" data-bs-slide="prev">
+      <span class="carousel-control-prev-icon"></span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#carouselProductos" data-bs-slide="next">
+      <span class="carousel-control-next-icon"></span>
+    </button>
+  </div>
+</section>
+{% endblock %}

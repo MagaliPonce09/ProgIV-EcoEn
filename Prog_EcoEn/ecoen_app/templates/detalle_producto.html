@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="container py-5">
+  <div class="row">
+    <div class="col-md-6">
+      <img src="{{ producto.imagen.url }}" class="img-fluid rounded shadow" alt="{{ producto.nombre }}">
+    </div>
+    <div class="col-md-6">
+      <h2>{{ producto.nombre }}</h2>
+      <p>{{ producto.descripcion }}</p>
+      <p class="text-success fw-bold">Precio: ${{ producto.precio|floatformat:0 }} ARS</p>
+      <p class="text-warning">⭐ Promedio: {{ producto.promedio_puntuacion }} / 5</p>
+
+      <div class="rating mb-3">
+        {% for i in "12345" %}
+          {% with val=i|stringformat:"i" %}
+            <span class="star {% if puntuacion_usuario|stringformat:"s" >= val %}selected{% endif %}" data-value="{{ val }}">★</span>
+          {% endwith %}
+        {% endfor %}
+      </div>
+
+      <button class="btn btn-outline-success add-to-cart"
+              data-product="{{ producto.nombre }}"
+              data-price="{{ producto.precio }}"
+              data-product-id="{{ producto.id }}">
+        🛒 Agregar al carrito
+      </button>
+    </div>
+  </div>
+</section>
+{% endblock %}

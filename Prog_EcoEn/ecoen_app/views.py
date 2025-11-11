@@ -4,11 +4,32 @@ from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.shortcuts import render, redirect
 from .models import Producto
 from django.contrib.auth.decorators import login_required
-from .models import Compra
+from .models import Producto, Opinion, Compra, Puntuacion
+from django.db.models import Avg
+from django.shortcuts import get_object_or_404
+from .models import Perfil
+from .forms import EditarPerfilForm
+from django.contrib import messages
+
 
 def index(request):
-    opiniones = Opinion.objects.all().order_by('-fecha')  # últimas primero
-    return render(request, "index.html", {"opiniones": opiniones})
+    productos = Producto.objects.all()
+    puntuaciones_usuario = {}
+
+    if request.user.is_authenticated:
+        puntuaciones = Puntuacion.objects.filter(usuario=request.user)
+        puntuaciones_usuario = {p.producto_id: p.valor for p in puntuaciones}
+
+    for producto in productos:
+        producto.puntuacion_usuario = puntuaciones_usuario.get(producto.id, 0)
+
+    opiniones = Opinion.objects.all()  # ✅ Agregado
+
+    context = {
+        "productos": productos,
+        "opiniones": opiniones,  # ✅ Agregado
+    }
+    return render(request, "index.html", context)
 
 def iniciar_sesion(request):
     if request.method == "POST":
@@ -23,12 +44,22 @@ def iniciar_sesion(request):
 
 def cerrar_sesion(request):
     logout(request)
-    return redirect("inicio")
+    return redirect("index")
 
 
 def productos(request):
-    lista = Producto.objects.all()
-    return render(request, "productos.html", {"productos": lista})
+    query = request.GET.get("q", "")
+    productos = Producto.objects.filter(nombre__icontains=query) if query else Producto.objects.all()
+
+    puntuaciones_usuario = {}
+    if request.user.is_authenticated:
+        puntuaciones = Puntuacion.objects.filter(usuario=request.user)
+        puntuaciones_usuario = {p.producto_id: p.valor for p in puntuaciones}
+
+    for producto in productos:
+        producto.puntuacion_usuario = puntuaciones_usuario.get(producto.id, 0)
+
+    return render(request, "producto.html", {"productos": productos, "query": query})
 
 @login_required
 def crear_producto(request):
@@ -85,8 +116,6 @@ def calcular_total_carrito(request):
     # En producción, deberías sumar los precios reales desde sesión o base de datos
     return 1000.00  # valor simulado en ARS
 
-
-
 def registro(request):
     if request.method == "POST":
         form = UserCreationForm(request.POST)
@@ -96,3 +125,45 @@ def registro(request):
     else:
         form = UserCreationForm()
     return render(request, "registro.html", {"form": form})
+
+def producto_detalle(request, id):
+    producto = get_object_or_404(Producto, id=id)
+    puntuacion_usuario = 0
+    if request.user.is_authenticated:
+        try:
+            puntuacion_usuario = Puntuacion.objects.get(producto=producto, usuario=request.user).valor
+        except Puntuacion.DoesNotExist:
+            pass
+    return render(request, "detalle_producto.html", {
+        "producto": producto,
+        "puntuacion_usuario": puntuacion_usuario
+    })
+
+@login_required
+def mi_perfil(request):
+    perfil, creado = Perfil.objects.get_or_create(user=request.user)
+    compras = Compra.objects.filter(usuario=request.user).order_by("-fecha")
+    opiniones = Opinion.objects.filter(nombre=request.user.username).order_by("-fecha")
+
+    return render(request, "perfil.html", {
+        "perfil": perfil,
+        "compras": compras,
+        "opiniones": opiniones
+    })
+
+@login_required
+def editar_perfil(request):
+    perfil = request.user.perfil
+
+    if request.method == "POST":
+        form = EditarPerfilForm(request.POST, request.FILES, instance=perfil, user=request.user)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Perfil actualizado correctamente.")
+            return redirect("mi_perfil")
+        else:
+            messages.error(request, "Hubo un error al actualizar tu perfil.")
+    else:
+        form = EditarPerfilForm(instance=perfil, user=request.user)
+
+    return render(request, "editar_perfil.html", {"form": form})

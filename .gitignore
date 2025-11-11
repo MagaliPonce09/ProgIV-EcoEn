@@ -4,6 +4,7 @@
 
 # Ignorar variables de entorno
 .env
+env
 
 # Ignorar archivos de Python compilados
 __pycache__/

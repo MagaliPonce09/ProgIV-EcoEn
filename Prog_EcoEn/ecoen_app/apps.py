@@ -5,4 +5,4 @@ class EcoenAppConfig(AppConfig):
     name = 'Prog_EcoEn.ecoen_app'
 
 def ready(self):
-    import ecoen_app.signals
+    import Prog_EcoEn.ecoen_app.signals  # ajustá el path si usás otro nombre
