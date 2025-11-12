@@ -230,3 +230,71 @@ p {
 .star.text-warning {
   color: #ffc107;
 }
+
+/* Contenedor general */
+.container {
+  padding-bottom: 50px;
+}
+
+/* Cards */
+.card {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  transition: transform 0.2s ease;
+  background-color: #fff;
+}
+
+.card:hover {
+  transform: scale(1.02);
+}
+
+/* Imágenes */
+.card-img-top {
+  height: 200px;
+  object-fit: cover;
+  border-bottom: 1px solid #eee;
+}
+
+/* Títulos */
+.card-title {
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+/* Texto */
+.card-text {
+  font-size: 0.95rem;
+  color: #444;
+}
+
+/* Precio */
+.text-success {
+  font-size: 1rem;
+}
+
+/* Puntuación */
+.text-warning {
+  font-size: 0.9rem;
+}
+
+/* Botón carrito */
+.add-to-cart {
+  margin-top: 10px;
+  width: 100%;
+}
+
+/* Reseñas */
+.opinion-card {
+  background-color: #f8f9fa;
+  font-style: italic;
+  font-size: 0.95rem;
+  border-left: 4px solid #198754;
+}
+
+/* Responsive ajustes */
+@media (max-width: 768px) {
+  .card-img-top {
+    height: 160px;
+  }
+}

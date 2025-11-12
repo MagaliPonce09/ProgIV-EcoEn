@@ -125,6 +125,18 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR / "static"]  # carpeta donde guardás tus imágenes, CSS, JS
 
+# Archivos estáticos (CSS, JavaScript, imágenes)
+STATIC_URL = '/static/'
+STATICFILES_DIRS = [BASE_DIR / "static"]  # carpeta donde guardás tus imágenes, CSS, JS
+
+# 📦 Carpeta donde Django reunirá todos los archivos estáticos al ejecutar collectstatic
+STATIC_ROOT = BASE_DIR / "staticfiles"
+
+# 🖼️ Archivos multimedia (subidos por los usuarios)
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / "media"
+
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
