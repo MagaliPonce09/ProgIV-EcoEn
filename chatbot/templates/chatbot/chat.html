@@ -1,0 +1,102 @@
+<!-- chatbot/templates/chatbot/chat.html -->
+{% load static %}
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <title>Chatbot</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- Bootstrap CSS (usa tu pipeline habitual) -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+  <style>
+    .chat-container { max-width: 720px; margin: 30px auto; }
+    .chat-box { height: 60vh; overflow-y: auto; background: #00070eff; border-radius: 12px; padding: 16px; }
+    .bubble { max-width: 75%; padding: 10px 14px; border-radius: 16px; margin-bottom: 10px; line-height: 1.4; }
+    .bubble.user { background: #7d0dfdff; color: #fff; border-bottom-right-radius: 4px; margin-left: auto; }
+    .bubble.bot { background: #0df7e4ff; color: #212529; border-bottom-left-radius: 4px; margin-right: auto; }
+    .suggestions { gap: 8px; }
+    .suggestion-btn { border-radius: 16px; }
+  </style>
+</head>
+<body>
+  <div class="chat-container">
+    <div class="card shadow-sm">
+      <div class="card-header d-flex align-items-center justify-content-between">
+        <strong>Asistente EcoEn</strong>
+        <span class="text-muted small"></span>
+      </div>
+      <div id="chatBox" class="chat-box">
+        <div class="bubble bot">Hola, soy tu asistente. Preguntame sobre productos, instalación o precios.</div>
+      </div>
+      <div class="card-body">
+        <div class="d-flex mb-2 suggestions flex-wrap">
+          <button class="btn btn-outline-secondary btn-sm suggestion-btn" onclick="quickAsk('¿Qué panel me recomendás?')">¿Qué panel me recomendás?</button>
+          <button class="btn btn-outline-secondary btn-sm suggestion-btn" onclick="quickAsk('¿Cómo es la instalación?')">¿Cómo es la instalación?</button>
+          <button class="btn btn-outline-secondary btn-sm suggestion-btn" onclick="quickAsk('Rendimiento en días nublados')">Rendimiento en días nublados</button>
+        </div>
+        <form id="chatForm" class="input-group" onsubmit="return sendMessage(event);">
+          {% csrf_token %}
+          <input id="userMessage" type="text" class="form-control" placeholder="Escribí tu mensaje..." autocomplete="off" required>
+          <button class="btn btn-primary" type="submit">Enviar</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function appendBubble(text, role) {
+      const chatBox = document.getElementById('chatBox');
+      const div = document.createElement('div');
+      div.className = 'bubble ' + (role === 'user' ? 'user' : 'bot');
+      div.textContent = text;
+      chatBox.appendChild(div);
+      chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+    function getCsrfToken() {
+      const csrfInput = document.querySelector('#chatForm input[name="csrfmiddlewaretoken"]');
+      return csrfInput ? csrfInput.value : '';
+    }
+
+    async function sendMessage(event) {
+      event.preventDefault();
+      const input = document.getElementById('userMessage');
+      const message = input.value.trim();
+      if (!message) return;
+
+      appendBubble(message, 'user');
+      input.value = '';
+      // Estado de “escribiendo”
+      const typing = document.createElement('div');
+      typing.className = 'bubble bot';
+      typing.textContent = '…';
+      document.getElementById('chatBox').appendChild(typing);
+      document.getElementById('chatBox').scrollTop = document.getElementById('chatBox').scrollHeight;
+
+      try {
+        const resp = await fetch('/chatbot/respond/', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'X-CSRFToken': getCsrfToken()
+          },
+          body: new URLSearchParams({ message })
+        });
+
+        const data = await resp.json();
+        typing.remove();
+        appendBubble(data.response || 'No recibí respuesta.', 'bot');
+      } catch (err) {
+        typing.remove();
+        appendBubble('Ocurrió un error. Intentá de nuevo.', 'bot');
+      }
+    }
+
+    function quickAsk(text) {
+      document.getElementById('userMessage').value = text;
+      document.getElementById('chatForm').dispatchEvent(new Event('submit'));
+    }
+  </script>
+</body>
+</html>
+

@@ -20,7 +20,9 @@
   <link rel="stylesheet" href="{% static 'css/styles.css' %}">
 </head>
 <body class="light-mode">
-  <div id="menu-toggle" onclick="toggleMenu()" class="menu-toggle">
+
+  <!-- Botón flotante hamburguesa -->
+  <div id="menu-toggle" onclick="toggleMenu()" class="menu-toggle" aria-label="Abrir menú">
     <span id="menu-icon">
       {% if user.is_authenticated %}
         👤 {{ user.username }}
@@ -30,16 +32,22 @@
     </span>
   </div>
 
-  
   <!-- Menú lateral derecho -->
   <div id="menu-lateral" class="menu-lateral">
-    <span class="close-btn" onclick="toggleMenu()">✖</span>
 
     {% if user.is_authenticated %}
       <p class="menu-header">👋 Hola, {{ user.username }}</p>
-      <a href="{% url 'logout' %}" class="btn btn-danger w-100 mt-3">Cerrar sesión</a>
+      <a href="{% url 'custom_logout' %}" class="btn btn-danger w-100 mt-3">Cerrar sesión</a>
     {% else %}
-      <a href="{% url 'account_login' %}" class="btn btn-primary w-100 mb-3">🔐 Iniciar sesión</a>
+      <button onclick="toggleLoginOptions()" class="btn btn-primary w-100 mb-3">🔐 Iniciar sesión</button>
+      <div id="login-options" style="display: none; margin-top: 10px">
+        <a href="{% url 'custom_login' %}" class="btn btn-outline-primary">Iniciar sesión con usuario</a>
+        {# <a href="{% provider_login_url 'google' %}" class="btn btn-outline-danger">Iniciar sesión con Google</a> #}
+        <p class="text-center mt-3">
+          ¿No tienes una cuenta?
+          <a href="{% url 'custom_signup' %}" class="text-success">Regístrate aquí</a>
+        </p>
+      </div>
     {% endif %}
 
     <a href="{% url 'mi_perfil' %}" class="btn btn-outline-secondary w-100 mt-3">👤 Ver perfil</a>
@@ -49,14 +57,14 @@
       <button onclick="toggleDarkMode()" class="btn btn-dark w-100">🌙 Modo oscuro / claro</button>
     </div>
   </div>
-  
+
   <!-- Header -->
   <header class="text-center p-4 bg-azul d-flex justify-content-between align-items-center">
     <h1 class="m-0">🌱 Energía Renovable</h1>
   </header>
 
   <!-- Navbar -->
-  <nav class="navbar navbar-expand-lg bg-azul">
+  <nav class="navbar navbar-expand-lg navbar-dark bg-azul">
     <div class="container-fluid">
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarEcoEn" aria-controls="navbarEcoEn" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -72,6 +80,7 @@
     </div>
   </nav>
 
+  <!-- Contenido dinámico -->
   <main>
     {% block content %}
     {% endblock %}
@@ -93,45 +102,44 @@
     }
     function toggleDarkMode() {
       document.body.classList.toggle("dark-mode");
+      document.body.classList.toggle("light-mode");
     }
 
     const TASA_PESO = 950;
-    let carrito = JSON.parse(localStorage.getItem('carrito')) || [];
+    let carrito = JSON.parse(localStorage.getItem("carrito")) || [];
 
     function guardarCarrito() {
-      localStorage.setItem('carrito', JSON.stringify(carrito));
+      localStorage.setItem("carrito", JSON.stringify(carrito));
     }
     function actualizarCarrito() {
-      const lista = document.getElementById('carrito-lista');
-      const totalElemento = document.getElementById('carrito-total');
+      const lista = document.getElementById("carrito-lista");
+      const totalElemento = document.getElementById("carrito-total");
       if (!lista || !totalElemento) return;
-      lista.innerHTML = '';
+      lista.innerHTML = "";
       let total = 0;
       carrito.forEach((item, index) => {
-        const li = document.createElement('li');
-        li.className = 'list-group-item d-flex justify-content-between align-items-center';
-        li.innerHTML = `
-          ${item.producto} - $${item.precioARS.toLocaleString('es-AR')} ARS
-          <button class="btn btn-sm btn-danger" onclick="eliminarItem(${index})">🗑</button>
-        `;
+        const li = document.createElement("li");
+        li.className = "list-group-item d-flex justify-content-between align-items-center";
+        li.innerHTML = `${item.producto} - $${item.precioARS.toLocaleString("es-AR")} ARS
+          <button class="btn btn-sm btn-danger" onclick="eliminarItem(${index})">🗑</button>`;
         lista.appendChild(li);
         total += item.precioARS;
       });
-      totalElemento.textContent = total.toLocaleString('es-AR');
+      totalElemento.textContent = total.toLocaleString("es-AR");
       guardarCarrito();
-      const metodos = document.getElementById('metodos-pago');
+      const metodos = document.getElementById("metodos-pago");
       if (metodos) {
-        metodos.classList.toggle('d-none', carrito.length === 0);
+        metodos.classList.toggle("d-none", carrito.length === 0);
       }
     }
     function eliminarItem(index) {
       carrito.splice(index, 1);
       actualizarCarrito();
     }
-    document.addEventListener('DOMContentLoaded', () => {
+    document.addEventListener("DOMContentLoaded", () => {
       actualizarCarrito();
-      document.querySelectorAll('.add-to-cart').forEach(boton => {
-        boton.addEventListener('click', () => {
+      document.querySelectorAll(".add-to-cart").forEach(boton => {
+        boton.addEventListener("click", () => {
           const producto = boton.dataset.product;
           const precioUSD = parseFloat(boton.dataset.price);
           const precioARS = precioUSD * TASA_PESO;
@@ -140,34 +148,34 @@
           alert(`${producto} agregado al carrito 🛒`);
         });
       });
-      const btnComprar = document.getElementById('btn-comprar');
+      const btnComprar = document.getElementById("btn-comprar");
       if (btnComprar) {
-        btnComprar.addEventListener('click', () => {
+        btnComprar.addEventListener("click", () => {
           if (carrito.length === 0) {
-            alert('El carrito está vacío.');
+            alert("El carrito está vacío.");
             return;
           }
-          document.getElementById('metodos-pago').classList.remove('d-none');
+          document.getElementById("metodos-pago").classList.remove("d-none");
         });
       }
       document.querySelectorAll('input[name="metodoPago"]').forEach(radio => {
-        radio.addEventListener('change', () => {
-          const transferencia = document.getElementById('pagoTransferencia').checked;
-          document.getElementById('datos-transferencia').classList.toggle('d-none', !transferencia);
+        radio.addEventListener("change", () => {
+          const transferencia = document.getElementById("pagoTransferencia").checked;
+          document.getElementById("datos-transferencia").classList.toggle("d-none", !transferencia);
         });
       });
-      const btnConfirmar = document.getElementById('btn-confirmar');
+      const btnConfirmar = document.getElementById("btn-confirmar");
       if (btnConfirmar) {
-        btnConfirmar.addEventListener('click', () => {
+        btnConfirmar.addEventListener("click", () => {
           const metodo = document.querySelector('input[name="metodoPago"]:checked');
           if (!metodo) {
-            alert('Seleccioná un método de pago.');
+            alert("Seleccioná un método de pago.");
             return;
           }
           alert(`Compra confirmada con ${metodo.value}. ¡Gracias!`);
           carrito = [];
           actualizarCarrito();
-          document.getElementById('metodos-pago').classList.add('d-none');
+          document.getElementById("metodos-pago").classList.add("d-none");
         });
       }
     });

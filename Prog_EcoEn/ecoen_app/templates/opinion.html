@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+
+<section id="opinion" class="container py-5">
+  <h2 class="text-center mb-4">💬 Deja tu Opinión</h2>
+  <p class="text-center lead mb-5">
+    Tu experiencia nos ayuda a mejorar y a inspirar a más personas a elegir energía limpia.
+  </p>
+
+  <!-- Formulario de opinión -->
+  <form action="{% url 'opinion' %}" method="POST" class="needs-validation" novalidate>
+    {% csrf_token %}
+    <div class="mb-3">
+      <label for="nombre" class="form-label">Nombre</label>
+      <input type="text" class="form-control" id="nombre" name="nombre" required />
+    </div>
+    <div class="mb-3">
+      <label for="mensaje" class="form-label">Tu opinión</label>
+      <textarea class="form-control" id="mensaje" name="mensaje" rows="4" required></textarea>
+    </div>
+    <button type="submit" class="btn btn-success">Enviar Opinión</button>
+  </form>
+
+  <!-- Opiniones ya registradas -->
+  <div class="mt-5">
+    <h3 class="mb-4">Opiniones de otros clientes</h3>
+    <div class="row row-cols-1 row-cols-md-2 g-4">
+      {% for op in opiniones %}
+      <div class="col">
+        <div class="p-3 opinion-card shadow-sm rounded">
+          "{{ op.mensaje }}" – <strong>{{ op.nombre }}</strong>
+        </div>
+      </div>
+      {% empty %}
+      <p class="text-muted">Todavía no hay opiniones registradas. Sé el primero en dejar la tuya.</p>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+{% endblock %}

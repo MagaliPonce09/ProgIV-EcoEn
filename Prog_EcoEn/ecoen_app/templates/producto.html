@@ -1,92 +1,339 @@
-{% extends "index.html" %}
+{% extends "base.html" %}
 {% load static %}
-
 {% block content %}
+
 <section id="productos" class="container py-5">
-  {% if user.is_authenticated and user.perfil.es_vendedor %}
-  <section id="cargar-producto" class="container py-5">
-    <h3 class="mb-4">📦 Cargar nuevo producto</h3>
-    <form method="POST" action="{% url 'crear_producto' %}" enctype="multipart/form-data">
-      {% csrf_token %}
-      <div class="mb-3">
-        <input type="text" name="nombre" class="form-control" placeholder="Nombre del producto" required>
-      </div>
-      <div class="mb-3">
-        <textarea name="descripcion" class="form-control" placeholder="Descripción" required></textarea>
-      </div>
-      <div class="mb-3">
-        <input type="number" name="precio" step="0.01" class="form-control" placeholder="Precio en USD" required>
-      </div>
-      <div class="mb-3">
-        <input type="file" name="imagen" accept="image/*" class="form-control" required>
-      </div>
-      <button type="submit" class="btn btn-success">Guardar producto</button>
-    </form>
-  </section>
-  {% endif %}
-
   <h2 class="text-center mb-4">🌱 Nuestros Productos</h2>
+  <div class="row gx-4 gy-5 justify-content-start">
 
-
-<form method="GET" class="mb-4">
-  <input type="text" name="q" value="{{ query }}" class="form-control" placeholder="Buscar producto...">
-</form>
-    <!-- Carrusel de productos -->
-  <div id="carouselProductos" class="carousel slide" data-bs-ride="carousel">
-    <div class="carousel-inner">
-      {% for producto in productos %}
-        {% if forloop.counter0|divisibleby:3 %}
-          <div class="carousel-item {% if forloop.first %}active{% endif %}">
-            <div class="row g-4">
-        {% endif %}
-
-        <div class="col-md-4">
-          <div class="card h-100 shadow-sm">
-            <img src="{{ producto.imagen.url }}" class="card-img-top" alt="{{ producto.nombre }}">
-            <div class="card-body">
-              <h5 class="card-title">{{ producto.nombre }}</h5>
-              <p class="card-text">{{ producto.descripcion }}</p>
-              <p class="text-success fw-bold">Precio: ${{ producto.precio|floatformat:0 }} ARS</p>
-              <p class="text-warning">⭐ Promedio: {{ producto.promedio_puntuacion }} / 5</p>
-
-              <div class="rating mb-2" data-product-id="{{ producto.id }}">
-                {% for i in "12345" %}
-                  {% with val=i|stringformat:"i" %}
-                    <span class="star {% if producto.puntuacion_usuario|stringformat:"s" >= val %}selected{% endif %}" data-value="{{ val }}">★</span>
-                  {% endwith %}
-                {% endfor %}
-                <small class="ms-2 rating-label">
-                  {% if producto.puntuacion_usuario %}
-                    Tu puntuación: {{ producto.puntuacion_usuario }} ⭐
-                  {% else %}
-                    Seleccioná tu puntuación
-                  {% endif %}
-                </small>
-              </div>
-
-              <button class="btn btn-outline-success btn-sm add-to-cart"
-                      data-product="{{ producto.nombre }}"
-                      data-price="{{ producto.precio }}"
-                      data-product-id="{{ producto.id }}">
-                🛒 Agregar al carrito
-              </button>
-            </div>
-          </div>
+    <!-- Card 1 -->
+    <div class="col-12 col-md-4">
+      <div class="card h-100 shadow-sm">
+        <img src="{% static 'images/bateria.jpg' %}" class="card-img-top" alt="Batería de almacenamiento" />
+        <div class="card-body">
+          <h5 class="card-title">Batería de Almacenamiento</h5>
+          <p class="card-text">Unidad industrial de baterías de litio para almacenamiento energético a gran escala...</p>
+          <p class="text-success fw-bold">Precio: $18.500.000 ARS</p>
+          <p class="text-warning">⭐ Promedio: 4.7 / 5</p>
+          <button class="btn btn-outline-success btn-sm add-to-cart"
+                  data-product="Batería de Almacenamiento"
+                  data-price="18500">
+            🛒 Agregar al carrito
+          </button>
         </div>
-
-        {% if forloop.counter|divisibleby:3 or forloop.last %}
-            </div>
-          </div>
-        {% endif %}
-      {% endfor %}
+      </div>
     </div>
 
-    <button class="carousel-control-prev" type="button" data-bs-target="#carouselProductos" data-bs-slide="prev">
-      <span class="carousel-control-prev-icon"></span>
-    </button>
-    <button class="carousel-control-next" type="button" data-bs-target="#carouselProductos" data-bs-slide="next">
-      <span class="carousel-control-next-icon"></span>
-    </button>
+    <!-- Card 2 -->
+    <div class="col-12 col-md-4">
+      <div class="card h-100 shadow-sm">
+        <img src="{% static 'images/turbina-real1.jpg' %}" class="card-img-top" alt="Turbina eólica" />
+        <div class="card-body">
+          <h5 class="card-title">Turbina Eólica</h5>
+          <p class="card-text">Turbina de alto rendimiento capaz de abastecer hasta 16.000 hogares...</p>
+          <p class="text-success fw-bold">Precio: $16.800.000 ARS</p>
+          <p class="text-warning">⭐ Promedio: 4.6 / 5</p>
+          <button class="btn btn-outline-success btn-sm add-to-cart"
+                  data-product="Turbina Eólica"
+                  data-price="16800">
+            🛒 Agregar al carrito
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 3 -->
+    <div class="col-12 col-md-4">
+      <div class="card h-100 shadow-sm">
+        <img src="{% static 'images/panel-solar2.jpg' %}" class="card-img-top" alt="Panel solar" />
+        <div class="card-body">
+          <h5 class="card-title">Panel Solar</h5>
+          <p class="card-text">Panel solar de alta eficiencia, diseñado para captar la energía del sol...</p>
+          <p class="text-success fw-bold">Precio: $600.000 ARS</p>
+          <p class="text-warning">⭐ Promedio: 4.6 / 5</p>
+          <button class="btn btn-outline-success btn-sm add-to-cart"
+                  data-product="Panel Solar"
+                  data-price="600">
+            🛒 Agregar al carrito
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 4 -->
+    <div class="col-12 col-md-4">
+      <div class="card h-100 shadow-sm">
+        <img src="{% static 'images/panel-solar4.jpg' %}" class="card-img-top" alt="Panel solar residencial" />
+        <div class="card-body">
+          <h5 class="card-title">Panel Solar Residencial</h5>
+          <p class="card-text">Sistema solar diseñado para instalarse en techos inclinados...</p>
+          <p class="text-success fw-bold">Precio: $800.000 ARS</p>
+          <p class="text-warning">⭐ Promedio: 4.6 / 5</p>
+          <button class="btn btn-outline-success btn-sm add-to-cart"
+                  data-product="Panel Solar Residencial"
+                  data-price="800">
+            🛒 Agregar al carrito
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 5 -->
+    <div class="col-12 col-md-4">
+      <div class="card h-100 shadow-sm">
+        <img src="{% static 'images/turbina-real2.jpg' %}" class="card-img-top" alt="Turbina eólica urbana" />
+        <div class="card-body">
+          <h5 class="card-title">Turbina Eólica Urbana</h5>
+          <p class="card-text">Turbina silenciosa y eficiente, pensada para generar energía limpia en zonas urbanas...</p>
+          <p class="text-success fw-bold">Precio: $12.500.000 ARS</p>
+          <p class="text-warning">⭐ Promedio: 4.6 / 5</p>
+          <button class="btn btn-outline-success btn-sm add-to-cart"
+                  data-product="Turbina Eólica Urbana"
+                  data-price="12500">
+            🛒 Agregar al carrito
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 6 -->
+    <div class="col-12 col-md-4">
+      <div class="card h-100 shadow-sm">
+        <img src="{% static 'images/bateria2.jpg' %}" class="card-img-top" alt="Batería industrial" />
+        <div class="card-body">
+          <h5 class="card-title">Batería de Almacenamiento Industrial</h5>
+          <p class="card-text">Batería de alto rendimiento diseñada para almacenar energía eléctrica en grandes volúmenes...</p>
+          <p class="text-success fw-bold">Precio: $12.000.000 ARS</p>
+          <p class="text-warning">⭐ Promedio: 4.6 / 5</p>
+          <button class="btn btn-outline-success btn-sm add-to-cart"
+                  data-product="Batería de Almacenamiento Industrial"
+                  data-price="12000">
+            🛒 Agregar al carrito
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 7 -->
+    <div class="col-12 col-md-4">
+      <div class="card h-100 shadow-sm">
+        <img src="{% static 'images/panel-solar5.jpg' %}" class="card-img-top" alt="Estructura solar residencial fija" />
+        <div class="card-body">
+          <h5 class="card-title">Estructura Solar Residencial Fija</h5>
+          <p class="card-text">Sistema solar montado sobre estructura fija, ideal para generar electricidad limpia en espacios abiertos...</p>
+          <p class="text-success fw-bold">Precio: $900.000 ARS</p>
+          <p class="text-warning">⭐ Promedio: 4.6 / 5</p>
+          <button class="btn btn-outline-success btn-sm add-to-cart"
+                  data-product="Estructura Solar Residencial Fija"
+                  data-price="900">
+            🛒 Agregar al carrito
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 8 -->
+    <div class="col-12 col-md-4">
+      <div class="card h-100 shadow-sm">
+        <img src="{% static 'images/camarasolar.jpeg' %}" class="card-img-top" alt="Cámara solar autónoma" />
+        <div class="card-body">
+          <h5 class="card-title">Cámara de Seguridad Solar Autónoma</h5>
+          <p class="card-text">Sistema de videovigilancia alimentado por energía solar, con visión nocturna y sensores de movimiento...</p>
+          <p class="text-success fw-bold">Precio: $300.000 ARS</p>
+          <p class="text-warning">⭐ Promedio: 4.6 / 5</p>
+          <button class="btn btn-outline-success btn-sm add-to-cart"
+                  data-product="Cámara de Seguridad Solar Autónoma"
+                  data-price="300">
+            🛒 Agregar al carrito
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 9 -->
+    <div class="col-12 col-md-4">
+      <div class="card h-100 shadow-sm">
+        <img src="{% static 'images/camarasolar2.jpeg' %}" class="card-img-top" alt="Cámara solar de seguridad" />
+        <div class="card-body">
+          <h5 class="card-title">Cámara Solar de Seguridad</h5>
+          <p class="card-text">Cámara de seguridad autónoma con visión nocturna, sensores de movimiento y alimentación solar...</p>
+          <p class="text-success fw-bold">Precio: $250.000 ARS</p>
+          <p class="text-warning">⭐ Promedio: 4.6 / 5</p>
+          <button class="btn btn-outline-success btn-sm add-to-cart"
+                  data-product="Cámara Solar de Seguridad"
+                  data-price="250">
+            🛒 Agregar al carrito
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 10 -->
+    <div class="col-12 col-md-4">
+      <div class="card h-100 shadow-sm">
+        <img src="{% static 'images/Mochila.jpeg' %}" class="card-img-top" alt="Mochila solar con cargador USB" />
+        <div class="card-body">
+          <h5 class="card-title">Mochila Solar con Cargador USB</h5>
+          <p class="card-text">Mochila resistente equipada con panel solar frontal que permite cargar dispositivos móviles...</p>
+          <p class="text-success fw-bold">Precio: $250.000 ARS</p>
+          <p class="text-warning">⭐ Promedio: 4.6 / 5</p>
+          <button class="btn btn-outline-success btn-sm add-to-cart"
+                  data-product="Mochila Solar con Cargador USB"
+                  data-price="250">
+            🛒 Agregar al carrito
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 11 -->
+    <div class="col-12 col-md-4">
+      <div class="card h-100 shadow-sm">
+        <img src="{% static 'images/bateria3.jpg' %}" class="card-img-top" alt="Batería portátil" />
+        <div class="card-body">
+          <h5 class="card-title">Batería portátil</h5>
+          <p class="card-text">Caja de batería resistente con puertos de salida, fusibles y protección contra sobrecargas...</p>
+          <p class="text-success fw-bold">Precio: $500.000 ARS</p>
+          <p class="text-warning">⭐ Promedio: 4.6 / 5</p>
+          <button class="btn btn-outline-success btn-sm add-to-cart"
+                  data-product="Batería portátil"
+                  data-price="500">
+            🛒 Agregar al carrito
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 12 -->
+    <div class="col-12 col-md-4">
+      <div class="card h-100 shadow-sm">
+        <img src="{% static 'images/turbina-real3.jpg' %}" class="card-img-top" alt="Turbina eólica con almacenamiento subterráneo" />
+        <div class="card-body">
+          <h5 class="card-title">Turbina Eólica con Almacenamiento Subterráneo</h5>
+          <p class="card-text">Sistema que combina turbinas eólicas con almacenamiento subterráneo, permitiendo generar y conservar energía limpia...</p>
+          <p class="text-success fw-bold">Precio: $18.000.000 ARS</p>
+          <p class="text-warning">⭐ Promedio: 4.6 / 5</p>
+          <button class="btn btn-outline-success btn-sm add-to-cart"
+                  data-product="Turbina Eólica con Almacenamiento Subterráneo"
+                  data-price="18000">
+            🛒 Agregar al carrito
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 13 -->
+    <div class="col-12 col-md-4">
+      <div class="card h-100 shadow-sm">
+        <img src="{% static 'images/camarasolar3.jpeg' %}" class="card-img-top" alt="Cámara solar exterior" />
+        <div class="card-body">
+          <h5 class="card-title">Cámara Solar de Seguridad Exterior</h5>
+          <p class="card-text">Cámara de seguridad con alimentación solar, visión nocturna y conexión inalámbrica...</p>
+          <p class="text-success fw-bold">Precio: $300.000 ARS</p>
+          <p class="text-warning">⭐ Promedio: 4.6 / 5</p>
+          <button class="btn btn-outline-success btn-sm add-to-cart"
+                  data-product="Cámara Solar de Seguridad Exterior"
+                  data-price="300">
+            🛒 Agregar al carrito
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 14 -->
+    <div class="col-12 col-md-4">
+      <div class="card h-100 shadow-sm">
+        <img src="{% static 'images/mochila3.jpeg' %}" class="card-img-top" alt="Mochila solar" />
+        <div class="card-body">
+          <h5 class="card-title">Mochila Solar</h5>
+          <p class="card-text">Mochila resistente con panel solar frontal que permite cargar dispositivos en movimiento...</p>
+          <p class="text-success fw-bold">Precio: $250.000 ARS</p>
+          <p class="text-warning">⭐ Promedio: 4.6 / 5</p>
+          <button class="btn btn-outline-success btn-sm add-to-cart"
+                  data-product="Mochila Solar"
+                  data-price="250">
+            🛒 Agregar al carrito
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 15 -->
+    <div class="col-12 col-md-4">
+      <div class="card h-100 shadow-sm">
+        <img src="{% static 'images/camarasolar4.jpeg' %}" class="card-img-top" alt="Cámara solar exterior" />
+        <div class="card-body">
+          <h5 class="card-title">Cámara Solar de Seguridad Exterior</h5>
+          <p class="card-text">Cámara de seguridad autónoma con visión nocturna, sensores de movimiento y alimentación solar...</p>
+          <p class="text-success fw-bold">Precio: $250.000 ARS</p>
+          <p class="text-warning">⭐ Promedio: 4.6 / 5</p>
+          <button class="btn btn-outline-success btn-sm add-to-cart"
+                  data-product="Cámara Solar de Seguridad Exterior"
+                  data-price="250">
+            🛒 Agregar al carrito
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 16 -->
+    <div class="col-12 col-md-4">
+      <div class="card h-100 shadow-sm">
+        <img src="{% static 'images/mochila3.jpeg' %}" class="card-img-top" alt="Mochila solar roja" />
+        <div class="card-body">
+          <h5 class="card-title">Mochila Solar Roja</h5>
+          <p class="card-text">Mochila resistente con panel solar desmontable o integrado, diseñada para generar energía mientras te desplazás...</p>
+          <p class="text-success fw-bold">Precio: $250.000 ARS</p>
+          <p class="text-warning">⭐ Promedio: 4.6 / 5</p>
+          <button class="btn btn-outline-success btn-sm add-to-cart"
+                  data-product="Mochila Solar Roja"
+                  data-price="250">
+            🛒 Agregar al carrito
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 17 -->
+    <div class="col-12 col-md-4">
+      <div class="card h-100 shadow-sm">
+        <img src="{% static 'images/Termotanque.jpeg' %}" class="card-img-top" alt="Termotanque solar" />
+        <div class="card-body">
+          <h5 class="card-title">Termotanque Solar</h5>
+          <p class="card-text">Sistema solar térmico que utiliza tubos evacuados para captar el calor del sol y calentar agua...</p>
+          <p class="text-success fw-bold">Precio: $20.000.000 ARS</p>
+          <p class="text-warning">⭐ Promedio: 4.6 / 5</p>
+          <button class="btn btn-outline-success btn-sm add-to-cart"
+                  data-product="Termotanque Solar"
+                  data-price="20000">
+            🛒 Agregar al carrito
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 18 -->
+    <div class="col-12 col-md-4">
+      <div class="card h-100 shadow-sm">
+        <img src="{% static 'images/termotanque2.jpeg' %}" class="card-img-top" alt="Termotanque solar chico" />
+        <div class="card-body">
+          <h5 class="card-title">Termotanque Solar Chico</h5>
+          <p class="card-text">Sistema solar térmico confiable y duradero, ideal para reducir el consumo de gas o electricidad...</p>
+          <p class="text-success fw-bold">Precio: $18.000.000 ARS</p>
+          <p class="text-warning">⭐ Promedio: 4.6 / 5</p>
+          <button class="btn btn-outline-success btn-sm add-to-cart"
+                  data-product="Termotanque Solar Chico"
+                  data-price="18000">
+            🛒 Agregar al carrito
+          </button>
+        </div>
+      </div>
+    </div>
+
   </div>
 </section>
+
+<!-- Carrito -->
+{% include "partials/carrito.html" %}
+
 {% endblock %}

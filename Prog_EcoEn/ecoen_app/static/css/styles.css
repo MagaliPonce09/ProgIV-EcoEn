@@ -1,5 +1,5 @@
 /* ===========================
-   🌱 EcoEn - Estilos Globales
+  🌱 EcoEn - Estilos Globales
    =========================== */
 
 /* Reset básico */
@@ -9,11 +9,9 @@
   box-sizing: border-box;
 }
 
-/* Tipografía y colores base */
+/* Tipografía base */
 body {
   font-family: 'Segoe UI', Arial, sans-serif;
-  background-color: #f9f9f9;
-  color: #333;
   line-height: 1.6;
 }
 
@@ -26,63 +24,45 @@ a:hover {
   text-decoration: underline;
 }
 
-/* Botones generales */
+/* Botones */
 .btn-primary,
 .btn-success {
-  background: #2e7d32;
-  color: #fff;
   border: none;
   padding: 0.75rem;
   border-radius: 8px;
   cursor: pointer;
   transition: background 0.3s ease;
 }
-.btn-primary:hover,
-.btn-success:hover {
-  background: #1b5e20;
-}
 
+/* Botón Google fijo */
 .btn-google {
-  display: block;
-  background: #fff;
+  background-color: #ffffff;
   border: 1px solid #d32f2f;
   color: #d32f2f;
-  padding: 0.75rem;
-  border-radius: 8px;
-  text-decoration: none;
-  margin-top: 1rem;
-  transition: background 0.3s ease;
 }
 .btn-google:hover {
-  background: #fce4ec;
+  background-color: #fce4ec;
 }
 
 /* ===========================
    🔑 Login & Signup
    =========================== */
-
 .auth-section {
   display: flex;
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  background: linear-gradient(135deg, #e8f5e9, #f1f8e9);
+  background: linear-gradient(135deg, #dcedc8, #f1f8e9);
 }
 
 .auth-box {
-  background: #fff;
+  background: #f1f8e9;
   padding: 2rem;
   border-radius: 12px;
   box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-  width: 100%;
   max-width: 400px;
   text-align: center;
   animation: fadeIn 0.8s ease;
-}
-
-.logo {
-  max-width: 120px;
-  margin-bottom: 1rem;
 }
 
 .auth-title {
@@ -91,44 +71,13 @@ a:hover {
   margin-bottom: 1.5rem;
 }
 .auth-title span {
-  color: #1976d2;
-}
-
-.auth-form input {
-  width: 100%;
-  padding: 0.75rem;
-  margin-bottom: 1rem;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-}
-
-.separator {
-  display: flex;
-  align-items: center;
-  margin: 1.5rem 0;
-  color: #888;
-}
-.separator::before,
-.separator::after {
-  content: "";
-  flex: 1;
-  border-bottom: 1px solid #ccc;
-  margin: 0 0.5rem;
-}
-
-.auth-footer {
-  margin-top: 1rem;
-  font-size: 0.9rem;
-  color: #666;
+  color: #388e3c;
 }
 
 /* ===========================
-   🌍 Otros estilos globales
+   🌍 Navbar y Footer
    =========================== */
-
-/* Navbar */
 .navbar {
-  background: #2e7d32;
   padding: 1rem;
 }
 .navbar a {
@@ -139,13 +88,10 @@ a:hover {
   color: #c8e6c9;
 }
 
-/* Footer */
 .footer {
-  background: #f1f8e9;
   padding: 1rem;
   text-align: center;
   font-size: 0.85rem;
-  color: #555;
 }
 
 /* Animaciones */
@@ -157,28 +103,26 @@ a:hover {
 /* ===========================
    🍔 Menú hamburguesa flotante
    =========================== */
-
 .menu-toggle {
   position: fixed;
-  top: 20px;
-  right: 20px;
-  background: #2e7d32;
-  color: #fff;
+  top: 16px;
+  right: 16px;
+  background-color: #1b5e20;   /* verde oscuro fijo */
+  color: #ffffff;
   padding: 0.6rem 1rem;
   border-radius: 50px;
   font-size: 1.2rem;
   cursor: pointer;
-  z-index: 1000;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+  z-index: 2000;
+  border: 2px solid #145016;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.3);
   transition: background 0.3s ease;
 }
-.menu-toggle:hover {
-  background: #1b5e20;
-}
+.menu-toggle:hover { background-color: #145016; }
 
-/* ===========================
-   📋 Menú lateral oculto
-   =========================== */
+@media (min-width: 768px) {
+  .menu-toggle { display: inline-flex; }
+}
 
 .menu-lateral {
   position: fixed;
@@ -186,88 +130,9 @@ a:hover {
   right: -320px;
   width: 300px;
   height: 100vh;
-  background: #fff;
-  box-shadow: -2px 0 10px rgba(0,0,0,0.1);
-  padding: 2rem 1rem;
-  transition: right 0.3s ease;
-  z-index: 999;
-  overflow-y: auto;
-}
-
-/* ✅ Menú activo */
-.menu-lateral.active {
-  right: 0;
-}
-
-/* ❌ Botón cerrar */
-.close-btn {
-  position: absolute;
-  top: 10px;
-  left: 10px;
-  font-size: 1.5rem;
-  cursor: pointer;
-  color: #d32f2f;
-}
-
-/* 👤 Encabezado del menú */
-.menu-header {
-  font-weight: bold;
-  margin-bottom: 1rem;
-  color: #2e7d32;
-}
-
-/* ===========================
-   📱 Responsividad
-   =========================== */
-
-@media (min-width: 768px) {
-  .menu-toggle {
-    display: none;
-  }
-}
-
-/* ===========================
-   🎨 Header y Navbar personalizados
-   =========================== */
-
-/* Color de fondo azul EcoEn */
-.bg-azul {
-  background-color: #1976d2; /* azul intenso */
-  color: #fff;
-}
-
-/* Header */
-header h1 {
-  font-size: 1.8rem;
-  font-weight: bold;
-  color: #fff;
-}
-
-/* 🍔 Botón hamburguesa flotante */
-.menu-toggle {
-  position: fixed;
-  top: 16px;
-  right: 16px;
-  background: #2e7d32;
-  color: #fff;
-  padding: 0.6rem 1rem;
-  border-radius: 50px;
-  font-size: 1.2rem;
-  cursor: pointer;
-  z-index: 2000; /* por encima de todo */
-  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
-  transition: background 0.3s ease;
-}
-.menu-toggle:hover { background: #1b5e20; }
-
-/* 📋 Menú lateral */
-.menu-lateral {
-  position: fixed;
-  top: 0;
-  right: -320px; /* oculto */
-  width: 300px;
-  height: 100vh;
-  background: #fff;
+  background: #1b5e20;   /* verde oscuro fijo */
+  color: #ffffff;
+  border-left: 3px solid #145016;
   box-shadow: -2px 0 10px rgba(0,0,0,0.12);
   padding: 2rem 1rem;
   transition: right 0.3s ease;
@@ -276,24 +141,162 @@ header h1 {
 }
 .menu-lateral.active { right: 0; }
 
-/* ❌ Botón cerrar */
-.close-btn {
-  position: absolute;
-  top: 10px;
-  left: 10px;
-  font-size: 1.5rem;
-  cursor: pointer;
-  color: #d32f2f;
-}
-
-/* 👤 Encabezado del menú */
 .menu-header {
   font-weight: bold;
   margin-bottom: 1rem;
-  color: #2e7d32;
+  color: #ffffff;
 }
 
-/* 📱 Responsividad */
-@media (min-width: 768px) {
-  .menu-toggle { display: none; } /* ocultar en escritorio */
+.menu-lateral a,
+.menu-lateral .btn {
+  color: #ffffff;
+}
+.menu-lateral a:hover {
+  color: #c8e6c9;
+}
+
+.menu-lateral .btn,
+.menu-lateral .btn-primary,
+.menu-lateral .btn-success,
+.menu-lateral .btn-outline-secondary {
+  background: #2e7d32;
+  color: #ffffff;
+  border: 1px solid #145016;
+}
+.menu-lateral .btn:hover {
+  background: #145016;
+}
+
+.menu-lateral .btn-danger {
+  background: #d32f2f;
+  color: #ffffff;
+  border: 1px solid #9a1f1f;
+}
+.menu-lateral .btn-danger:hover {
+  background: #9a1f1f;
+}
+
+.close-btn { display: none !important; }
+
+/* ===========================
+   🎨 Header
+   =========================== */
+header {
+  background-color: #43a047;
+}
+header h1 {
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: #1b5e20;
+}
+
+/* ===========================
+   🛒 Cards de productos
+   =========================== */
+.container {
+  padding-bottom: 50px;
+}
+
+.card {
+  border-radius: 10px;
+  transition: transform 0.2s ease, box-shadow 0.3s ease;
+}
+.card:hover {
+  transform: scale(1.02);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.card-img-top {
+  height: 200px;
+  object-fit: cover;
+  border-bottom: 1px solid #eee;
+}
+@media (max-width: 768px) {
+  .card-img-top { height: 160px; }
+}
+
+.card-title {
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-bottom: 10px;
+  color: #1b5e20;
+}
+
+.card-text {
+  font-size: 0.95rem;
+  color: #33691e;
+}
+
+/* ===========================
+   🌞 Modo claro (verdes vivos)
+   =========================== */
+body.light-mode {
+  background-color: #e6f5e1;
+  color: #2e2e2e;
+}
+
+body.light-mode .navbar {
+  background: #2e7d32;
+}
+
+body.light-mode header {
+  background-color: #43a047;
+}
+body.light-mode header h1 {
+  color: #1b5e20;
+}
+
+body.light-mode .card {
+  background-color: #f1f8e9;
+  border: 1px solid #c8e6c9;
+  color: #2e2e2e;
+}
+body.light-mode .card-title { color: #1b5e20; }
+body.light-mode .card-text { color: #33691e; }
+
+body.light-mode .btn-primary,
+body.light-mode .btn-success {
+  background-color: #2e7d32;
+  color: #fff;
+}
+body.light-mode .btn-primary:hover,
+body.light-mode .btn-success:hover {
+  background-color: #1b5e20;
+}
+
+/* ===========================
+   🌙 Modo oscuro (verdes profundos armónicos)
+   =========================== */
+body.dark-mode {
+  background-color: #0d1f12;   /* verde bosque profundo */
+  color: #c8e6c9;              /* texto verde claro */
+}
+
+body.dark-mode .navbar {
+  background: #145016;         /* verde oscuro elegante */
+}
+
+body.dark-mode header {
+  background-color: #145016;
+}
+body.dark-mode header h1 {
+  color: #a5d6a7;              /* verde suave */
+}
+
+body.dark-mode .card {
+  background-color: #1e2d1f;   /* verde grisáceo */
+  border: 1px solid #2e7d32;
+  color: #c8e6c9;
+}
+body.dark-mode .card-title { color: #a5d6a7; }
+body.dark-mode .card-text { color: #c8e6c9; }
+
+body.dark-mode .btn-primary,
+body.dark-mode .btn-success {
+  background-color: #2e7d32;
+  color: #ffffff;
+}
+body.dark-mode .btn-primary:hover,
+body.dark-mode .btn-success:hover {
+  background-color: #1b5e20;
 }

@@ -20,4 +20,5 @@ from django.urls import path, include
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('Prog_EcoEn.ecoen_app.urls')),
+    path('chatbot/', include('chatbot.urls')),  # <— ruta base del chatbot
 ]
