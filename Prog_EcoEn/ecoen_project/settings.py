@@ -69,9 +69,16 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'allauth.account.middleware.AccountMiddleware',
-
+    # apps de Django
+    'django.contrib.sites',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    # si usas login con Google, Facebook, etc.
+    'allauth.socialaccount.providers.google',
 ]
 
+SITE_ID = 1
 
 TEMPLATES = [
     {
