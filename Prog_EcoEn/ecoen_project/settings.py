@@ -12,6 +12,15 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 
 from pathlib import Path
 from decouple import config
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+
+# Configuración de Azure OpenAI (Copilot)
+AZURE_OPENAI_ENDPOINT = os.getenv("AZURE_OPENAI_ENDPOINT")  # ej: https://tu-recurso.openai.azure.com/
+AZURE_OPENAI_API_KEY = os.getenv("AZURE_OPENAI_API_KEY")
+AZURE_OPENAI_API_VERSION = "2024-08-01-preview"  # versión estable
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -37,6 +46,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.sites',
+    'ecoen_app', 
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
@@ -57,7 +67,8 @@ AUTHENTICATION_BACKENDS = [
 LOGIN_REDIRECT_URL = '/'        # adonde redirige después de login
 LOGOUT_REDIRECT_URL = '/'       # adonde redirige después de logout
 ACCOUNT_EMAIL_VERIFICATION = "none"  # puedes poner "mandatory" si quieres verificar emails
-ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_SIGNUP_FIELDS = ['email*', 'username*', 'password1*', 'password2*']
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -69,16 +80,16 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'allauth.account.middleware.AccountMiddleware',
-    # apps de Django
-    'django.contrib.sites',
-    'allauth',
-    'allauth.account',
-    'allauth.socialaccount',
-    # si usas login con Google, Facebook, etc.
-    'allauth.socialaccount.providers.google',
+    
 ]
 
 SITE_ID = 1
+STATIC_URL = '/static/'
+STATICFILES_DIRS = [BASE_DIR / "static"]  # crea la carpeta si no existe
+STATIC_ROOT = BASE_DIR / "staticfiles"
+
+# Whitenoise config
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 TEMPLATES = [
     {
@@ -146,7 +157,6 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
 STATIC_URL = '/static/'
-STATICFILES_DIRS = [BASE_DIR / "static"]  # carpeta donde guardás tus imágenes, CSS, JS
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 # Archivos estáticos (CSS, JavaScript, imágenes)
