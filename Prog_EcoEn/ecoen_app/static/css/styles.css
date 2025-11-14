@@ -1,300 +1,302 @@
-/* === Reset básico === */
-body {
-  font-family: 'Montserrat', sans-serif;
+/* ===========================
+  🌱 EcoEn - Estilos Globales
+   =========================== */
+
+/* Reset básico */
+* {
   margin: 0;
   padding: 0;
+  box-sizing: border-box;
 }
 
-/* === Modo claro (paleta ecológica luminosa) === */
-body.light-mode {
-  background-color: #f0fff4 !important; /* verde muy claro */
-  color: #0d2b0d !important; /* verde oscuro para texto */
+/* Tipografía base */
+body {
+  font-family: 'Segoe UI', Arial, sans-serif;
+  line-height: 1.6;
 }
 
-/* === Modo oscuro (paleta ecológica sobria) === */
-body.dark-mode {
-  background-color: #0f1c0f !important; /* verde muy oscuro */
-  color: #e0f2e9 !important; /* verde claro para texto */
+/* Links */
+a {
+  color: #2e7d32;
+  text-decoration: none;
+}
+a:hover {
+  text-decoration: underline;
 }
 
-/* Header */
-body.light-mode header {
-  background-color: #2196f3 !important; /* azul cielo */
-  color: #ffffff !important;
-}
-
-body.dark-mode header {
-  background-color: #0b3d0b !important; /* verde bosque */
-  color: #e0f2e9 !important;
-}
-
-/* Navbar */
-body.light-mode nav {
-  background-color: #2196f3 !important; /* azul cielo */
-}
-
-body.dark-mode nav {
-  background-color: #0b3d0b !important; /* verde bosque */
-}
-
-body.light-mode .navbar .nav-link {
-  color: #0d2b0d !important; /* verde oscuro */
-}
-
-body.dark-mode .navbar .nav-link {
-  color: #e0f2e9 !important; /* verde claro */
-}
-
-/* Hero */
-.bg-solar {
-  background: linear-gradient(135deg, #fff176, #ffb74d) !important; /* amarillo solar + naranja suave */
-}
-
-body.dark-mode .bg-solar {
-  background: linear-gradient(135deg, #1b5e20, #0f3d0f) !important; /* verdes oscuros */
-}
-
-/* Footer */
-body.light-mode .bg-footer {
-  background-color: #2196f3 !important; /* azul cielo */
-  color: #ffffff !important;
-}
-
-body.dark-mode .bg-footer {
-  background-color: #0b3d0b !important;
-  color: #e0f2e9 !important;
-}
-
-/* Botón verde personalizado */
-.btn-verde {
-  background-color: #4caf50;
-  color: #fff;
+/* Botones */
+.btn-primary,
+.btn-success {
   border: none;
+  padding: 0.75rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.3s ease;
 }
 
-.btn-verde:hover {
-  background-color: #388e3c;
+/* Botón Google fijo */
+.btn-google {
+  background-color: #ffffff;
+  border: 1px solid #d32f2f;
+  color: #d32f2f;
+}
+.btn-google:hover {
+  background-color: #fce4ec;
 }
 
-/* Opiniones título */
-.opiniones-titulo {
-  font-size: 2rem;
+/* ===========================
+   🔑 Login & Signup
+   =========================== */
+.auth-section {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #dcedc8, #f1f8e9);
+}
+
+.auth-box {
+  background: #f1f8e9;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  max-width: 400px;
+  text-align: center;
+  animation: fadeIn 0.8s ease;
+}
+
+.auth-title {
   font-weight: bold;
   color: #2e7d32;
-  animation: colorChangeLight 5s infinite alternate;
+  margin-bottom: 1.5rem;
+}
+.auth-title span {
+  color: #388e3c;
 }
 
-@keyframes colorChangeLight {
-  from { color: #2e7d32; }
-  to { color: #fbc02d; }
+/* ===========================
+   🌍 Navbar y Footer
+   =========================== */
+.navbar {
+  padding: 1rem;
+}
+.navbar a {
+  color: #fff;
+  margin-right: 1rem;
+}
+.navbar a:hover {
+  color: #c8e6c9;
 }
 
-body.dark-mode .opiniones-titulo {
-  animation: colorChangeDark 5s infinite alternate;
+.footer {
+  padding: 1rem;
+  text-align: center;
+  font-size: 0.85rem;
 }
 
-@keyframes colorChangeDark {
-  from { color: #cddc39; }
-  to { color: #4caf50; }
+/* Animaciones */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
-/* Tarjetas de opiniones */
-.opinion-card {
-  background-color: #ffffff !important;
-  color: #0d2b0d !important;
-  border-radius: 8px;
-  border: 1px solid #a5d6a7;
-}
-
-body.dark-mode .opinion-card {
-  background-color: #1e2d1e !important;
-  color: #e0f2e9 !important;
-  border: 1px solid #4caf50;
-}
-
-/* Sección reseñas */
-body.light-mode .bg-claro {
-  background-color: #f0fff4 !important;
-  color: #0d2b0d !important;
-}
-
-body.dark-mode .bg-claro {
-  background-color: #1e2d1e !important;
-  color: #e0f2e9 !important;
-}
-
-/* Cards de productos */
-.zoom-card {
-  transition: transform 0.3s ease;
-}
-
-.zoom-card:hover {
-  transform: scale(1.05);
-}
-
-.card-title {
-  font-weight: bold;
-}
-
-.card-text {
-  font-size: 0.95rem;
-}
-
-/* Ajustes generales */
-h1, h2, h5 {
-  margin: 0;
-}
-
-p {
-  margin: 0.5rem 0;
-}
-
-#carouselEcoEn img {
-  max-height: 400px;
-  object-fit: cover;
-}
-
-/*menu hamburguesa*/
+/* ===========================
+   🍔 Menú hamburguesa flotante
+   =========================== */
 .menu-toggle {
   position: fixed;
-  top: 20px;
-  right: 20px;
-  background: #333;
-  color: white;
-  padding: 10px 15px;
+  top: 16px;
+  right: 16px;
+  background-color: #1b5e20;   /* verde oscuro fijo */
+  color: #ffffff;
+  padding: 0.6rem 1rem;
   border-radius: 50px;
+  font-size: 1.2rem;
   cursor: pointer;
-  z-index: 1000;
+  z-index: 2000;
+  border: 2px solid #145016;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+  transition: background 0.3s ease;
+}
+.menu-toggle:hover { background-color: #145016; }
+
+@media (min-width: 768px) {
+  .menu-toggle { display: inline-flex; }
 }
 
 .menu-lateral {
   position: fixed;
   top: 0;
-  right: -300px;
+  right: -320px;
   width: 300px;
-  height: 100%;
-  background: white;
-  box-shadow: -2px 0 5px rgba(0,0,0,0.3);
-  padding: 20px;
+  height: 100vh;
+  background: #1b5e20;   /* verde oscuro fijo */
+  color: #ffffff;
+  border-left: 3px solid #145016;
+  box-shadow: -2px 0 10px rgba(0,0,0,0.12);
+  padding: 2rem 1rem;
   transition: right 0.3s ease;
-  z-index: 999;
+  z-index: 1999;
+  overflow-y: auto;
+}
+.menu-lateral.active { right: 0; }
+
+.menu-header {
+  font-weight: bold;
+  margin-bottom: 1rem;
+  color: #ffffff;
 }
 
-.menu-lateral.active {
-  right: 0;
+.menu-lateral a,
+.menu-lateral .btn {
+  color: #ffffff;
+}
+.menu-lateral a:hover {
+  color: #c8e6c9;
 }
 
-.close-btn {
-  position: absolute;
-  top: 10px;
-  right: 15px;
-  font-size: 20px;
-  cursor: pointer;
+.menu-lateral .btn,
+.menu-lateral .btn-primary,
+.menu-lateral .btn-success,
+.menu-lateral .btn-outline-secondary {
+  background: #2e7d32;
+  color: #ffffff;
+  border: 1px solid #145016;
+}
+.menu-lateral .btn:hover {
+  background: #145016;
 }
 
-.opiniones {
-  text-align: center;
-  padding: 2rem;
-  background-color: #e6f5e6;
+.menu-lateral .btn-danger {
+  background: #d32f2f;
+  color: #ffffff;
+  border: 1px solid #9a1f1f;
+}
+.menu-lateral .btn-danger:hover {
+  background: #9a1f1f;
 }
 
-.testimonios p {
-  margin: 1rem auto;
-  font-size: 1.1rem;
-  max-width: 600px;
+.close-btn { display: none !important; }
+
+/* ===========================
+   🎨 Header
+   =========================== */
+header {
+  background-color: #43a047;
 }
-.contenedor-principal {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 2rem;
-  justify-content: center;
-  padding: 2rem;
+header h1 {
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: #1b5e20;
 }
 
-.card {
-  background-color: #ffffff;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  padding: 1.5rem;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-  width: 100%;
-  max-width: 400px;
-}
-.star {
-  font-size: 1.5rem;
-  cursor: pointer;
-  color: #ccc;
-  transition: color 0.2s;
-}
-
-.star.text-warning {
-  color: #ffc107;
-}
-
-/* Contenedor general */
+/* ===========================
+   🛒 Cards de productos
+   =========================== */
 .container {
   padding-bottom: 50px;
 }
 
-/* Cards */
 .card {
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  transition: transform 0.2s ease;
-  background-color: #fff;
+  border-radius: 10px;
+  transition: transform 0.2s ease, box-shadow 0.3s ease;
 }
-
 .card:hover {
   transform: scale(1.02);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
 }
 
-/* Imágenes */
 .card-img-top {
   height: 200px;
   object-fit: cover;
   border-bottom: 1px solid #eee;
 }
+@media (max-width: 768px) {
+  .card-img-top { height: 160px; }
+}
 
-/* Títulos */
 .card-title {
   font-size: 1.2rem;
   font-weight: 600;
   margin-bottom: 10px;
+  color: #1b5e20;
 }
 
-/* Texto */
 .card-text {
   font-size: 0.95rem;
-  color: #444;
+  color: #33691e;
 }
 
-/* Precio */
-.text-success {
-  font-size: 1rem;
+/* ===========================
+   🌞 Modo claro (verdes vivos)
+   =========================== */
+body.light-mode {
+  background-color: #e6f5e1;
+  color: #2e2e2e;
 }
 
-/* Puntuación */
-.text-warning {
-  font-size: 0.9rem;
+body.light-mode .navbar {
+  background: #2e7d32;
 }
 
-/* Botón carrito */
-.add-to-cart {
-  margin-top: 10px;
-  width: 100%;
+body.light-mode header {
+  background-color: #43a047;
+}
+body.light-mode header h1 {
+  color: #1b5e20;
 }
 
-/* Reseñas */
-.opinion-card {
-  background-color: #f8f9fa;
-  font-style: italic;
-  font-size: 0.95rem;
-  border-left: 4px solid #198754;
+body.light-mode .card {
+  background-color: #f1f8e9;
+  border: 1px solid #c8e6c9;
+  color: #2e2e2e;
+}
+body.light-mode .card-title { color: #1b5e20; }
+body.light-mode .card-text { color: #33691e; }
+
+body.light-mode .btn-primary,
+body.light-mode .btn-success {
+  background-color: #2e7d32;
+  color: #fff;
+}
+body.light-mode .btn-primary:hover,
+body.light-mode .btn-success:hover {
+  background-color: #1b5e20;
 }
 
-/* Responsive ajustes */
-@media (max-width: 768px) {
-  .card-img-top {
-    height: 160px;
-  }
+/* ===========================
+   🌙 Modo oscuro (verdes profundos armónicos)
+   =========================== */
+body.dark-mode {
+  background-color: #0d1f12;   /* verde bosque profundo */
+  color: #c8e6c9;              /* texto verde claro */
+}
+
+body.dark-mode .navbar {
+  background: #145016;         /* verde oscuro elegante */
+}
+
+body.dark-mode header {
+  background-color: #145016;
+}
+body.dark-mode header h1 {
+  color: #a5d6a7;              /* verde suave */
+}
+
+body.dark-mode .card {
+  background-color: #1e2d1f;   /* verde grisáceo */
+  border: 1px solid #2e7d32;
+  color: #c8e6c9;
+}
+body.dark-mode .card-title { color: #a5d6a7; }
+body.dark-mode .card-text { color: #c8e6c9; }
+
+body.dark-mode .btn-primary,
+body.dark-mode .btn-success {
+  background-color: #2e7d32;
+  color: #ffffff;
+}
+body.dark-mode .btn-primary:hover,
+body.dark-mode .btn-success:hover {
+  background-color: #1b5e20;
 }

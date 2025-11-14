@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<section class="auth-section">
+  <div class="auth-box">
+    <!-- Logo -->
+    <div class="logo-container">
+      <img src="{% static 'ecoen_app/images/logo-ecoen.png' %}" alt="EcoEn Logo" class="logo">
+    </div>
+
+    <!-- Título -->
+    <h2 class="auth-title">Bienvenido a <span>EcoEn</span></h2>
+
+    <!-- Formulario modular -->
+    {% include "account/components/_form_login.html" %}
+
+    <!-- Separador -->
+    <div class="separator">o</div>
+
+    <!-- Botón Google -->
+    <a href="{% provider_login_url 'google' %}" class="btn-google">
+      Iniciar sesión con Google
+    </a>
+
+    <!-- Footer -->
+    <p class="auth-footer">
+      ¿No tienes cuenta? <a href="{% url 'account_signup' %}">Regístrate aquí</a>
+    </p>
+  </div>
+</section>
+{% endblock %}

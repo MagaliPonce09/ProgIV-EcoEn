@@ -40,7 +40,8 @@ document.addEventListener("DOMContentLoaded", () => {
   const body = document.body;
 
   if (toggleBtn) {
-    if (localStorage.getItem("theme") === "dark") {
+    const savedTheme = localStorage.getItem("theme");
+    if (savedTheme === "dark") {
       body.classList.add("dark-mode");
       body.classList.remove("light-mode");
       toggleBtn.textContent = "☀️ Modo claro";
@@ -81,11 +82,22 @@ document.addEventListener("DOMContentLoaded", () => {
       const li = document.createElement("li");
       li.className =
         "list-group-item d-flex justify-content-between align-items-center";
-      li.innerHTML = `
-        <span>${item.nombre}</span>
-        <span>$${item.precio}</span>
-        <button onclick="eliminarDelCarrito(${index})" class="btn btn-sm btn-danger">🗑️</button>
-      `;
+
+      const spanNombre = document.createElement("span");
+      spanNombre.textContent = item.nombre;
+
+      const spanPrecio = document.createElement("span");
+      spanPrecio.textContent = `$${item.precio}`;
+
+      const btnEliminar = document.createElement("button");
+      btnEliminar.className = "btn btn-sm btn-danger";
+      btnEliminar.textContent = "🗑️";
+      btnEliminar.addEventListener("click", () => {
+        carrito.splice(index, 1);
+        actualizarCarrito();
+      });
+
+      li.append(spanNombre, spanPrecio, btnEliminar);
       carritoLista.appendChild(li);
     });
 
@@ -94,15 +106,10 @@ document.addEventListener("DOMContentLoaded", () => {
     carritoTotal.textContent = totalConvertido.toFixed(2) + " " + moneda;
   }
 
-  window.eliminarDelCarrito = function (index) {
-    carrito.splice(index, 1);
-    actualizarCarrito();
-  };
-
   document.querySelectorAll(".add-to-cart").forEach((btn) => {
     btn.addEventListener("click", () => {
-      const nombre = btn.getAttribute("data-product");
-      const precio = parseFloat(btn.getAttribute("data-price"));
+      const nombre = btn.dataset.product;
+      const precio = parseFloat(btn.dataset.price);
       carrito.push({ nombre, precio });
       actualizarCarrito();
     });
@@ -123,13 +130,13 @@ document.addEventListener("DOMContentLoaded", () => {
     metodosPago.classList.remove("d-none");
   });
 
-  window.simularMercadoPago = function () {
+  document.getElementById("btn-mercado-pago")?.addEventListener("click", () => {
     window.location.href = "/confirmar-pago/mercado_pago/";
-  };
+  });
 
-  window.mostrarTransferencia = function () {
+  document.getElementById("btn-transferencia")?.addEventListener("click", () => {
     datosTransferencia.classList.remove("d-none");
-  };
+  });
 
   // === PUNTUACIÓN DE PRODUCTOS ===
   document.querySelectorAll(".rating").forEach((ratingBlock) => {

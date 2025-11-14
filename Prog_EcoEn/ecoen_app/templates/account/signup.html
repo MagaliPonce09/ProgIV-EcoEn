@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'ecoen_app/css/styles.css' %}">
+{% load socialaccount %}
+
+{% block content %}
+<section class="d-flex justify-content-center align-items-center bg-gradient full-height">
+  <div class="login-container signup-box animate__animated animate__fadeIn">
+    
+    <!-- Logo o ícono -->
+    <div class="text-center mb-3">
+      <img src="{% static 'img/logo-ecoen.png' %}" alt="EcoEn Logo" class="logo-ecoen">
+    </div>
+
+    <!-- Título -->
+    <h2 class="text-center text-success mb-4 fw-bold">
+      Crear cuenta en <span class="text-primary">EcoEn</span>
+    </h2>
+
+    <!-- Formulario de signup -->
+    {% include "components/_form_signup.html" %}
+
+    <!-- Separador -->
+    <hr class="my-4">
+
+    <!-- Botón Google -->
+    <a href="{% provider_login_url 'google' process='signup' %}" class="btn btn-outline-danger w-100 mb-2">
+      <i class="bi bi-google me-2"></i> Registrarse con Google
+    </a>
+
+    <!-- Login -->
+    <p class="text-center mt-3 text-muted">
+      ¿Ya tienes una cuenta?
+      <a href="{% url 'account_login' %}" class="text-success fw-bold">Inicia sesión aquí</a>
+    </p>
+
+    <!-- Nota footer -->
+    <div class="footer-note text-center mt-3 text-muted small">
+      Plataforma de energías renovables 🌞💨
+    </div>
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,29 @@
+{% extends "index.html" %}
+{% block title %}Perfil de Usuario{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <h2 class="mb-4">Perfil de {{ request.user.username }}</h2>
+
+    <div class="row align-items-center">
+        <div class="col-md-3 text-center">
+            {% if profile.avatar %}
+                <img src="{{ profile.avatar.url }}" alt="Avatar" class="img-fluid rounded-circle" width="150" height="150">
+            {% else %}
+                <img src="https://ui-avatars.com/api/?name={{ user.username }}&background=random" alt="Avatar" class="img-fluid rounded-circle" width="150" height="150">
+            {% endif %}
+        </div>
+        <div class="col-md-9">
+            <p><strong>Bio:</strong> {{ profile.bio|default:"Sin biografía aún." }}</p>
+            <p><strong>Website:</strong> 
+                {% if profile.website %}
+                    <a href="{{ profile.website }}" target="_blank">{{ profile.website }}</a>
+                {% else %}
+                    No especificado
+                {% endif %}
+            </p>
+            <a href="{% url 'edit_profile' %}" class="btn btn-verde">Editar perfil</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

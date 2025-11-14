@@ -1,14 +1,7 @@
-from .models import Opinion
-from django.contrib.auth import login, logout, authenticate
+from django.contrib.auth import login, logout
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
-from django.shortcuts import render, redirect
-from .models import Producto
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
-from .models import Producto, Opinion, Compra, Puntuacion
-from django.db.models import Avg
-from django.shortcuts import get_object_or_404
-from .models import Perfil
-from .forms import EditarPerfilForm
 from django.contrib import messages
 import json
 from django.http import JsonResponse
@@ -38,6 +31,10 @@ def chatbot_view(request):
         return JsonResponse({"reply": bot_reply})
 
 
+from .models import Producto, Opinion, Compra, Puntuacion, Perfil
+from .forms import EditarPerfilForm
+from allauth.account.views import LoginView, SignupView
+
 
 def index(request):
     productos = Producto.objects.all()
@@ -50,13 +47,14 @@ def index(request):
     for producto in productos:
         producto.puntuacion_usuario = puntuaciones_usuario.get(producto.id, 0)
 
-    opiniones = Opinion.objects.all()  # ✅ Agregado
+    opiniones = Opinion.objects.all()
 
     context = {
         "productos": productos,
-        "opiniones": opiniones,  # ✅ Agregado
+        "opiniones": opiniones,
     }
     return render(request, "index.html", context)
+
 
 def iniciar_sesion(request):
     if request.method == "POST":
@@ -68,6 +66,7 @@ def iniciar_sesion(request):
     else:
         form = AuthenticationForm()
     return render(request, "login.html", {"form": form})
+
 
 def cerrar_sesion(request):
     logout(request)
@@ -88,9 +87,11 @@ def productos(request):
 
     return render(request, "producto.html", {"productos": productos, "query": query})
 
+
 @login_required
 def crear_producto(request):
-    if not request.user.perfil.es_vendedor:
+    perfil, _ = Perfil.objects.get_or_create(user=request.user)
+    if not perfil.es_vendedor:
         return redirect("productos")
 
     if request.method == "POST":
@@ -111,12 +112,16 @@ def crear_producto(request):
 
     return render(request, "crear_producto.html")
 
-def enviar_opinion(request):
+
+
+def opinion_view(request):
     if request.method == "POST":
+        nombre = request.POST.get("nombre")
         mensaje = request.POST.get("mensaje")
-        if mensaje and request.user.is_authenticated:
-            Opinion.objects.create(nombre=request.user.username, mensaje=mensaje)
-    return redirect("inicio")
+        Opinion.objects.create(nombre=nombre, mensaje=mensaje)
+        return redirect("opinion")
+    opiniones = Opinion.objects.all()
+    return render(request, "opinion.html", {"opiniones": opiniones})
 
 @login_required
 def carrito(request):
@@ -126,32 +131,32 @@ def carrito(request):
 
 def confirmar_pago(request, metodo):
     if not request.user.is_authenticated:
-        return redirect("login")
+        return redirect("custom_login")  # corregido
 
-    # Simulación: guardar una compra ficticia
     Compra.objects.create(
         usuario=request.user,
         metodo_pago=metodo,
-        total=calcular_total_carrito(request),  # función que suma los ítems
+        total=calcular_total_carrito(request),
         estado="simulado"
     )
 
     return redirect(f"/?confirmacion=1&metodo={metodo}")
 
+
 def calcular_total_carrito(request):
-    # Simulación: suma ficticia de ítems del carrito
-    # En producción, deberías sumar los precios reales desde sesión o base de datos
     return 1000.00  # valor simulado en ARS
+
 
 def registro(request):
     if request.method == "POST":
         form = UserCreationForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect("login")  # o redirigí a donde quieras
+            return redirect("custom_login")  # corregido
     else:
         form = UserCreationForm()
     return render(request, "registro.html", {"form": form})
+
 
 def producto_detalle(request, id):
     producto = get_object_or_404(Producto, id=id)
@@ -166,9 +171,10 @@ def producto_detalle(request, id):
         "puntuacion_usuario": puntuacion_usuario
     })
 
+
 @login_required
 def mi_perfil(request):
-    perfil, creado = Perfil.objects.get_or_create(user=request.user)
+    perfil, _ = Perfil.objects.get_or_create(user=request.user)
     compras = Compra.objects.filter(usuario=request.user).order_by("-fecha")
     opiniones = Opinion.objects.filter(nombre=request.user.username).order_by("-fecha")
 
@@ -178,9 +184,10 @@ def mi_perfil(request):
         "opiniones": opiniones
     })
 
+
 @login_required
 def editar_perfil(request):
-    perfil = request.user.perfil
+    perfil, _ = Perfil.objects.get_or_create(user=request.user)
 
     if request.method == "POST":
         form = EditarPerfilForm(request.POST, request.FILES, instance=perfil, user=request.user)
@@ -194,3 +201,11 @@ def editar_perfil(request):
         form = EditarPerfilForm(instance=perfil, user=request.user)
 
     return render(request, "editar_perfil.html", {"form": form})
+
+
+class CustomLoginView(LoginView):
+    template_name = "account/login.html"
+
+
+class CustomSignupView(SignupView):
+    template_name = "account/signup.html"
