@@ -45,7 +45,7 @@ a:hover {
 }
 
 /* ===========================
-   🔑 Login & Signup
+  🔑 Login & Signup
    =========================== */
 .auth-section {
   display: flex;
@@ -75,7 +75,7 @@ a:hover {
 }
 
 /* ===========================
-   🌍 Navbar y Footer
+  🌍 Navbar y Footer
    =========================== */
 .navbar {
   padding: 1rem;
@@ -101,7 +101,7 @@ a:hover {
 }
 
 /* ===========================
-   🍔 Menú hamburguesa flotante
+  🍔 Menú hamburguesa flotante
    =========================== */
 .menu-toggle {
   position: fixed;
@@ -179,7 +179,7 @@ a:hover {
 .close-btn { display: none !important; }
 
 /* ===========================
-   🎨 Header
+  🎨 Header
    =========================== */
 header {
   background-color: #43a047;
@@ -191,7 +191,7 @@ header h1 {
 }
 
 /* ===========================
-   🛒 Cards de productos
+  🛒 Cards de productos
    =========================== */
 .container {
   padding-bottom: 50px;
@@ -228,7 +228,7 @@ header h1 {
 }
 
 /* ===========================
-   🌞 Modo claro (verdes vivos)
+  🌞 Modo claro (verdes vivos)
    =========================== */
 body.light-mode {
   background-color: #e6f5e1;
@@ -265,7 +265,7 @@ body.light-mode .btn-success:hover {
 }
 
 /* ===========================
-   🌙 Modo oscuro (verdes profundos armónicos)
+  🌙 Modo oscuro (verdes profundos armónicos)
    =========================== */
 body.dark-mode {
   background-color: #0d1f12;   /* verde bosque profundo */

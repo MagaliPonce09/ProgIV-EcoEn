@@ -15,10 +15,11 @@ AZURE_OPENAI_API_KEY = os.getenv("AZURE_OPENAI_API_KEY")
 AZURE_OPENAI_API_VERSION = "2024-08-01-preview"  # versión estable
 
 BASE_DIR = Path(__file__).resolve().parent.parent
+load_dotenv(BASE_DIR / ".env")
 
 # Seguridad
-SECRET_KEY = config('SECRET_KEY')
-DEBUG = config('DEBUG', default=False, cast=bool)
+SECRET_KEY = os.getenv("SECRET_KEY")
+DEBUG = os.getenv("DEBUG", "False") == "True"
 ALLOWED_HOSTS = config(
     'ALLOWED_HOSTS',
     default='localhost',
@@ -34,12 +35,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.sites',
-<<<<<<< HEAD
-    'ecoen_app', 
-=======
 
     # Allauth
->>>>>>> 1e1cde8f33ebc315da7b2eae982ebf2c723b4289
+
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
@@ -51,16 +49,13 @@ INSTALLED_APPS = [
     "chatbot",
 ]
 
-<<<<<<< HEAD
 # Configuración de allauth
 LOGIN_REDIRECT_URL = '/'        # adonde redirige después de login
 LOGOUT_REDIRECT_URL = '/'       # adonde redirige después de logout
 ACCOUNT_EMAIL_VERIFICATION = "none"  # puedes poner "mandatory" si quieres verificar emails
 ACCOUNT_SIGNUP_FIELDS = ['email*', 'username*', 'password1*', 'password2*']
 
-=======
 SITE_ID = 1
->>>>>>> 1e1cde8f33ebc315da7b2eae982ebf2c723b4289
 
 # Autenticación
 AUTHENTICATION_BACKENDS = [
@@ -96,23 +91,22 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'allauth.account.middleware.AccountMiddleware',
-<<<<<<< HEAD
     
 ]
 
 SITE_ID = 1
 STATIC_URL = '/static/'
-STATICFILES_DIRS = [BASE_DIR / "static"]  # crea la carpeta si no existe
-STATIC_ROOT = BASE_DIR / "staticfiles"
+
+STATICFILES_DIRS = [BASE_DIR / "static"]
+
+STATIC_ROOT = BASE_DIR / "staticfiles"   # ← ESTA ES LA QUE FALTABA
+
 
 # Whitenoise config
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
-=======
-]
 
 # Templates
->>>>>>> 1e1cde8f33ebc315da7b2eae982ebf2c723b4289
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -156,15 +150,8 @@ USE_TZ = True
 
 # Archivos estáticos
 STATIC_URL = '/static/'
-<<<<<<< HEAD
+
 STATIC_ROOT = BASE_DIR / 'staticfiles'
-=======
->>>>>>> 1e1cde8f33ebc315da7b2eae982ebf2c723b4289
-
-# Si quieres carpeta global de estáticos, descomenta:
-# STATICFILES_DIRS = [BASE_DIR / "static"]
-
-STATIC_ROOT = BASE_DIR / "staticfiles"
 
 # Archivos multimedia
 MEDIA_URL = '/media/'
@@ -172,3 +159,4 @@ MEDIA_ROOT = BASE_DIR / "media"
 
 # Configuración por defecto de IDs
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
