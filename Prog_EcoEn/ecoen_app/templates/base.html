@@ -103,10 +103,30 @@
     <!-- Contenido dinámico -->
     <main>{% block content %}{% endblock %}</main>
 
-    <!-- Scripts globales -->
+    <!-- Overlay detrás del chatbot -->
+    <div class="chatbot-overlay"></div>
+
+   <!-- Ventana del chatbot -->
+   <div class="chatbot-window">
+      <header>EcoBot 🌱</header>
+      <div class="chat-content">
+          <!-- mensajes -->
+      </div>
+      <footer>
+          <input type="text" placeholder="Escribe aquí...">
+      </footer>
+   </div>
+
+   <!-- Scripts globales -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script>
       /* tus funciones JS aquí (las que ya tenías) */
     </script>
+
+  <!-- Scripts al final -->
+   <script src="chatbot.js"></script>
+</body>
+</html>
+
 </body>
 </html>
