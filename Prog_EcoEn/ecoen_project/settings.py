@@ -27,6 +27,7 @@ ALLOWED_HOSTS = config(
 
 # Aplicaciones instaladas
 INSTALLED_APPS = [
+    # Django apps
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -34,12 +35,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.sites',
-<<<<<<< HEAD
-    'ecoen_app', 
-=======
 
     # Allauth
->>>>>>> 1e1cde8f33ebc315da7b2eae982ebf2c723b4289
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
@@ -51,16 +48,8 @@ INSTALLED_APPS = [
     "chatbot",
 ]
 
-<<<<<<< HEAD
-# Configuración de allauth
-LOGIN_REDIRECT_URL = '/'        # adonde redirige después de login
-LOGOUT_REDIRECT_URL = '/'       # adonde redirige después de logout
-ACCOUNT_EMAIL_VERIFICATION = "none"  # puedes poner "mandatory" si quieres verificar emails
-ACCOUNT_SIGNUP_FIELDS = ['email*', 'username*', 'password1*', 'password2*']
-
-=======
+# Configuración de sitios (necesario para allauth)
 SITE_ID = 1
->>>>>>> 1e1cde8f33ebc315da7b2eae982ebf2c723b4289
 
 # Autenticación
 AUTHENTICATION_BACKENDS = [
@@ -68,11 +57,12 @@ AUTHENTICATION_BACKENDS = [
     'allauth.account.auth_backends.AuthenticationBackend',
 ]
 
+# Redirecciones de login/logout
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
 
 # Configuración de Allauth
-ACCOUNT_EMAIL_VERIFICATION = "none"
+ACCOUNT_EMAIL_VERIFICATION = "none"  # puedes poner "mandatory" si quieres verificar emails
 ACCOUNT_SIGNUP_FIELDS = ['email*', 'username*', 'password1*', 'password2*']
 
 SOCIALACCOUNT_PROVIDERS = {
@@ -96,23 +86,9 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'allauth.account.middleware.AccountMiddleware',
-<<<<<<< HEAD
-    
-]
-
-SITE_ID = 1
-STATIC_URL = '/static/'
-STATICFILES_DIRS = [BASE_DIR / "static"]  # crea la carpeta si no existe
-STATIC_ROOT = BASE_DIR / "staticfiles"
-
-# Whitenoise config
-STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
-
-=======
 ]
 
 # Templates
->>>>>>> 1e1cde8f33ebc315da7b2eae982ebf2c723b4289
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -156,15 +132,11 @@ USE_TZ = True
 
 # Archivos estáticos
 STATIC_URL = '/static/'
-<<<<<<< HEAD
-STATIC_ROOT = BASE_DIR / 'staticfiles'
-=======
->>>>>>> 1e1cde8f33ebc315da7b2eae982ebf2c723b4289
-
-# Si quieres carpeta global de estáticos, descomenta:
-# STATICFILES_DIRS = [BASE_DIR / "static"]
-
+STATICFILES_DIRS = [BASE_DIR / "static"]  # opcional, si quieres carpeta global
 STATIC_ROOT = BASE_DIR / "staticfiles"
+
+# Whitenoise config
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 # Archivos multimedia
 MEDIA_URL = '/media/'
