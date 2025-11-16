@@ -7,15 +7,14 @@ from decouple import config
 import os
 from dotenv import load_dotenv
 
-load_dotenv()
+# Cargar variables de entorno
+BASE_DIR = Path(__file__).resolve().parent.parent
+load_dotenv(BASE_DIR / ".env")
 
 # Configuración de Azure OpenAI (Copilot)
 AZURE_OPENAI_ENDPOINT = os.getenv("AZURE_OPENAI_ENDPOINT")  # ej: https://tu-recurso.openai.azure.com/
 AZURE_OPENAI_API_KEY = os.getenv("AZURE_OPENAI_API_KEY")
 AZURE_OPENAI_API_VERSION = "2024-08-01-preview"  # versión estable
-
-BASE_DIR = Path(__file__).resolve().parent.parent
-load_dotenv(BASE_DIR / ".env")
 
 # Seguridad
 SECRET_KEY = os.getenv("SECRET_KEY")
@@ -38,10 +37,6 @@ INSTALLED_APPS = [
     'django.contrib.sites',
 
     # Allauth
-<<<<<<< HEAD
-=======
-
->>>>>>> 25a60429fedf6817dd0bf052b8b497f8f95e4154
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
@@ -51,32 +46,12 @@ INSTALLED_APPS = [
     "Prog_EcoEn.ecoen_app",
     'django_extensions',
     "chatbot",
-
 ]
 
-<<<<<<< HEAD
-# Configuración de sitios (necesario para allauth)
-=======
-# Configuración de allauth
+# Configuración de sitios y allauth
+SITE_ID = 1
 LOGIN_REDIRECT_URL = '/'        # adonde redirige después de login
 LOGOUT_REDIRECT_URL = '/'       # adonde redirige después de logout
-ACCOUNT_EMAIL_VERIFICATION = "none"  # puedes poner "mandatory" si quieres verificar emails
-ACCOUNT_SIGNUP_FIELDS = ['email*', 'username*', 'password1*', 'password2*']
-
->>>>>>> 25a60429fedf6817dd0bf052b8b497f8f95e4154
-SITE_ID = 1
-
-# Autenticación
-AUTHENTICATION_BACKENDS = [
-    'django.contrib.auth.backends.ModelBackend',
-    'allauth.account.auth_backends.AuthenticationBackend',
-]
-
-# Redirecciones de login/logout
-LOGIN_REDIRECT_URL = '/'
-LOGOUT_REDIRECT_URL = '/'
-
-# Configuración de Allauth
 ACCOUNT_EMAIL_VERIFICATION = "none"  # puedes poner "mandatory" si quieres verificar emails
 ACCOUNT_SIGNUP_FIELDS = ['email*', 'username*', 'password1*', 'password2*']
 
@@ -90,6 +65,12 @@ SOCIALACCOUNT_PROVIDERS = {
     }
 }
 
+# Autenticación
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+    'allauth.account.auth_backends.AuthenticationBackend',
+]
+
 # Middleware
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -101,24 +82,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'allauth.account.middleware.AccountMiddleware',
-<<<<<<< HEAD
 ]
-=======
-    
-]
-
-SITE_ID = 1
-STATIC_URL = '/static/'
-
-STATICFILES_DIRS = [BASE_DIR / "static"]
-
-STATIC_ROOT = BASE_DIR / "staticfiles"   # ← ESTA ES LA QUE FALTABA
-
-
-# Whitenoise config
-STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
-
->>>>>>> 25a60429fedf6817dd0bf052b8b497f8f95e4154
 
 # Templates
 TEMPLATES = [
@@ -164,13 +128,8 @@ USE_TZ = True
 
 # Archivos estáticos
 STATIC_URL = '/static/'
-<<<<<<< HEAD
 STATICFILES_DIRS = [BASE_DIR / "static"]  # opcional, si quieres carpeta global
 STATIC_ROOT = BASE_DIR / "staticfiles"
-=======
-
-STATIC_ROOT = BASE_DIR / 'staticfiles'
->>>>>>> 25a60429fedf6817dd0bf052b8b497f8f95e4154
 
 # Whitenoise config
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
