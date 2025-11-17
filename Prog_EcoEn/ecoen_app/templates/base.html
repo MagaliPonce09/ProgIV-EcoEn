@@ -28,35 +28,13 @@
        aria-expanded="false"
        aria-label="Abrir menú">
     <span id="menu-icon">
-    <!-- Botón flotante hamburguesa -->
-    <div id="menu-toggle" onclick="toggleMenu()" class="menu-toggle" aria-label="Abrir menú">
-      <span id="menu-icon">
-        {% if user.is_authenticated %}
-          👤 {{ user.username }}
-        {% else %}
-          ☰
-        {% endif %}
-      </span>
-    </div>
-
-    <!-- Menú lateral derecho -->
-    <div id="menu-lateral" class="menu-lateral">
       {% if user.is_authenticated %}
-        <p class="menu-header">👋 Hola, {{ user.username }}</p>
-        <a href="{% url 'custom_logout' %}" class="btn btn-danger w-100 mt-3">Cerrar sesión</a>
+        👤 {{ user.username }}
       {% else %}
-        <button onclick="toggleLoginOptions()" class="btn btn-primary w-100 mb-3">🔐 Iniciar sesión</button>
-        <div id="login-options" style="display: none; margin-top: 10px">
-          <a href="{% url 'custom_login' %}" class="btn btn-outline-primary">Iniciar sesión con usuario</a>
-          {# 
-          <a href="{% provider_login_url 'google' %}" class="btn btn-outline-danger">Iniciar sesión con Google</a>
-          #}
-          <p class="text-center mt-3">
-            ¿No tienes una cuenta?
-            <a href="{% url 'custom_signup' %}" class="text-success">Regístrate aquí</a>
-          </p>
-        </div>
+        ☰
       {% endif %}
+    </span>
+  </div>
 
   <!-- Overlay -->
   <div id="menu-overlay" class="menu-overlay"></div>
@@ -105,123 +83,35 @@
           <li class="nav-item"><a class="nav-link" href="#reseñas">Reseñas</a></li>
           <li class="nav-item"><a class="nav-link" href="#contacto">Contacto</a></li>
         </ul>
-      <a href="{% url 'mi_perfil' %}" class="btn btn-outline-secondary w-100 mt-3">👤 Ver perfil</a>
-
-      <button onclick="toggleConfig()" class="btn btn-secondary w-100 mt-4">⚙️ Configuración</button>
-      <div id="config-options" style="display: none" class="mt-2">
-        <button onclick="toggleDarkMode()" class="btn btn-dark w-100">🌙 Modo oscuro / claro</button>
       </div>
     </div>
+  </nav>
 
-    <!-- Header -->
-    <header class="text-center p-4 bg-azul d-flex justify-content-between align-items-center">
-      <h1 class="m-0">🌱 Energía Renovable</h1>
-    </header>
+  <!-- Contenido dinámico -->
+  <main>{% block content %}{% endblock %}</main>
+
+  <!-- Botón flotante con mascotita -->
+  <div id="chatbot-button">
+    <img src="{% static 'img/ecobot.png' %}" alt="EcoBot" style="width: 50px; height: 50px; cursor: pointer;" />
+  </div>
+
+  <!-- Overlay detrás del chatbot -->
+  <div id="chatbot-overlay" style="display: none;"></div>
+
+  <!-- Ventana del chatbot -->
+  <div id="chatbot-window" style="display: none;">
+    <header id="chatbot-header">🌱 EcoBot</header>
+    <div class="chat-content" id="chatbot-messages"></div>
+    <footer id="chatbot-input">
+        <input type="text" id="userMessage" placeholder="Escribe aquí..." />
+        <button onclick="sendMessage()">➤</button>
+    </footer>
+  </div>
 
   <!-- Scripts globales -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-  <script>
-    function toggleMenu() {
-      const menu = document.getElementById("menu-lateral");
-      const overlay = document.getElementById("menu-overlay");
-      const toggle = document.getElementById("menu-toggle");
-      const isActive = menu.classList.toggle("active");
-      overlay.classList.toggle("active", isActive);
-      toggle.setAttribute("aria-expanded", isActive ? "true" : "false");
-      document.body.classList.toggle("no-scroll", isActive);
-      if (isActive) {
-        const firstFocus = menu.querySelector("button, a");
-        if (firstFocus) firstFocus.focus();
-      } else {
-        toggle.focus();
-      }
-    }
-
-    function toggleLoginOptions() {
-      document.getElementById("login-options").classList.toggle("active");
-    }
-
-    function toggleConfig() {
-      document.getElementById("config-options").classList.toggle("active");
-    }
-
-    function toggleDarkMode() {
-      document.body.classList.toggle("dark-mode");
-      document.body.classList.toggle("light-mode");
-    }
-
-    document.addEventListener("click", (event) => {
-      const menu = document.getElementById("menu-lateral");
-      const toggle = document.getElementById("menu-toggle");
-      const overlay = document.getElementById("menu-overlay");
-      if (menu.classList.contains("active") &&
-          !menu.contains(event.target) &&
-          !toggle.contains(event.target)) {
-        menu.classList.remove("active");
-        overlay.classList.remove("active");
-        document.body.classList.remove("no-scroll");
-        toggle.setAttribute("aria-expanded", "false");
-        toggle.focus();
-      }
-    });
-
-    document.addEventListener("keydown", (e) => {
-      if (e.key === "Escape") {
-        const menu = document.getElementById("menu-lateral");
-        const overlay = document.getElementById("menu-overlay");
-        const toggle = document.getElementById("menu-toggle");
-        if (menu.classList.contains("active")) {
-          menu.classList.remove("active");
-          overlay.classList.remove("active");
-          document.body.classList.remove("no-scroll");
-          toggle.setAttribute("aria-expanded", "false");
-          toggle.focus();
-        }
-      }
-    });
-  </script>
-    <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-azul">
-      <div class="container-fluid">
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarEcoEn"
-                aria-controls="navbarEcoEn" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarEcoEn">
-          <ul class="navbar-nav mx-auto">
-            <li class="nav-item"><a class="nav-link" href="{% url 'index' %}">Inicio</a></li>
-            <li class="nav-item"><a class="nav-link" href="{% url 'productos' %}">Productos</a></li>
-            <li class="nav-item"><a class="nav-link" href="#reseñas">Reseñas</a></li>
-            <li class="nav-item"><a class="nav-link" href="#contacto">Contacto</a></li>
-          </ul>
-        </div>
-      </div>
-    </nav>
-
-    <!-- Contenido dinámico -->
-    <main>{% block content %}{% endblock %}</main>
-
-    <!-- Botón flotante con mascotita -->
-    <div id="chatbot-button">
-      <img src="{% static 'img/ecobot.png' %}" alt="EcoBot" style="width: 50px; height: 50px; cursor: pointer;" />
-    </div>
-
-    <!-- Overlay detrás del chatbot -->
-    <div id="chatbot-overlay" style="display: none;"></div>
-
-    <!-- Ventana del chatbot -->
-    <div id="chatbot-window" style="display: none;">
-      <header>🌱 EcoBot</header>
-      <div class="chat-content" id="chatbot-messages"></div>
-      <footer>
-          <input type="text" id="userMessage" placeholder="Escribe aquí..." />
-          <button onclick="sendMessage()">➤</button>
-      </footer>
-    </div>
-
-    <!-- Scripts globales -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="{% static 'js/chatbot.js' %}"></script>
+  <script src="{% static 'js/chatbot.js' %}"></script>
 </body>
 </html>
+
 

@@ -9,7 +9,7 @@
   cursor: pointer;
   box-shadow: 0 4px 12px rgba(0,0,0,0.3);
   transition: transform 0.2s ease, box-shadow 0.2s ease;
-  z-index: 10000; /* siempre encima */
+  z-index: 100000; /* muy alto para estar encima de todo */
 }
 
 #chatbot-button img {
@@ -28,7 +28,7 @@
   position: fixed;
   inset: 0;
   background: rgba(0,0,0,0.25);
-  z-index: 9998;
+  z-index: 99998;
   opacity: 0;
   visibility: hidden;
   transition: opacity 0.3s ease;
@@ -50,7 +50,7 @@
   background: #fff;
   border-radius: 12px;
   box-shadow: 0 6px 18px rgba(0,0,0,0.3);
-  z-index: 99999;     /* siempre encima */
+  z-index: 100001;    /* más alto que cualquier imagen o texto */
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -67,7 +67,6 @@
   visibility: visible;
   transform: translateY(0);
 }
-
 
 /* Header del chatbot */
 #chatbot-header {

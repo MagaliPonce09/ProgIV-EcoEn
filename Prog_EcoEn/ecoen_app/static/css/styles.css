@@ -476,3 +476,63 @@ body.dark-mode .menu-lateral a:hover {
   color: #81c784;
   transform: translateX(5px);
 }
+
+/* ===========================
+  🛒 Cards de productos
+   =========================== */
+.container {
+  padding-bottom: 50px;
+}
+
+/* ... tus estilos de cards ... */
+
+/* ===========================
+   🔒 Control de imágenes y cards
+   =========================== */
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  position: relative;
+  z-index: 1;
+}
+
+.card-img-top {
+  position: relative;
+  z-index: 1;
+}
+
+.card {
+  position: relative;
+  z-index: 1;
+  overflow: hidden;
+}
+
+/* ===========================
+   🎠 Control de sliders/carouseles
+   =========================== */
+
+/* Contenedor del carrusel */
+.carousel {
+  position: relative;
+  z-index: 1; /* bajo, no compite con el chatbot */
+}
+
+/* Imágenes dentro del carrusel */
+.carousel-item img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  position: relative;
+  z-index: 1; /* asegura que quede debajo del chatbot */
+  object-fit: cover; /* recorta manteniendo proporción */
+}
+
+/* Controles del carrusel (flechas, indicadores) */
+.carousel-control-prev,
+.carousel-control-next,
+.carousel-indicators {
+  z-index: 2; /* suficiente para estar sobre las imágenes, pero debajo del chatbot */
+}
+
+

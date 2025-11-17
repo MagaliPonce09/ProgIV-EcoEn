@@ -89,17 +89,53 @@
 <section id="reseñas" class="container py-5">
   <h2 class="text-center mb-4">💬 Opiniones de Clientes</h2>
   <div class="row row-cols-1 row-cols-md-3 g-4">
-    <div class="col"><div class="p-3 opinion-card shadow-sm rounded">"Los paneles solares redujeron mi factura un 70%." – Ana G.</div></div>
-    <div class="col"><div class="p-3 opinion-card shadow-sm rounded">"La turbina eólica funciona incluso en días nublados." – Carlos M.</div></div>
-    <div class="col"><div class="p-3 opinion-card shadow-sm rounded">"Excelente atención y productos de calidad." – Lucía R.</div></div>
+
+    <!-- Opiniones fijas -->
+    <div class="col">
+      <div class="opinion-card shadow-sm rounded text-center p-4">
+        <div style="font-size: 50px;">👩‍💼</div>
+        <p class="mt-3">“Los paneles solares redujeron mi factura un 70%.”</p>
+        <small class="text-muted">– Ana G.</small>
+      </div>
+    </div>
+
+    <div class="col">
+      <div class="opinion-card shadow-sm rounded text-center p-4">
+        <div style="font-size: 50px;">👨‍🔧</div>
+        <p class="mt-3">“La turbina eólica funciona incluso en días nublados.”</p>
+        <small class="text-muted">– Carlos M.</small>
+      </div>
+    </div>
+
+    <div class="col">
+      <div class="opinion-card shadow-sm rounded text-center p-4">
+        <div style="font-size: 50px;">👩‍🌾</div>
+        <p class="mt-3">“Excelente atención y productos de calidad.”</p>
+        <small class="text-muted">– Lucía R.</small>
+      </div>
+    </div>
+
+    <!-- Opiniones dinámicas desde la base de datos -->
     {% for op in opiniones %}
-    <div class="col"><div class="p-3 opinion-card shadow-sm rounded">"{{ op.mensaje }}" – {{ op.nombre }}</div></div>
+    <div class="col">
+      <div class="opinion-card shadow-sm rounded text-center p-4">
+        <div style="font-size: 50px;">🙂</div>
+        <p class="mt-3">“{{ op.mensaje }}”</p>
+        <small class="text-muted">– {{ op.nombre }}</small>
+      </div>
+    </div>
     {% endfor %}
+
   </div>
+
+  <!-- Botón para dejar opinión -->
   <div class="text-center mt-4">
-    <a href="{% url 'opinion' %}" class="btn btn-outline-primary">Deja tu opinión</a>
+    <a href="{% url 'opinion' %}" class="btn btn-outline-primary">
+      ✍️ Deja tu opinión
+    </a>
   </div>
 </section>
+
 
 <!-- Newsletter -->
 <section id="newsletter" class="container py-5">
