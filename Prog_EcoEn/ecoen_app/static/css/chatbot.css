@@ -43,14 +43,14 @@
 /* Ventana del chatbot */
 .chatbot-window {
   position: fixed;
-  bottom: 80px; /* un poco más arriba para no tapar el botón */
+  bottom: 80px;
   right: 20px;
-  width: 320px;
-  height: 420px;
+  width: 400px;       /* tamaño más grande en escritorio */
+  height: 500px;
   background: #fff;
   border-radius: 12px;
   box-shadow: 0 6px 18px rgba(0,0,0,0.3);
-  z-index: 9999;
+  z-index: 99999;     /* siempre encima */
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -67,6 +67,7 @@
   visibility: visible;
   transform: translateY(0);
 }
+
 
 /* Header del chatbot */
 #chatbot-header {
@@ -115,4 +116,40 @@
 
 #chatbot-input button:hover {
   background: #45a049;
+}
+
+/* Responsive para tablets y móviles */
+@media (max-width: 768px) {
+  .chatbot-window {
+    width: 90%;          /* ocupa casi todo el ancho */
+    height: 60%;         /* más bajo para no tapar todo */
+    bottom: 10px;
+    right: 5%;
+    border-radius: 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .chatbot-window {
+    width: 100%;         /* ocupa todo el ancho en móvil */
+    height: 70%;         /* más alto en pantallas pequeñas */
+    bottom: 0;
+    right: 0;
+    border-radius: 0;    /* estilo tipo app móvil */
+  }
+
+  #chatbot-header {
+    font-size: 14px;     /* texto más pequeño en móvil */
+    padding: 10px;
+  }
+
+  #chatbot-input input {
+    font-size: 12px;
+    padding: 8px;
+  }
+
+  #chatbot-input button {
+    font-size: 16px;
+    padding: 8px 12px;
+  }
 }

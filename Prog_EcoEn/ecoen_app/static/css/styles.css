@@ -197,24 +197,36 @@ header h1 {
   padding-bottom: 50px;
 }
 
+/* Card general */
 .card {
   border-radius: 10px;
   transition: transform 0.2s ease, box-shadow 0.3s ease;
+  overflow: hidden;          /* evita que la imagen se desborde */
+  position: relative;        /* asegura que no compita con el chatbot */
+  z-index: 1;                /* bajo, para no tapar el chatbot */
 }
+
 .card:hover {
   transform: scale(1.02);
   box-shadow: 0 4px 12px rgba(0,0,0,0.15);
 }
 
+/* Imagen superior de la card */
 .card-img-top {
+  width: 100%;               /* ocupa todo el ancho de la card */
   height: 200px;
-  object-fit: cover;
+  object-fit: cover;          /* recorta manteniendo proporción */
   border-bottom: 1px solid #eee;
+  display: block;
+  position: relative;
+  z-index: 1;                 /* asegura que quede debajo del chatbot */
 }
+
 @media (max-width: 768px) {
   .card-img-top { height: 160px; }
 }
 
+/* Título */
 .card-title {
   font-size: 1.2rem;
   font-weight: 600;
@@ -222,10 +234,12 @@ header h1 {
   color: #1b5e20;
 }
 
+/* Texto */
 .card-text {
   font-size: 0.95rem;
   color: #33691e;
 }
+
 
 /* ===========================
   🌞 Modo claro (verdes vivos)
