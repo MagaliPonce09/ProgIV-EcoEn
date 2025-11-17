@@ -19,19 +19,46 @@ body {
 a {
   color: #2e7d32;
   text-decoration: none;
+  transition: color 0.3s ease;
 }
 a:hover {
   text-decoration: underline;
+  color: #145016;
 }
 
-/* Botones */
-.btn-primary,
-.btn-success {
+/* Botones base */
+.btn,
+button,
+a.btn {
   border: none;
   padding: 0.75rem;
   border-radius: 8px;
   cursor: pointer;
-  transition: background 0.3s ease;
+  transition: background 0.3s ease, transform 0.2s ease, color 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Botones principales */
+.btn-primary,
+.btn-success {
+  background-color: #2e7d32;
+  color: #fff;
+}
+.btn-primary:hover,
+.btn-success:hover {
+  background-color: #1b5e20;
+  transform: scale(1.05);
+}
+
+/* Outline secundarios */
+.btn-outline-secondary {
+  background-color: transparent;
+  border: 1px solid #2e7d32;
+  color: #1b5e20;
+}
+.btn-outline-secondary:hover {
+  background-color: #2e7d32;
+  color: #ffffff;
+  transform: translateY(-2px);
 }
 
 /* Botón Google fijo */
@@ -39,9 +66,11 @@ a:hover {
   background-color: #ffffff;
   border: 1px solid #d32f2f;
   color: #d32f2f;
+  transition: background 0.3s ease, transform 0.2s ease;
 }
 .btn-google:hover {
   background-color: #fce4ec;
+  transform: translateY(-2px);
 }
 
 /* ===========================
@@ -83,6 +112,7 @@ a:hover {
 .navbar a {
   color: #fff;
   margin-right: 1rem;
+  transition: color 0.3s ease;
 }
 .navbar a:hover {
   color: #c8e6c9;
@@ -94,7 +124,7 @@ a:hover {
   font-size: 0.85rem;
 }
 
-/* Animaciones */
+/* Animaciones base */
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(10px); }
   to { opacity: 1; transform: translateY(0); }
@@ -107,54 +137,109 @@ a:hover {
   position: fixed;
   top: 16px;
   right: 16px;
-  background-color: #1b5e20;   /* verde oscuro fijo */
+  background-color: #1b5e20;
   color: #ffffff;
   padding: 0.6rem 1rem;
   border-radius: 50px;
   font-size: 1.2rem;
   cursor: pointer;
-  z-index: 2000;
+  z-index: 2001;
   border: 2px solid #145016;
   box-shadow: 0 2px 6px rgba(0,0,0,0.3);
-  transition: background 0.3s ease;
+  transition: background 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
 }
-.menu-toggle:hover { background-color: #145016; }
+.menu-toggle:hover { background-color: #145016; transform: scale(1.05); }
 
 @media (min-width: 768px) {
   .menu-toggle { display: inline-flex; }
 }
 
+/* Overlay */
+.menu-overlay {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0,0,0,0.4);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease;
+  z-index: 1998;
+}
+.menu-overlay.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Evitar scroll detrás del menú */
+.no-scroll { overflow: hidden; }
+
+/* ===========================
+   ➜ Menú lateral con animación
+   =========================== */
 .menu-lateral {
   position: fixed;
   top: 0;
   right: -320px;
   width: 300px;
   height: 100vh;
-  background: #1b5e20;   /* verde oscuro fijo */
+  background: #1b5e20;
   color: #ffffff;
   border-left: 3px solid #145016;
   box-shadow: -2px 0 10px rgba(0,0,0,0.12);
-  padding: 2rem 1rem;
-  transition: right 0.3s ease;
+  padding: 1.5rem 1rem;
+  transition: right 0.4s ease;
   z-index: 1999;
   overflow-y: auto;
 }
 .menu-lateral.active { right: 0; }
 
+/* Pila interna y animación “stagger” */
+.menu-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+.menu-stack > * {
+  opacity: 0;
+  transform: translateX(10px);
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
+.menu-lateral.active .menu-stack > * {
+  opacity: 1;
+  transform: translateX(0);
+}
+.menu-lateral.active .menu-stack > *:nth-child(1) { transition-delay: 0.05s; }
+.menu-lateral.active .menu-stack > *:nth-child(2) { transition-delay: 0.1s; }
+.menu-lateral.active .menu-stack > *:nth-child(3) { transition-delay: 0.15s; }
+.menu-lateral.active .menu-stack > *:nth-child(4) { transition-delay: 0.2s; }
+.menu-lateral.active .menu-stack > *:nth-child(5) { transition-delay: 0.25s; }
+.menu-lateral.active .menu-stack > *:nth-child(6) { transition-delay: 0.3s; }
+
+/* Encabezado del menú */
 .menu-header {
   font-weight: bold;
-  margin-bottom: 1rem;
+  margin-bottom: 0.25rem;
   color: #ffffff;
+  animation: fadeIn 0.6s ease;
 }
 
-.menu-lateral a,
-.menu-lateral .btn {
-  color: #ffffff;
+/* Botones y links del menú: full width y consistentes */
+.menu-lateral .btn,
+.menu-lateral a.btn,
+.menu-lateral a:not(.btn) {
+  width: 100%;
+  text-align: left;
+  padding: 0.6rem 0.8rem;
+  border-radius: 10px;
+  transition: transform 0.2s ease, background 0.3s ease, color 0.3s ease;
 }
-.menu-lateral a:hover {
+.menu-lateral a:hover,
+.menu-lateral .btn:hover {
   color: #c8e6c9;
+  transform: translateX(5px);
 }
 
+/* Estados de botones dentro del menú */
 .menu-lateral .btn,
 .menu-lateral .btn-primary,
 .menu-lateral .btn-success,
@@ -167,6 +252,7 @@ a:hover {
   background: #145016;
 }
 
+/* Botón danger coherente */
 .menu-lateral .btn-danger {
   background: #d32f2f;
   color: #ffffff;
@@ -174,6 +260,18 @@ a:hover {
 }
 .menu-lateral .btn-danger:hover {
   background: #9a1f1f;
+}
+
+/* Áreas colapsables con animación */
+.collapse-area {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease, opacity 0.3s ease;
+  opacity: 0;
+}
+.collapse-area.active {
+  max-height: 400px;
+  opacity: 1;
 }
 
 .close-btn { display: none !important; }
@@ -188,6 +286,7 @@ header h1 {
   font-size: 1.8rem;
   font-weight: bold;
   color: #1b5e20;
+  animation: fadeIn 0.8s ease;
 }
 
 /* ===========================
@@ -201,14 +300,11 @@ header h1 {
 .card {
   border-radius: 10px;
   transition: transform 0.2s ease, box-shadow 0.3s ease;
-  overflow: hidden;          /* evita que la imagen se desborde */
-  position: relative;        /* asegura que no compita con el chatbot */
-  z-index: 1;                /* bajo, para no tapar el chatbot */
 }
 
 .card:hover {
-  transform: scale(1.02);
-  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  transform: scale(1.03);
+  box-shadow: 0 6px 14px rgba(0,0,0,0.2);
 }
 
 /* Imagen superior de la card */
@@ -217,11 +313,7 @@ header h1 {
   height: 200px;
   object-fit: cover;          /* recorta manteniendo proporción */
   border-bottom: 1px solid #eee;
-  display: block;
-  position: relative;
-  z-index: 1;                 /* asegura que quede debajo del chatbot */
 }
-
 @media (max-width: 768px) {
   .card-img-top { height: 160px; }
 }
@@ -232,16 +324,22 @@ header h1 {
   font-weight: 600;
   margin-bottom: 10px;
   color: #1b5e20;
+  transition: color 0.3s ease, transform 0.2s ease;
+}
+.card-title:hover {
+  color: #145016;
+  transform: translateX(3px);
 }
 
 /* Texto */
 .card-text {
   font-size: 0.95rem;
   color: #33691e;
+  transition: color 0.3s ease;
 }
 
-
 /* ===========================
+   🌞 Modo claro
   🌞 Modo claro (verdes vivos)
    =========================== */
 body.light-mode {
@@ -249,21 +347,18 @@ body.light-mode {
   color: #2e2e2e;
 }
 
-body.light-mode .navbar {
-  background: #2e7d32;
-}
-
-body.light-mode header {
-  background-color: #43a047;
-}
-body.light-mode header h1 {
-  color: #1b5e20;
-}
+body.light-mode .navbar { background: #2e7d32; }
+body.light-mode header { background-color: #43a047; }
+body.light-mode header h1 { color: #1b5e20; }
 
 body.light-mode .card {
   background-color: #f1f8e9;
   border: 1px solid #c8e6c9;
   color: #2e2e2e;
+}
+body.light-mode .card:hover {
+  background-color: #e8f5e9;
+  transform: scale(1.02);
 }
 body.light-mode .card-title { color: #1b5e20; }
 body.light-mode .card-text { color: #33691e; }
@@ -276,9 +371,11 @@ body.light-mode .btn-success {
 body.light-mode .btn-primary:hover,
 body.light-mode .btn-success:hover {
   background-color: #1b5e20;
+  transform: scale(1.05);
 }
 
 /* ===========================
+   🌙 Modo oscuro
   🌙 Modo oscuro (verdes profundos armónicos)
    =========================== */
 body.dark-mode {
@@ -286,31 +383,96 @@ body.dark-mode {
   color: #c8e6c9;              /* texto verde claro */
 }
 
-body.dark-mode .navbar {
-  background: #145016;         /* verde oscuro elegante */
-}
-
-body.dark-mode header {
-  background-color: #145016;
-}
-body.dark-mode header h1 {
-  color: #a5d6a7;              /* verde suave */
-}
+body.dark-mode .navbar { background: #145016; }
+body.dark-mode header { background-color: #145016; }
+body.dark-mode header h1 { color: #a5d6a7; }
 
 body.dark-mode .card {
   background-color: #1e2d1f;   /* verde grisáceo */
   border: 1px solid #2e7d32;
   color: #c8e6c9;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
-body.dark-mode .card-title { color: #a5d6a7; }
-body.dark-mode .card-text { color: #c8e6c9; }
+body.dark-mode .card:hover {
+  transform: scale(1.02);
+  box-shadow: 0 4px 12px rgba(255,255,255,0.1);
+}
 
+body.dark-mode .card-title {
+  color: #a5d6a7;
+  transition: color 0.3s ease, transform 0.2s ease;
+}
+body.dark-mode .card-title:hover {
+  color: #81c784;
+  transform: translateX(3px);
+}
+
+body.dark-mode .card-text {
+  color: #c8e6c9;
+  transition: color 0.3s ease;
+}
+body.dark-mode .card-text:hover { color: #a5d6a7; }
+
+/* Botones en modo oscuro */
 body.dark-mode .btn-primary,
 body.dark-mode .btn-success {
   background-color: #2e7d32;
   color: #ffffff;
+  transition: background 0.3s ease, transform 0.2s ease;
 }
 body.dark-mode .btn-primary:hover,
 body.dark-mode .btn-success:hover {
   background-color: #1b5e20;
+  transform: scale(1.05);
+}
+
+body.dark-mode .btn-outline-secondary {
+  background-color: transparent;
+  border: 1px solid #2e7d32;
+  color: #c8e6c9;
+  transition: background 0.3s ease, color 0.3s ease, transform 0.2s ease;
+}
+body.dark-mode .btn-outline-secondary:hover {
+  background-color: #2e7d32;
+  color: #ffffff;
+  transform: translateY(-2px);
+}
+
+body.dark-mode .btn-danger {
+  background-color: #b71c1c;
+  border: 1px solid #7f0000;
+  color: #ffffff;
+  transition: background 0.3s ease, transform 0.2s ease;
+}
+body.dark-mode .btn-danger:hover {
+  background-color: #9a0007;
+  transform: translateY(-2px);
+}
+
+/* Links en modo oscuro */
+body.dark-mode a {
+  color: #81c784;
+  transition: color 0.3s ease;
+}
+body.dark-mode a:hover {
+  color: #c8e6c9;
+}
+
+/* Menú lateral en modo oscuro */
+body.dark-mode .menu-lateral {
+  background: #0d1f12;
+  border-left: 3px solid #2e7d32;
+  transition: right 0.4s ease, background 0.3s ease;
+}
+body.dark-mode .menu-header { color: #a5d6a7; }
+
+body.dark-mode .menu-lateral .btn,
+body.dark-mode .menu-lateral a {
+  color: #c8e6c9;
+  transition: transform 0.2s ease, color 0.3s ease;
+}
+body.dark-mode .menu-lateral .btn:hover,
+body.dark-mode .menu-lateral a:hover {
+  color: #81c784;
+  transform: translateX(5px);
 }
