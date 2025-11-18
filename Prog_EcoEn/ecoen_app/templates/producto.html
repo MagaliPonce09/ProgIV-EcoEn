@@ -492,5 +492,29 @@
   </div>
 </section>
 
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const botones = document.querySelectorAll(".add-to-cart");
+
+    botones.forEach(boton => {
+      boton.addEventListener("click", function () {
+        const nombre = this.dataset.product;
+        const precio = parseFloat(this.dataset.price);
+
+        let carrito = JSON.parse(localStorage.getItem("carrito")) || [];
+        carrito.push({ nombre, precio });
+
+        localStorage.setItem("carrito", JSON.stringify(carrito));
+
+        alert(`${nombre} agregado al carrito!`);
+      });
+    });
+  });
+</script>
+
+
 <!-- Carrito -->
-{% include "partials/carrito.html" %} {% endblock %}
+{% include "partials/carrito.html" %} 
+
+
+{% endblock %}
