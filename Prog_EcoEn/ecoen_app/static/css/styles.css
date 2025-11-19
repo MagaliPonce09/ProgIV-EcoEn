@@ -13,6 +13,7 @@
 body {
   font-family: 'Segoe UI', Arial, sans-serif;
   line-height: 1.6;
+  transition: background 0.3s ease, color 0.3s ease;
 }
 
 /* Links */
@@ -21,9 +22,10 @@ a {
   text-decoration: none;
   transition: color 0.3s ease;
 }
-a:hover {
+a:hover, a:focus {
   text-decoration: underline;
   color: #145016;
+  outline: none;
 }
 
 /* Botones base */
@@ -31,11 +33,12 @@ a:hover {
 button,
 a.btn {
   border: none;
-  padding: 0.75rem;
+  padding: 0.6rem 0.9rem;
   border-radius: 8px;
   cursor: pointer;
   transition: background 0.3s ease, transform 0.2s ease, color 0.3s ease, box-shadow 0.3s ease;
 }
+.btn:focus { outline: 2px solid #81c784; }
 
 /* Botones principales */
 .btn-primary,
@@ -61,15 +64,14 @@ a.btn {
   transform: translateY(-2px);
 }
 
-/* Botón Google fijo */
-.btn-google {
-  background-color: #ffffff;
-  border: 1px solid #d32f2f;
-  color: #d32f2f;
-  transition: background 0.3s ease, transform 0.2s ease;
+/* Botón danger */
+.btn-danger {
+  background-color: #d32f2f;
+  color: #fff;
+  border: 1px solid #9a1f1f;
 }
-.btn-google:hover {
-  background-color: #fce4ec;
+.btn-danger:hover {
+  background-color: #9a1f1f;
   transform: translateY(-2px);
 }
 
@@ -99,9 +101,7 @@ a.btn {
   color: #2e7d32;
   margin-bottom: 1.5rem;
 }
-.auth-title span {
-  color: #388e3c;
-}
+.auth-title span { color: #388e3c; }
 
 /* ===========================
   🌍 Navbar y Footer
@@ -114,9 +114,7 @@ a.btn {
   margin-right: 1rem;
   transition: color 0.3s ease;
 }
-.navbar a:hover {
-  color: #c8e6c9;
-}
+.navbar a:hover { color: #c8e6c9; }
 
 .footer {
   padding: 1rem;
@@ -150,10 +148,6 @@ a.btn {
 }
 .menu-toggle:hover { background-color: #145016; transform: scale(1.05); }
 
-@media (min-width: 768px) {
-  .menu-toggle { display: inline-flex; }
-}
-
 /* Overlay */
 .menu-overlay {
   position: fixed;
@@ -165,13 +159,7 @@ a.btn {
   transition: opacity 0.3s ease;
   z-index: 1998;
 }
-.menu-overlay.active {
-  opacity: 1;
-  visibility: visible;
-}
-
-/* Evitar scroll detrás del menú */
-.no-scroll { overflow: hidden; }
+.menu-overlay.active { opacity: 1; visibility: visible; }
 
 /* ===========================
    ➜ Menú lateral con animación
@@ -193,28 +181,6 @@ a.btn {
 }
 .menu-lateral.active { right: 0; }
 
-/* Pila interna y animación “stagger” */
-.menu-stack {
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-}
-.menu-stack > * {
-  opacity: 0;
-  transform: translateX(10px);
-  transition: opacity 0.4s ease, transform 0.4s ease;
-}
-.menu-lateral.active .menu-stack > * {
-  opacity: 1;
-  transform: translateX(0);
-}
-.menu-lateral.active .menu-stack > *:nth-child(1) { transition-delay: 0.05s; }
-.menu-lateral.active .menu-stack > *:nth-child(2) { transition-delay: 0.1s; }
-.menu-lateral.active .menu-stack > *:nth-child(3) { transition-delay: 0.15s; }
-.menu-lateral.active .menu-stack > *:nth-child(4) { transition-delay: 0.2s; }
-.menu-lateral.active .menu-stack > *:nth-child(5) { transition-delay: 0.25s; }
-.menu-lateral.active .menu-stack > *:nth-child(6) { transition-delay: 0.3s; }
-
 /* Encabezado del menú */
 .menu-header {
   font-weight: bold;
@@ -222,59 +188,6 @@ a.btn {
   color: #ffffff;
   animation: fadeIn 0.6s ease;
 }
-
-/* Botones y links del menú: full width y consistentes */
-.menu-lateral .btn,
-.menu-lateral a.btn,
-.menu-lateral a:not(.btn) {
-  width: 100%;
-  text-align: left;
-  padding: 0.6rem 0.8rem;
-  border-radius: 10px;
-  transition: transform 0.2s ease, background 0.3s ease, color 0.3s ease;
-}
-.menu-lateral a:hover,
-.menu-lateral .btn:hover {
-  color: #c8e6c9;
-  transform: translateX(5px);
-}
-
-/* Estados de botones dentro del menú */
-.menu-lateral .btn,
-.menu-lateral .btn-primary,
-.menu-lateral .btn-success,
-.menu-lateral .btn-outline-secondary {
-  background: #2e7d32;
-  color: #ffffff;
-  border: 1px solid #145016;
-}
-.menu-lateral .btn:hover {
-  background: #145016;
-}
-
-/* Botón danger coherente */
-.menu-lateral .btn-danger {
-  background: #d32f2f;
-  color: #ffffff;
-  border: 1px solid #9a1f1f;
-}
-.menu-lateral .btn-danger:hover {
-  background: #9a1f1f;
-}
-
-/* Áreas colapsables con animación */
-.collapse-area {
-  max-height: 0;
-  overflow: hidden;
-  transition: max-height 0.3s ease, opacity 0.3s ease;
-  opacity: 0;
-}
-.collapse-area.active {
-  max-height: 400px;
-  opacity: 1;
-}
-
-.close-btn { display: none !important; }
 
 /* ===========================
   🎨 Header
@@ -292,33 +205,24 @@ header h1 {
 /* ===========================
   🛒 Cards de productos
    =========================== */
-.container {
-  padding-bottom: 50px;
-}
+.container { padding-bottom: 50px; }
 
-/* Card general */
 .card {
   border-radius: 10px;
   transition: transform 0.2s ease, box-shadow 0.3s ease;
+  overflow: hidden;
 }
-
 .card:hover {
   transform: scale(1.03);
   box-shadow: 0 6px 14px rgba(0,0,0,0.2);
 }
-
-/* Imagen superior de la card */
 .card-img-top {
-  width: 100%;               /* ocupa todo el ancho de la card */
+  width: 100%;
   height: 200px;
-  object-fit: cover;          /* recorta manteniendo proporción */
+  object-fit: cover;
   border-bottom: 1px solid #eee;
 }
-@media (max-width: 768px) {
-  .card-img-top { height: 160px; }
-}
-
-/* Título */
+@media (max-width: 768px) { .card-img-top { height: 160px; } }
 .card-title {
   font-size: 1.2rem;
   font-weight: 600;
@@ -326,69 +230,69 @@ header h1 {
   color: #1b5e20;
   transition: color 0.3s ease, transform 0.2s ease;
 }
-.card-title:hover {
-  color: #145016;
-  transform: translateX(3px);
-}
+.card-title:hover { color: #145016; transform: translateX(3px); }
+.card-text { font-size: 0.95rem; color: #33691e; }
 
-/* Texto */
-.card-text {
-  font-size: 0.95rem;
-  color: #33691e;
-  transition: color 0.3s ease;
+/* ===========================
+  🛒 Carrito
+   =========================== */
+.table {
+  border: 1px solid #c8e6c9;
+}
+.table th {
+  background: #2e7d32;
+  color: #fff;
+}
+.table td { vertical-align: middle; }
+#carrito-vacio {
+  font-size: 1rem;
+  padding: 1rem;
+  border-radius: 8px;
 }
 
 /* ===========================
+  ⭐ Rating interactivo
+   =========================== */
+.star {
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: #ccc;
+  transition: color 0.3s ease, transform 0.2s ease;
+}
+.star.selected,
+.star:hover { color: #ffb300; transform: scale(1.2); }
+
+/* ===========================
    🌞 Modo claro
-  🌞 Modo claro (verdes vivos)
    =========================== */
 body.light-mode {
   background-color: #e6f5e1;
   color: #2e2e2e;
 }
-
 body.light-mode .navbar { background: #2e7d32; }
 body.light-mode header { background-color: #43a047; }
 body.light-mode header h1 { color: #1b5e20; }
-
 body.light-mode .card {
   background-color: #f1f8e9;
   border: 1px solid #c8e6c9;
   color: #2e2e2e;
 }
-body.light-mode .card:hover {
-  background-color: #e8f5e9;
-  transform: scale(1.02);
-}
+body.light-mode .card:hover { background-color: #e8f5e9; transform: scale(1.02); }
 body.light-mode .card-title { color: #1b5e20; }
 body.light-mode .card-text { color: #33691e; }
 
-body.light-mode .btn-primary,
-body.light-mode .btn-success {
-  background-color: #2e7d32;
-  color: #fff;
-}
-body.light-mode .btn-primary:hover,
-body.light-mode .btn-success:hover {
-  background-color: #1b5e20;
-  transform: scale(1.05);
-}
-
 /* ===========================
    🌙 Modo oscuro
-  🌙 Modo oscuro (verdes profundos armónicos)
    =========================== */
 body.dark-mode {
-  background-color: #0d1f12;   /* verde bosque profundo */
-  color: #c8e6c9;              /* texto verde claro */
+  background-color: #0d1f12;
+  color: #c8e6c9;
 }
-
 body.dark-mode .navbar { background: #145016; }
 body.dark-mode header { background-color: #145016; }
 body.dark-mode header h1 { color: #a5d6a7; }
-
 body.dark-mode .card {
-  background-color: #1e2d1f;   /* verde grisáceo */
+  background-color: #1e2d1f;
   border: 1px solid #2e7d32;
   color: #c8e6c9;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
@@ -397,94 +301,10 @@ body.dark-mode .card:hover {
   transform: scale(1.02);
   box-shadow: 0 4px 12px rgba(255,255,255,0.1);
 }
-
-body.dark-mode .card-title {
-  color: #a5d6a7;
-  transition: color 0.3s ease, transform 0.2s ease;
-}
-body.dark-mode .card-title:hover {
-  color: #81c784;
-  transform: translateX(3px);
-}
-
-body.dark-mode .card-text {
-  color: #c8e6c9;
-  transition: color 0.3s ease;
-}
+body.dark-mode .card-title { color: #a5d6a7; }
+body.dark-mode .card-title:hover { color: #81c784; transform: translateX(3px); }
+body.dark-mode .card-text { color: #c8e6c9; }
 body.dark-mode .card-text:hover { color: #a5d6a7; }
-
-/* Botones en modo oscuro */
-body.dark-mode .btn-primary,
-body.dark-mode .btn-success {
-  background-color: #2e7d32;
-  color: #ffffff;
-  transition: background 0.3s ease, transform 0.2s ease;
-}
-body.dark-mode .btn-primary:hover,
-body.dark-mode .btn-success:hover {
-  background-color: #1b5e20;
-  transform: scale(1.05);
-}
-
-body.dark-mode .btn-outline-secondary {
-  background-color: transparent;
-  border: 1px solid #2e7d32;
-  color: #c8e6c9;
-  transition: background 0.3s ease, color 0.3s ease, transform 0.2s ease;
-}
-body.dark-mode .btn-outline-secondary:hover {
-  background-color: #2e7d32;
-  color: #ffffff;
-  transform: translateY(-2px);
-}
-
-body.dark-mode .btn-danger {
-  background-color: #b71c1c;
-  border: 1px solid #7f0000;
-  color: #ffffff;
-  transition: background 0.3s ease, transform 0.2s ease;
-}
-body.dark-mode .btn-danger:hover {
-  background-color: #9a0007;
-  transform: translateY(-2px);
-}
-
-/* Links en modo oscuro */
-body.dark-mode a {
-  color: #81c784;
-  transition: color 0.3s ease;
-}
-body.dark-mode a:hover {
-  color: #c8e6c9;
-}
-
-/* Menú lateral en modo oscuro */
-body.dark-mode .menu-lateral {
-  background: #0d1f12;
-  border-left: 3px solid #2e7d32;
-  transition: right 0.4s ease, background 0.3s ease;
-}
-body.dark-mode .menu-header { color: #a5d6a7; }
-
-body.dark-mode .menu-lateral .btn,
-body.dark-mode .menu-lateral a {
-  color: #c8e6c9;
-  transition: transform 0.2s ease, color 0.3s ease;
-}
-body.dark-mode .menu-lateral .btn:hover,
-body.dark-mode .menu-lateral a:hover {
-  color: #81c784;
-  transform: translateX(5px);
-}
-
-/* ===========================
-  🛒 Cards de productos
-   =========================== */
-.container {
-  padding-bottom: 50px;
-}
-
-/* ... tus estilos de cards ... */
 
 /* ===========================
    🔒 Control de imágenes y cards
@@ -496,43 +316,25 @@ img {
   position: relative;
   z-index: 1;
 }
-
-.card-img-top {
-  position: relative;
-  z-index: 1;
-}
-
-.card {
-  position: relative;
-  z-index: 1;
-  overflow: hidden;
-}
+.card-img-top { position: relative; z-index: 1; }
+.card { position: relative; z-index: 1; overflow: hidden; }
 
 /* ===========================
    🎠 Control de sliders/carouseles
    =========================== */
-
-/* Contenedor del carrusel */
-.carousel {
-  position: relative;
-  z-index: 1; /* bajo, no compite con el chatbot */
-}
-
-/* Imágenes dentro del carrusel */
+.carousel { position: relative; z-index: 1; }
 .carousel-item img {
   max-width: 100%;
   height: auto;
   display: block;
   position: relative;
-  z-index: 1; /* asegura que quede debajo del chatbot */
-  object-fit: cover; /* recorta manteniendo proporción */
+  z-index: 1;
+  object-fit: cover;
 }
-
-/* Controles del carrusel (flechas, indicadores) */
 .carousel-control-prev,
 .carousel-control-next,
 .carousel-indicators {
-  z-index: 2; /* suficiente para estar sobre las imágenes, pero debajo del chatbot */
+  z-index: 2;
 }
 
 /* ===========================
@@ -544,36 +346,20 @@ img {
   border-radius: 12px;
   padding: 20px;
   text-align: center;
-  font-family: 'Montserrat', sans-serif;
   font-size: 0.95rem;
   color: #333;
   transition: transform 0.2s ease, box-shadow 0.3s ease;
 }
-
-/* Hover animado */
 .opinion-card:hover {
   transform: translateY(-5px);
   box-shadow: 0 6px 18px rgba(0,0,0,0.15);
-  border-color: #4CAF50; /* resalta con verde eco */
+  border-color: #4CAF50;
 }
-
-/* Texto de la reseña */
-.opinion-card p {
-  margin: 0;
-  font-style: italic;
-  color: #444;
-}
-
-/* Nombre del cliente */
-.opinion-card small {
-  display: block;
-  margin-top: 10px;
-  font-weight: 600;
-  color: #4CAF50; /* verde eco */
-}
+.opinion-card p { margin: 0; font-style: italic; color: #444; }
+.opinion-card small { display: block; margin-top: 10px; font-weight: 600; color: #4CAF50; }
 
 /* ===========================
-  💬 Chatbot: fijo y siempre visible
+  💬 Chatbot
    =========================== */
 .chatbot-window {
   position: fixed;
@@ -585,17 +371,14 @@ img {
   border: 2px solid #2e7d32;
   border-radius: 12px;
   box-shadow: 0 8px 22px rgba(0,0,0,0.28);
-  z-index: 3000; /* por encima de overlays y menú */
+  z-index: 3000;
   display: flex;
   flex-direction: column;
   overflow: hidden;
 }
-
-/* Modo claro/oscuro del chatbot */
 body.light-mode .chatbot-window { background: #ffffff; border-color: #2e7d32; }
 body.dark-mode  .chatbot-window { background: #0f1b12; border-color: #2e7d32; }
 
-/* Cabecera */
 .chatbot-header {
   background: #2e7d32;
   color: #ffffff;
@@ -605,8 +388,6 @@ body.dark-mode  .chatbot-window { background: #0f1b12; border-color: #2e7d32; }
   align-items: center;
   justify-content: space-between;
 }
-
-/* Mensajes */
 .chatbot-messages {
   flex: 1;
   padding: 0.9rem;
@@ -615,13 +396,11 @@ body.dark-mode  .chatbot-window { background: #0f1b12; border-color: #2e7d32; }
 }
 body.dark-mode .chatbot-messages { background: #112016; }
 
-/* Input */
 .chatbot-input {
   display: flex;
   border-top: 1px solid #c8e6c9;
 }
 body.dark-mode .chatbot-input { border-top-color: #2e7d32; }
-
 .chatbot-input input {
   flex: 1;
   padding: 0.75rem;
@@ -630,7 +409,6 @@ body.dark-mode .chatbot-input { border-top-color: #2e7d32; }
   background: transparent;
   color: inherit;
 }
-
 .chatbot-input button {
   background: #2e7d32;
   color: #fff;
@@ -641,7 +419,6 @@ body.dark-mode .chatbot-input { border-top-color: #2e7d32; }
 }
 .chatbot-input button:hover { background: #1b5e20; }
 
-/* Burbuja de mensajes */
 .chatbot-msg {
   max-width: 85%;
   margin-bottom: 10px;
@@ -654,17 +431,6 @@ body.dark-mode .chatbot-input { border-top-color: #2e7d32; }
 .chatbot-msg.user { background: #c8e6c9; color: #1b5e20; margin-left: auto; }
 body.dark-mode .chatbot-msg.bot  { background: #17351f; color: #c8e6c9; }
 body.dark-mode .chatbot-msg.user { background: #1e3c25; color: #c8e6c9; }
-
-/* Evitar que otros elementos lo tapen por z-index bajos/relativos */
-img,
-.card,
-.carousel,
-.carousel-item img,
-.carousel-control-prev,
-.carousel-control-next,
-.carousel-indicators {
-  z-index: 1;
-}
 
 /* Responsive */
 @media (max-width: 480px) {
@@ -685,7 +451,7 @@ img,
 .carousel-control-prev,
 .carousel-control-next,
 .carousel-indicators {
-  z-index: 1000; /* mucho más bajo que el chatbot */
+  z-index: 1000;
 }
 
 /* Chatbot siempre arriba */
@@ -693,6 +459,5 @@ img,
   position: fixed;
   bottom: 20px;
   right: 20px;
-  z-index: 99999; /* garantizado por encima */
+  z-index: 99999;
 }
-

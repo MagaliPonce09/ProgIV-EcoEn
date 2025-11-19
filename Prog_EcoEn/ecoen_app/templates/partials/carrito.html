@@ -5,54 +5,115 @@
 <section class="container py-5">
   <h2 class="text-center mb-4">🛒 Carrito de Compras</h2>
 
-  <table class="table table-striped">
-    <thead>
-      <tr>
-        <th>Producto</th>
-        <th>Precio (ARS)</th>
-        <th>Acción</th>
-      </tr>
-    </thead>
-    <tbody id="carrito-body"></tbody>
-  </table>
+  <div class="table-responsive">
+    <table class="table table-striped align-middle">
+      <thead class="table-dark">
+        <tr>
+          <th scope="col">Producto</th>
+          <th scope="col">Precio (ARS)</th>
+          <th scope="col">Cantidad</th>
+          <th scope="col">Subtotal</th>
+          <th scope="col">Acción</th>
+        </tr>
+      </thead>
+      <tbody id="carrito-body"></tbody>
+    </table>
+  </div>
 
-  <h4 class="text-end mt-3">
-    Total: $<span id="total"></span> ARS
-  </h4>
+  <div class="text-end mt-3">
+    <h4>Total: <span id="total" class="fw-bold text-success"></span> ARS</h4>
+  </div>
+
+  <div id="carrito-vacio" class="alert alert-info text-center d-none">
+    🛍️ Tu carrito está vacío. ¡Agrega productos para comenzar!
+  </div>
 </section>
 
 <script>
+  const tbody = document.getElementById("carrito-body");
+  const totalElement = document.getElementById("total");
+  const carritoVacio = document.getElementById("carrito-vacio");
+
+  // Formatear precios en ARS
+  const formatoARS = new Intl.NumberFormat("es-AR", {
+    style: "currency",
+    currency: "ARS",
+    minimumFractionDigits: 2
+  });
+
+  // Obtener carrito desde localStorage
+  function obtenerCarrito() {
+    return JSON.parse(localStorage.getItem("carrito")) || [];
+  }
+
+  // Guardar carrito en localStorage
+  function guardarCarrito(carrito) {
+    localStorage.setItem("carrito", JSON.stringify(carrito));
+  }
+
   // Mostrar carrito
   function mostrarCarrito() {
-    let carrito = JSON.parse(localStorage.getItem("carrito")) || [];
-    let tbody = document.getElementById("carrito-body");
+    const carrito = obtenerCarrito();
     tbody.innerHTML = "";
     let total = 0;
 
+    if (carrito.length === 0) {
+      carritoVacio.classList.remove("d-none");
+      totalElement.textContent = formatoARS.format(0);
+      return;
+    } else {
+      carritoVacio.classList.add("d-none");
+    }
+
     carrito.forEach((item, index) => {
-      let fila = document.createElement("tr");
+      const subtotal = item.precio * item.cantidad;
+      total += subtotal;
+
+      const fila = document.createElement("tr");
       fila.innerHTML = `
         <td>${item.nombre}</td>
-        <td>${item.precio}</td>
+        <td>${formatoARS.format(item.precio)}</td>
         <td>
-          <button class="btn btn-danger btn-sm" onclick="eliminarDelCarrito(${index})">
+          <div class="d-flex align-items-center">
+            <button class="btn btn-outline-secondary btn-sm me-2" aria-label="Disminuir cantidad" onclick="cambiarCantidad(${index}, -1)">➖</button>
+            <span class="fw-bold">${item.cantidad}</span>
+            <button class="btn btn-outline-secondary btn-sm ms-2" aria-label="Aumentar cantidad" onclick="cambiarCantidad(${index}, 1)">➕</button>
+          </div>
+        </td>
+        <td>${formatoARS.format(subtotal)}</td>
+        <td>
+          <button class="btn btn-danger btn-sm" aria-label="Eliminar producto" onclick="eliminarDelCarrito(${index})">
             ❌ Eliminar
           </button>
         </td>
       `;
       tbody.appendChild(fila);
-      total += item.precio;
     });
 
-    document.getElementById("total").textContent = total;
+    totalElement.textContent = formatoARS.format(total);
+  }
+
+  // Cambiar cantidad
+  function cambiarCantidad(index, cambio) {
+    const carrito = obtenerCarrito();
+    carrito[index].cantidad += cambio;
+
+    if (carrito[index].cantidad <= 0) {
+      eliminarDelCarrito(index);
+    } else {
+      guardarCarrito(carrito);
+      mostrarCarrito();
+    }
   }
 
   // Eliminar producto
   function eliminarDelCarrito(index) {
-    let carrito = JSON.parse(localStorage.getItem("carrito")) || [];
-    carrito.splice(index, 1);
-    localStorage.setItem("carrito", JSON.stringify(carrito));
-    mostrarCarrito();
+    const carrito = obtenerCarrito();
+    if (confirm("¿Seguro que deseas eliminar este producto?")) {
+      carrito.splice(index, 1);
+      guardarCarrito(carrito);
+      mostrarCarrito();
+    }
   }
 
   // Inicializar al cargar la página
