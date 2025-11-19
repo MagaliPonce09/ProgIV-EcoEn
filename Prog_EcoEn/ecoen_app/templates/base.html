@@ -3,6 +3,7 @@
 <head>
     {% load static %}
     {% load socialaccount %}
+    {% include 'chatbot.html' %}
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>EcoEn</title>
@@ -87,22 +88,38 @@
 <!-- Contenido dinámico -->
 <main>{% block content %}{% endblock %}</main>
 
-<!-- Botón flotante con mascotita -->
-<div id="chatbot-button">
+<!-- =========================
+     ECOBOT: BOTÓN + PANEL LATERAL
+     ========================= -->
+
+<!-- Botón flotante con mascotita (abre/cierra el panel) -->
+<div id="chatbot-button" aria-label="Abrir EcoBot" title="Abrir EcoBot">
   <img src="{% static 'img/ecobot.png' %}" alt="EcoBot" style="width: 50px; height: 50px; cursor: pointer;" />
 </div>
 
-<!-- Overlay detrás del chatbot -->
-<div id="chatbot-overlay" style="display: none;"></div>
+<!-- Panel lateral vertical (glassmorphism + slide-in) -->
+<div id="chatbot-window" class="hidden" role="dialog" aria-label="EcoBot">
+  <div id="chatbot-header">
+    <span>EcoBot 🌍</span>
+    <button id="chatbot-close" aria-label="Cerrar">✖</button>
+  </div>
 
-<!-- Ventana del chatbot -->
-<div id="chatbot-window" style="display: none;">
-  <header id="chatbot-header">🌱 EcoBot</header>
-  <div class="chat-content" id="chatbot-messages"></div>
-  <footer id="chatbot-input">
-      <input type="text" id="userMessage" placeholder="Escribe aquí..." />
-      <button onclick="sendMessage()">➤</button>
-  </footer>
+  <!-- Área de mensajes -->
+  <div id="chatbot-messages" aria-live="polite"></div>
+
+  <!-- Botones rápidos iniciales -->
+  <div id="chatbot-quick-replies">
+    <button data-action="asistencia">🔧 Asistencia técnica</button>
+    <button data-action="recomendacion">🌱 Recomendación de productos</button>
+    <button data-action="compra">🛒 Realizar compra</button>
+    <button data-action="tips">📘 Tips de sostenibilidad</button>
+  </div>
+
+  <!-- Input -->
+  <div id="chatbot-input-row">
+    <input id="chatbot-input" type="text" placeholder="Escribe tu mensaje..." />
+    <button id="chatbot-send">Enviar</button>
+  </div>
 </div>
 
 <!-- Scripts globales -->

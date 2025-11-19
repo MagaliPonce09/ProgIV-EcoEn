@@ -1,169 +1,49 @@
 <!-- chatbot/templates/chatbot/chat.html -->
 {% load static %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
   <meta charset="UTF-8">
   <title>EcoBot Chat</title>
-  <style>
-    /* Icono flotante */
-    .chatbot-icon {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      width: 60px;
-      height: 60px;
-      background-color: #4CAF50;
-      color: white;
-      font-size: 28px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: 50%;
-      cursor: pointer;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-      animation: bounce 2s infinite;
-      transition: background-color 0.3s ease, transform 0.3s ease;
-      z-index: 9999;
-    }
-    .chatbot-icon:hover {
-      background-color: #2196F3;
-      transform: scale(1.1);
-    }
-    @keyframes bounce {
-      0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
-      40% { transform: translateY(-12px); }
-      60% { transform: translateY(-6px); }
-    }
-
-    /* Ventana de chat */
-    .chat-window {
-      position: fixed;
-      bottom: 90px;
-      right: 20px;
-      width: 320px;
-      height: 420px;
-      background: #ffffff;
-      border-radius: 12px;
-      box-shadow: 0 6px 20px rgba(0,0,0,0.25);
-      display: none;
-      flex-direction: column;
-      overflow: hidden;
-      font-family: 'Segoe UI', sans-serif;
-      animation: fadeInUp 0.5s ease;
-      z-index: 9999;
-    }
-    .chat-header {
-      background: linear-gradient(135deg, #4CAF50, #2196F3);
-      color: white;
-      padding: 12px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-    .chat-title { font-weight: bold; }
-    .chat-close {
-      background: transparent;
-      border: none;
-      color: white;
-      font-size: 18px;
-      cursor: pointer;
-    }
-    .chat-body {
-      flex-grow: 1;
-      padding: 10px;
-      background: #f9f9f9;
-      overflow-y: auto;
-    }
-    .chat-message {
-      margin: 8px 0;
-      padding: 10px;
-      border-radius: 8px;
-      max-width: 80%;
-      font-size: 14px;
-    }
-    .chat-message.bot { background: #e0f7fa; align-self: flex-start; }
-    .chat-message.user { background: #c8e6c9; align-self: flex-end; }
-    .chat-footer {
-      display: flex;
-      padding: 10px;
-      background: #fafafa;
-      border-top: 1px solid #ddd;
-    }
-    .chat-input {
-      flex-grow: 1;
-      padding: 8px;
-      border: 1px solid #ccc;
-      border-radius: 8px;
-    }
-    .chat-send {
-      background: #4CAF50;
-      color: white;
-      border: none;
-      border-radius: 50%;
-      width: 36px;
-      height: 36px;
-      margin-left: 8px;
-      cursor: pointer;
-      transition: background 0.3s ease;
-    }
-    .chat-send:hover { background: #2196F3; }
-    @keyframes fadeInUp {
-      from { transform: translateY(30px); opacity: 0; }
-      to { transform: translateY(0); opacity: 1; }
-    }
-  </style>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <!-- Estilos del chatbot -->
+  <link rel="stylesheet" href="{% static 'css/chatbot.css' %}">
 </head>
 <body>
-  <!-- Icono flotante -->
-  <div class="chatbot-icon" onclick="toggleChat()">💬</div>
 
-  <!-- Ventana de chat -->
-  <div class="chat-window" id="chatWindow">
-    <div class="chat-header">
-      <span class="chat-title">EcoBot</span>
-      <button class="chat-close" onclick="toggleChat()">✕</button>
+  <!-- Botón flotante con mascotita (abre/cierra el panel) -->
+  <div id="chatbot-button" aria-label="Abrir EcoBot" title="Abrir EcoBot">
+    <img src="{% static 'img/ecobot.png' %}" alt="EcoBot" style="width: 50px; height: 50px; cursor: pointer;" />
+  </div>
+
+  <!-- Panel lateral vertical (glassmorphism + slide-in) -->
+  <div id="chatbot-window" class="hidden" role="dialog" aria-label="EcoBot">
+    <div id="chatbot-header">
+      <span>EcoBot 🌍</span>
+      <button id="chatbot-close" aria-label="Cerrar">✖</button>
     </div>
-    <div class="chat-body" id="chatBody">
-      <div class="chat-message bot">Hola 👋, soy EcoBot. ¿En qué puedo ayudarte hoy?</div>
+
+    <!-- Área de mensajes -->
+    <div id="chatbot-messages" aria-live="polite"></div>
+
+    <!-- Botones rápidos iniciales -->
+    <div id="chatbot-quick-replies">
+      <button data-action="asistencia">🔧 Asistencia técnica</button>
+      <button data-action="recomendacion">🌱 Recomendación de productos</button>
+      <button data-action="compra">🛒 Realizar compra</button>
+      <button data-action="tips">📘 Tips de sostenibilidad</button>
     </div>
-    <div class="chat-footer">
-      <input type="text" id="chatInput" placeholder="Escribe tu mensaje..." class="chat-input">
-      <button class="chat-send" onclick="sendMessage()">➤</button>
+
+    <!-- Input -->
+    <div id="chatbot-input-row">
+      <input id="chatbot-input" type="text" placeholder="Escribe tu mensaje..." />
+      <button id="chatbot-send">Enviar</button>
     </div>
   </div>
 
-  <!-- Script Botpress -->
-  <script src="https://cdn.botpress.cloud/webchat/v0/inject.js"></script>
-  <script>
-    window.botpressWebChat.init({
-      botId: "TU_BOT_ID",
-      clientId: "TU_CLIENT_ID",
-      hostUrl: "https://cdn.botpress.cloud/webchat/v0",
-      messagingUrl: "https://messaging.botpress.cloud",
-      botName: "EcoBot",
-      theme: "modern",
-      useSessionStorage: true,
-    });
-
-    function toggleChat() {
-      const chat = document.getElementById("chatWindow");
-      chat.style.display = chat.style.display === "flex" ? "none" : "flex";
-    }
-
-    function sendMessage() {
-      const input = document.getElementById("chatInput");
-      const body = document.getElementById("chatBody");
-      if (input.value.trim() !== "") {
-        const userMsg = document.createElement("div");
-        userMsg.className = "chat-message user";
-        userMsg.textContent = input.value;
-        body.appendChild(userMsg);
-        input.value = "";
-        body.scrollTop = body.scrollHeight;
-      }
-    }
-  </script>
+  <!-- Script del chatbot (lógica de apertura/cierre y flujo) -->
+  <script src="{% static 'js/chatbot.js' %}"></script>
 </body>
 </html>
+
 
