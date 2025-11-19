@@ -1,6 +1,6 @@
 from django.urls import path, include
 from Prog_EcoEn.ecoen_app import views
-from .views import CustomLoginView, CustomSignupView, chatbot_view
+from .views import CustomLoginView, CustomSignupView, chatbot_response
 from django.urls import path
 from .views import chatbot_response
 
