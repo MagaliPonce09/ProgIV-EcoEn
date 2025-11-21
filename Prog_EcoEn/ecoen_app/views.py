@@ -158,4 +158,10 @@ def index(request):
     }
     return render(request, "index.html", context)
 
+class CustomLoginView(LoginView):
+    template_name = "account/login.html"
+
+class CustomSignupView(SignupView):
+    template_name = "account/signup.html"
+
 # ... (el resto de tus vistas se mantiene igual)
