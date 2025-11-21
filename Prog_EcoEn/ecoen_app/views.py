@@ -12,134 +12,29 @@ from .models import Producto, Opinion, Compra, Puntuacion, Perfil
 from .forms import EditarPerfilForm
 from allauth.account.views import LoginView, SignupView
 from django.utils import timezone
-from .forms import ProductoForm
 
-# =========================
-# CHATBOT VIEW (flujo educativo + compra + opciones dinámicas)
-# =========================
 @csrf_exempt
-def chatbot_response(request):
-    if request.method != "POST":
-        return JsonResponse({"reply": "Usa POST para comunicarte con EcoBot."})
+def chatbot_view(request):
 
-    try:
-        data = json.loads(request.body.decode("utf-8"))
-    except Exception:
-        return JsonResponse({"reply": "No pude leer tu mensaje. Intenta de nuevo."})
+    # Configura tu API key (mejor usar variables de entorno)
+    client = AzureOpenAI(
+    api_key=settings.AZURE_OPENAI_API_KEY,
+    azure_endpoint=settings.AZURE_OPENAI_ENDPOINT,
+    api_version=settings.AZURE_OPENAI_API_VERSION,
+    )
+    
+    if request.method == "POST":
+        data = json.loads(request.body)
+        user_message = data.get("message", "")
 
-    user_message = data.get("message", "").lower().strip()
-    options = []
+        response = client.chat.completions.create(
+            model="gpt-4o-mini",  # motor que usa Copilot
+            messages=[{"role": "user", "content": user_message}]
+        )
 
-    if "asistencia técnica" in user_message:
-        reply = "🔧 Claro, cuéntame el problema. ¿Es con un panel solar, una lámpara LED, o el proceso de compra?"
-        options = [
-            {"label": "Panel solar", "send": "Asistencia: Panel solar"},
-            {"label": "Lámpara LED", "send": "Asistencia: Lámpara LED"},
-            {"label": "Proceso de compra", "send": "Asistencia: Compra"},
-        ]
+        bot_reply = response.choices[0].message.content
+        return JsonResponse({"reply": bot_reply})
 
-    elif "recomendación de productos" in user_message:
-        reply = "🌱 ¿Qué categoría te interesa?"
-        options = [
-            {"label": "Energía solar ☀️", "send": "Categoría: Energía solar"},
-            {"label": "Iluminación LED 💡", "send": "Categoría: Iluminación LED"},
-            {"label": "Packaging reciclable 📦", "send": "Categoría: Packaging reciclable"},
-        ]
-
-    elif "realizar compra" in user_message or user_message.startswith("categoría:"):
-        if "energía solar" in user_message:
-            reply = "☀️ Elige un producto:"
-            options = [
-                {"label": "Kit solar básico 🔋", "send": "Producto: Kit solar básico"},
-                {"label": "Panel solar portátil ☀️", "send": "Producto: Panel solar portátil"},
-            ]
-        elif "iluminación led" in user_message:
-            reply = "💡 Elige un producto:"
-            options = [
-                {"label": "Lámpara LED eco", "send": "Producto: Lámpara LED eco"},
-                {"label": "Tira LED eficiente", "send": "Producto: Tira LED eficiente"},
-            ]
-        elif "packaging reciclable" in user_message:
-            reply = "📦 Elige un producto:"
-            options = [
-                {"label": "Bolsas reciclables", "send": "Producto: Bolsas reciclables"},
-                {"label": "Cajas kraft eco", "send": "Producto: Cajas kraft eco"},
-            ]
-        else:
-            reply = "🛒 Elige una categoría para comprar:"
-            options = [
-                {"label": "Energía solar ☀️", "send": "Categoría: Energía solar"},
-                {"label": "Iluminación LED 💡", "send": "Categoría: Iluminación LED"},
-                {"label": "Packaging reciclable 📦", "send": "Categoría: Packaging reciclable"},
-            ]
-
-    elif user_message.startswith("producto:"):
-        producto = user_message.replace("producto:", "").strip()
-        reply = f"¿Confirmás la compra de {producto.title()}?"
-        options = [
-            {"label": "✅ Confirmar compra", "send": f"Confirmar compra: {producto}"},
-            {"label": "❌ Cancelar", "send": "Cancelar compra"},
-        ]
-
-    elif "confirmar compra" in user_message:
-        reply = "✅ Añadido al carrito. Ve al carrito para finalizar: /carrito"
-        options = [
-            {"label": "Ir al carrito 🛒", "send": "Ir al carrito"},
-            {"label": "Seguir explorando 🌿", "send": "Recomendación de productos"},
-        ]
-
-    elif "cancelar compra" in user_message:
-        reply = "❌ Compra cancelada. ¿Te muestro otras categorías?"
-        options = [
-            {"label": "Ver categorías", "send": "Recomendación de productos"},
-            {"label": "Tips de sostenibilidad", "send": "Tips de sostenibilidad"},
-        ]
-
-    elif "tips de sostenibilidad" in user_message or user_message.startswith("tip:"):
-        if "ahorro de energía" in user_message:
-            reply = ("⚡ Apaga dispositivos en standby y usa lámparas LED para reducir consumo. "
-                    "👉 Sugerido: Lámparas LED eco.")
-            options = [
-                {"label": "Ver lámparas LED 💡", "send": "Categoría: Iluminación LED"},
-                {"label": "Más tips", "send": "Más tips energía"},
-            ]
-        elif "reciclaje" in user_message:
-            reply = ("♻️ Separa residuos orgánicos e inorgánicos; vidrio y aluminio se reciclan infinitamente. "
-                    "👉 Sugerido: Bolsas reciclables y kits de separación.")
-            options = [
-                {"label": "Ver bolsas reciclables 📦", "send": "Categoría: Packaging reciclable"},
-                {"label": "Más tips", "send": "Más tips reciclaje"},
-            ]
-        elif "movilidad verde" in user_message:
-            reply = ("🚲 Usa bici o transporte público para reducir emisiones. "
-                    "👉 Sugerido: Mochilas eco resistentes al agua.")
-            options = [
-                {"label": "Explorar accesorios 🌿", "send": "Recomendación de productos"},
-                {"label": "Más tips", "send": "Más tips movilidad"},
-            ]
-        else:
-            reply = "📘 Elige un tema de tips:"
-            options = [
-                {"label": "⚡ Ahorro de energía", "send": "Tip: Ahorro de energía"},
-                {"label": "♻️ Reciclaje", "send": "Tip: Reciclaje"},
-                {"label": "🚲 Movilidad verde", "send": "Tip: Movilidad verde"},
-            ]
-
-    else:
-        reply = ("Soy EcoBot 🌍. Puedo ayudar con asistencia técnica, recomendación de productos, "
-                "realizar compra y tips de sostenibilidad.")
-        options = [
-            {"label": "🔧 Asistencia técnica", "send": "Asistencia técnica"},
-            {"label": "🌱 Recomendación de productos", "send": "Recomendación de productos"},
-            {"label": "🛒 Realizar compra", "send": "Realizar compra"},
-            {"label": "📘 Tips de sostenibilidad", "send": "Tips de sostenibilidad"},
-        ]
-
-    return JsonResponse({"reply": reply, "options": options})
-
-# =========================
-# Vistas existentes
-# =========================
 def index(request):
     productos = Producto.objects.all()
     puntuaciones_usuario = {}
@@ -159,91 +54,161 @@ def index(request):
     }
     return render(request, "index.html", context)
 
-class CustomLoginView(LoginView):
-    template_name = "account/login.html"
 
-class CustomSignupView(SignupView):
-    template_name = "account/signup.html"
+def iniciar_sesion(request):
+    if request.method == "POST":
+        form = AuthenticationForm(data=request.POST)
+        if form.is_valid():
+            usuario = form.get_user()
+            login(request, usuario)
+            return redirect("productos")
+    else:
+        form = AuthenticationForm()
+    return render(request, "login.html", {"form": form})
 
-from django.contrib.auth import logout
-from django.shortcuts import redirect
 
 def cerrar_sesion(request):
     logout(request)
-    return redirect('home')  # Cambia 'home' por el nombre de tu página principal
+    return redirect("index")
 
-from django.shortcuts import render
-from .models import Producto
 
 def productos(request):
-    productos = Producto.objects.all()
-    return render(request, "productos.html", {"productos": productos})
+    query = request.GET.get("q", "")
+    productos = Producto.objects.filter(nombre__icontains=query) if query else Producto.objects.all()
 
-from django.shortcuts import render, get_object_or_404
-from .models import Producto
+    puntuaciones_usuario = {}
+    if request.user.is_authenticated:
+        puntuaciones = Puntuacion.objects.filter(usuario=request.user)
+        puntuaciones_usuario = {p.producto_id: p.valor for p in puntuaciones}
+
+    for producto in productos:
+        producto.puntuacion_usuario = puntuaciones_usuario.get(producto.id, 0)
+
+    return render(request, "producto.html", {"productos": productos, "query": query})
+
+
+@login_required
+def crear_producto(request):
+    perfil, _ = Perfil.objects.get_or_create(user=request.user)
+    if not perfil.es_vendedor:
+        return redirect("productos")
+
+    if request.method == "POST":
+        nombre = request.POST.get("nombre")
+        descripcion = request.POST.get("descripcion")
+        precio = request.POST.get("precio")
+        imagen = request.FILES.get("imagen")
+
+        if nombre and descripcion and precio and imagen:
+            Producto.objects.create(
+                nombre=nombre,
+                descripcion=descripcion,
+                precio=precio,
+                imagen=imagen,
+                vendedor=request.user
+            )
+            return redirect("productos")
+
+    return render(request, "crear_producto.html")
+
+
+
+def opinion_view(request):
+    if request.method == "POST":
+        nombre = request.POST.get("nombre")
+        mensaje = request.POST.get("mensaje")
+        Opinion.objects.create(nombre=nombre, mensaje=mensaje)
+        return redirect("opinion")
+    opiniones = Opinion.objects.all()
+    return render(request, "opinion.html", {"opiniones": opiniones})
+
+@login_required
+def carrito(request):
+    mostrar_pago = request.GET.get("comprar") == "1"
+    return render(request, "carrito.html", {"mostrar_pago": mostrar_pago})
+
+
+def confirmar_pago(request, metodo):
+    if not request.user.is_authenticated:
+        return redirect("custom_login")  # corregido
+
+    Compra.objects.create(
+        usuario=request.user,
+        metodo_pago=metodo,
+        total=calcular_total_carrito(request),
+        estado="simulado"
+    )
+
+    return redirect(f"/?confirmacion=1&metodo={metodo}")
+
+
+def calcular_total_carrito(request):
+    return 1000.00  # valor simulado en ARS
+
+
+def registro(request):
+    if request.method == "POST":
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect("custom_login")  # corregido
+    else:
+        form = UserCreationForm()
+    return render(request, "registro.html", {"form": form})
+
 
 def producto_detalle(request, id):
     producto = get_object_or_404(Producto, id=id)
-    return render(request, "producto_detalle.html", {"producto": producto})
+    puntuacion_usuario = 0
+    if request.user.is_authenticated:
+        try:
+            puntuacion_usuario = Puntuacion.objects.get(producto=producto, usuario=request.user).valor
+        except Puntuacion.DoesNotExist:
+            pass
+    return render(request, "detalle_producto.html", {
+        "producto": producto,
+        "puntuacion_usuario": puntuacion_usuario
+    })
 
-def crear_producto(request):
-    if request.method == "POST":
-        form = ProductoForm(request.POST, request.FILES)
-        if form.is_valid():
-            form.save()
-            return redirect("productos")  # o la vista que quieras
-    else:
-        form = ProductoForm()
 
-    return render(request, "crear_producto.html", {"form": form})
-# PERFIL
-# =========================
 @login_required
 def mi_perfil(request):
-    perfil = Perfil.objects.get(usuario=request.user)
-    return render(request, "mi_perfil.html", {"perfil": perfil})
+    perfil, _ = Perfil.objects.get_or_create(user=request.user)
+    compras = Compra.objects.filter(usuario=request.user).order_by("-fecha")
+    opiniones = Opinion.objects.filter(nombre=request.user.username).order_by("-fecha")
+
+    return render(request, "perfil.html", {
+        "perfil": perfil,
+        "compras": compras,
+        "opiniones": opiniones
+    })
 
 
 @login_required
 def editar_perfil(request):
-    perfil = Perfil.objects.get(usuario=request.user)
+    perfil, _ = Perfil.objects.get_or_create(user=request.user)
 
     if request.method == "POST":
-        form = EditarPerfilForm(request.POST, request.FILES, instance=perfil)
+        form = EditarPerfilForm(request.POST, request.FILES, instance=perfil, user=request.user)
         if form.is_valid():
             form.save()
-            messages.success(request, "Perfil actualizado correctamente")
+            messages.success(request, "Perfil actualizado correctamente.")
             return redirect("mi_perfil")
+        else:
+            messages.error(request, "Hubo un error al actualizar tu perfil.")
     else:
-        form = EditarPerfilForm(instance=perfil)
+        form = EditarPerfilForm(instance=perfil, user=request.user)
 
     return render(request, "editar_perfil.html", {"form": form})
 
-# CARRITO DE COMPRAS
-# =========================
-@login_required
-def carrito(request):
-    compras = Compra.objects.filter(usuario=request.user, pagado=False)
-    return render(request, "carrito.html", {"compras": compras})
+
+class CustomLoginView(LoginView):
+    template_name = "account/login.html"
 
 
-@login_required
-def confirmar_pago(request, metodo):
-    # Aquí iría tu lógica real
-    return render(request, "confirmar_pago.html", {"metodo": metodo})
+class CustomSignupView(SignupView):
+    template_name = "account/signup.html"
 
 
-@login_required
 def resumen_compra(request):
-    compras = Compra.objects.filter(usuario=request.user, pagado=True)
-    return render(request, "resumen_compra.html", {"compras": compras})
-
-@login_required
-def opinion_view(request):
-    if request.method == "POST":
-        texto = request.POST.get("opinion")
-        Opinion.objects.create(usuario=request.user, texto=texto)
-        return redirect("index")
-
-    opiniones = Opinion.objects.all()
-    return render(request, "opiniones.html", {"opiniones": opiniones})
+    return render(request, "resumen_compra.html", {"now": timezone.now()})

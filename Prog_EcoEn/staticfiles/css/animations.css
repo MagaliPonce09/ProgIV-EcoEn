@@ -1,0 +1,63 @@
+/* ===========================
+   ✨ Animaciones Globales
+   =========================== */
+
+/* Fade-in suave */
+.fade-in {
+  animation: fadeIn 0.6s ease forwards;
+}
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Fade-in lateral (para menús o paneles) */
+.fade-in-right {
+  animation: fadeInRight 0.5s ease forwards;
+}
+@keyframes fadeInRight {
+  from { opacity: 0; transform: translateX(20px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+/* Escala suave (para botones y cards) */
+.scale-up {
+  animation: scaleUp 0.3s ease forwards;
+}
+@keyframes scaleUp {
+  from { transform: scale(0.95); opacity: 0.8; }
+  to   { transform: scale(1); opacity: 1; }
+}
+
+/* Bounce ligero (para feedback de carrito) */
+.bounce {
+  animation: bounce 0.6s ease;
+}
+@keyframes bounce {
+  0%   { transform: scale(1); }
+  30%  { transform: scale(1.1); }
+  50%  { transform: scale(0.95); }
+  70%  { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+
+/* Glow verde eco (para inputs y focus) */
+.glow-green:focus {
+  box-shadow: 0 0 8px #4CAF50;
+  transition: box-shadow 0.3s ease;
+}
+
+/* Slide-up (para alertas y mensajes) */
+.slide-up {
+  animation: slideUp 0.5s ease forwards;
+}
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Animación elegante para menú lateral */
+.menu-lateral.active {
+  animation: fadeInRight 0.5s ease forwards;
+}
+

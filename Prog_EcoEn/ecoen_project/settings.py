@@ -6,9 +6,12 @@ from pathlib import Path
 from decouple import config
 import os
 from dotenv import load_dotenv
+import dj_database_url#este es para deploy
 
 # Cargar variables de entorno
-BASE_DIR = Path(__file__).resolve().parent.parent  # Prog_EcoEn
+#BASE_DIR = Path(__file__).resolve().parent.parent  # Prog_EcoEn
+BASE_DIR = Path(__file__).resolve().parent.parent
+
 ENV_PATH = BASE_DIR.parent / ".env"  # ProgIV-EcoEn/.env
 
 load_dotenv(ENV_PATH)
@@ -19,9 +22,13 @@ AZURE_OPENAI_API_KEY = os.getenv("AZURE_OPENAI_API_KEY")
 AZURE_OPENAI_API_VERSION = "2024-08-01-preview"  # versión estable
 
 # Seguridad
-SECRET_KEY = os.getenv("SECRET_KEY")
-DEBUG = os.getenv("DEBUG", "False") == "True"
-ALLOWED_HOSTS = ["magaliPonce09.pythonanywhere.com", "localhost", "127.0.0.1"]
+#SECRET_KEY = os.getenv("SECRET_KEY")
+SECRET_KEY = os.environ.get("SECRET_KEY", "dev-secret-key-por-defecto")
+#DEBUG = os.getenv("DEBUG", "False") == "True"
+DEBUG = os.environ.get("DEBUG", "False") == "True"
+
+#ALLOWED_HOSTS = ["magaliPonce09.pythonanywhere.com", "localhost", "127.0.0.1"]
+ALLOWED_HOSTS = ["*"]
 
 
 # Aplicaciones instaladas
@@ -81,6 +88,11 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'allauth.account.middleware.AccountMiddleware',
+
+    #MIDDLEWARE = este es el que puse para el deploy
+    "django.middleware.security.SecurityMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware", 
+
 ]
 
 # Templates
@@ -102,14 +114,26 @@ TEMPLATES = [
 
 ROOT_URLCONF = 'Prog_EcoEn.ecoen_project.urls'
 WSGI_APPLICATION = 'Prog_EcoEn.ecoen_project.wsgi.application'
-
 # Base de datos
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+if DEBUG:
+    # --- MODO LOCAL ---
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
     }
-}
+else:
+    # --- MODO DEPLOY ---
+    DATABASES = {
+        "default": dj_database_url.config(
+            default=os.environ.get(
+                "DATABASE_URL",
+                "sqlite:///" + os.path.join(BASE_DIR, "db.sqlite3")
+            )
+        )
+    }
+
 
 # Validación de contraseñas
 AUTH_PASSWORD_VALIDATORS = [
@@ -126,16 +150,22 @@ USE_I18N = True
 USE_TZ = True
 
 # Archivos estáticos
-STATIC_URL = '/static/'
+#STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR / "static"]
-STATIC_ROOT = BASE_DIR / "staticfiles"
+#STATIC_ROOT = BASE_DIR / "staticfiles"
+STATIC_URL = "/static/"
+STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
+
 
 # Whitenoise config
+#STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 # Archivos multimedia
-MEDIA_URL = '/media/'
-MEDIA_ROOT = BASE_DIR / "media"
+#MEDIA_URL = '/media/'
+#MEDIA_ROOT = BASE_DIR / "media"
+MEDIA_URL = "/media/"
+MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
 # Configuración por defecto de IDs
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'

@@ -1,0 +1,568 @@
+/* ===========================
+  🌱 EcoEn - Estilos Globales
+   =========================== */
+
+/* Reset básico */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Tipografía base */
+body {
+  font-family: 'Segoe UI', Arial, sans-serif;
+  line-height: 1.6;
+  transition: background 0.3s ease, color 0.3s ease;
+}
+
+/* Links */
+a {
+  color: #2e7d32;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+a:hover, a:focus {
+  text-decoration: underline;
+  color: #145016;
+  outline: none;
+}
+
+/* Botones base */
+.btn,
+button,
+a.btn {
+  border: none;
+  padding: 0.6rem 0.9rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.2s ease, color 0.3s ease, box-shadow 0.3s ease;
+}
+.btn:focus { outline: 2px solid #81c784; }
+
+/* Botones principales */
+.btn-primary,
+.btn-success {
+  background-color: #2e7d32;
+  color: #fff;
+}
+.btn-primary:hover,
+.btn-success:hover {
+  background-color: #1b5e20;
+  transform: scale(1.05);
+}
+
+/* Outline secundarios */
+.btn-outline-secondary {
+  background-color: transparent;
+  border: 1px solid #2e7d32;
+  color: #1b5e20;
+}
+.btn-outline-secondary:hover {
+  background-color: #2e7d32;
+  color: #ffffff;
+  transform: translateY(-2px);
+}
+
+/* Botón danger */
+.btn-danger {
+  background-color: #d32f2f;
+  color: #fff;
+  border: 1px solid #9a1f1f;
+}
+.btn-danger:hover {
+  background-color: #9a1f1f;
+  transform: translateY(-2px);
+}
+
+/* ===========================
+  🌱 EcoEn - Estilos Globales
+   =========================== */
+
+/* Reset básico */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Tipografía base */
+body {
+  font-family: 'Segoe UI', Arial, sans-serif;
+  line-height: 1.6;
+  transition: background 0.3s ease, color 0.3s ease;
+}
+
+/* Links */
+a {
+  color: #2e7d32;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+a:hover, a:focus {
+  text-decoration: underline;
+  color: #145016;
+  outline: none;
+}
+
+/* Botones base */
+.btn,
+button,
+a.btn {
+  border: none;
+  padding: 0.6rem 0.9rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.2s ease, color 0.3s ease, box-shadow 0.3s ease;
+}
+.btn:focus { outline: 2px solid #81c784; }
+
+/* Botones principales */
+.btn-primary,
+.btn-success {
+  background-color: #2e7d32;
+  color: #fff;
+}
+.btn-primary:hover,
+.btn-success:hover {
+  background-color: #1b5e20;
+  transform: scale(1.05);
+}
+
+/* Outline secundarios */
+.btn-outline-secondary {
+  background-color: transparent;
+  border: 1px solid #2e7d32;
+  color: #1b5e20;
+}
+.btn-outline-secondary:hover {
+  background-color: #2e7d32;
+  color: #ffffff;
+  transform: translateY(-2px);
+}
+
+/* Botón danger */
+.btn-danger {
+  background-color: #d32f2f;
+  color: #fff;
+  border: 1px solid #9a1f1f;
+}
+.btn-danger:hover {
+  background-color: #9a1f1f;
+  transform: translateY(-2px);
+}
+
+/* ===========================
+  🎨 Header
+   =========================== */
+header {
+  background-color: #43a047;
+}
+header h1 {
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: #1b5e20;
+  animation: fadeIn 0.8s ease;
+}
+
+/* ===========================
+  🛒 Cards de productos
+   =========================== */
+.container { padding-bottom: 50px; }
+
+.card {
+  border-radius: 10px;
+  transition: transform 0.2s ease, box-shadow 0.3s ease;
+  overflow: hidden;
+}
+.card:hover {
+  transform: scale(1.03);
+  box-shadow: 0 6px 14px rgba(0,0,0,0.2);
+}
+.card-img-top {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  border-bottom: 1px solid #eee;
+}
+@media (max-width: 768px) { .card-img-top { height: 160px; } }
+.card-title {
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-bottom: 10px;
+  color: #1b5e20;
+  transition: color 0.3s ease, transform 0.2s ease;
+}
+.card-title:hover { color: #145016; transform: translateX(3px); }
+.card-text { font-size: 0.95rem; color: #33691e; }
+
+/* ===========================
+  🛒 Carrito
+   =========================== */
+.table {
+  border: 1px solid #c8e6c9;
+}
+.table th {
+  background: #2e7d32;
+  color: #fff;
+}
+.table td { vertical-align: middle; }
+#carrito-vacio {
+  font-size: 1rem;
+  padding: 1rem;
+  border-radius: 8px;
+}
+
+/* ===========================
+   🔒 Control de imágenes y cards
+   =========================== */
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  position: relative;
+  z-index: 1;
+}
+.card-img-top { position: relative; z-index: 1; }
+.card { position: relative; z-index: 1; overflow: hidden; }
+
+/* ===========================
+   🎠 Control de sliders/carouseles
+   =========================== */
+.carousel { position: relative; z-index: 1; }
+.carousel-item img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  position: relative;
+  z-index: 1;
+  object-fit: cover;
+}
+.carousel-control-prev,
+.carousel-control-next,
+.carousel-indicators {
+  z-index: 2;
+}
+
+/* ===========================
+   💬 Opiniones de clientes
+   =========================== */
+.opinion-card {
+  background: #ffffff;
+  border: 1px solid #e0e0e0;
+  border-radius: 12px;
+  padding: 20px;
+  text-align: center;
+  font-size: 0.95rem;
+  color: #333;
+  transition: transform 0.2s ease, box-shadow 0.3s ease;
+}
+.opinion-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 18px rgba(0,0,0,0.15);
+  border-color: #4CAF50;
+}
+.opinion-card p { margin: 0; font-style: italic; color: #444; }
+.opinion-card small { display: block; margin-top: 10px; font-weight: 600; color: #4CAF50; }
+
+/* ===========================
+  💬 Chatbot
+   =========================== */
+.chatbot-window {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 350px;
+  max-height: 70vh;
+  background: #ffffff;
+  border: 2px solid #2e7d32;
+  border-radius: 12px;
+  box-shadow: 0 8px 22px rgba(0,0,0,0.28);
+  z-index: 3000;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+body.light-mode .chatbot-window { background: #ffffff; border-color: #2e7d32; }
+body.dark-mode  .chatbot-window { background: #0f1b12; border-color: #2e7d32; }
+
+.chatbot-header {
+  background: #2e7d32;
+  color: #ffffff;
+  padding: 0.75rem 1rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.chatbot-messages {
+  flex: 1;
+  padding: 0.9rem;
+  overflow-y: auto;
+  background: #f7fff7;
+}
+body.dark-mode .chatbot-messages { background: #112016; }
+
+.chatbot-input {
+  display: flex;
+  border-top: 1px solid #c8e6c9;
+}
+body.dark-mode .chatbot-input { border-top-color: #2e7d32; }
+.chatbot-input input {
+  flex: 1;
+  padding: 0.75rem;
+  border: none;
+  outline: none;
+  background: transparent;
+  color: inherit;
+}
+.chatbot-input button {
+  background: #2e7d32;
+  color: #fff;
+  border: none;
+  padding: 0 1rem;
+  cursor: pointer;
+  transition: background 0.25s ease;
+}
+.chatbot-input button:hover { background: #1b5e20; }
+
+.chatbot-msg {
+  max-width: 85%;
+  margin-bottom: 10px;
+  padding: 8px 12px;
+  border-radius: 12px;
+  line-height: 1.4;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+}
+.chatbot-msg.bot  { background: #e8f5e9; color: #1b5e20; }
+.chatbot-msg.user { background: #c8e6c9; color: #1b5e20; margin-left: auto; }
+body.dark-mode .chatbot-msg.bot  { background: #17351f; color: #c8e6c9; }
+body.dark-mode .chatbot-msg.user { background: #1e3c25; color: #c8e6c9; }
+
+/* Responsive */
+@media (max-width: 480px) {
+  .chatbot-window {
+    right: 12px;
+    left: 12px;
+    width: auto;
+    bottom: 12px;
+    max-height: 65vh;
+  }
+}
+
+/* Overlay y menú lateral siempre debajo del chatbot */
+.menu-overlay,
+.menu-lateral,
+.carousel,
+.carousel-item img,
+.carousel-control-prev,
+.carousel-control-next,
+.carousel-indicators {
+  z-index: 1000;
+}
+
+/* Chatbot siempre arriba */
+#chatbot-window {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 99999;
+}
+
+/* Animación elegante para ticket, QR, Mercado Pago y alerta */
+#ticket-efectivo, #qr-pago, #mercado-pago, #alerta-expiracion {
+  animation: fadeInZoom 0.8s ease-in-out;
+}
+@keyframes fadeInZoom {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+/* Estilo para contador */
+#contador-tiempo {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #dc3545;
+  animation: pulseTime 1s infinite;
+}
+@keyframes pulseTime {
+  0% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.05); opacity: 0.8; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+/* Animación escalonada para tarjetas */
+.card {
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeUp 0.6s ease-out forwards;
+}
+@keyframes fadeUp {
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Feedback visual para botón “Agregar” */
+.added-feedback {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background: #2e7d32;
+  color: white;
+  font-size: 0.75rem;
+  padding: 2px 6px;
+  border-radius: 50px;
+  animation: fadeOut 2s forwards;
+  z-index: 10;
+}
+@keyframes fadeOut {
+  0% { opacity: 1; }
+  100% { opacity: 0; transform: scale(0.8); }
+}
+
+/* Accesibilidad mejorada */
+button:focus-visible,
+a.btn:focus-visible {
+  outline: 3px solid #81c784;
+  outline-offset: 2px;
+}
+
+/* Transiciones suaves entre modos */
+body,
+.card,
+.navbar,
+header {
+  transition: background-color 0.4s ease, color 0.4s ease, box-shadow 0.4s ease;
+}
+
+/* ===========================
+  🍔 Botón hamburguesa elegante
+   =========================== */
+#menu-toggle {
+  position: fixed;
+  top: 16px;
+  right: 16px;
+  background: linear-gradient(135deg, #2e7d32, #43a047);
+  color: #ffffff;
+  padding: 0.6rem 1rem;
+  border-radius: 50px;
+  font-size: 1.4rem;
+  cursor: pointer;
+  z-index: 2001;
+  border: none;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+#menu-toggle:hover {
+  transform: scale(1.1);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.35);
+}
+#menu-toggle span {
+  font-weight: bold;
+  font-size: 1.2rem;
+  color: #ffffff;
+}
+
+/* ===========================
+  🌑 Overlay elegante
+   =========================== */
+.menu-overlay {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0,0,0,0.5);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.4s ease;
+  z-index: 1998;
+}
+.menu-overlay.active {
+  opacity: 1;
+  visibility: visible;
+  backdrop-filter: blur(3px);
+}
+
+/* ===========================
+  📐 Menú lateral elegante
+   =========================== */
+.menu-lateral {
+  position: fixed;
+  top: 0;
+  right: -320px;
+  width: 300px;
+  height: 100vh;
+  background: linear-gradient(180deg, #1b5e20, #2e7d32);
+  color: #ffffff;
+  border-left: 3px solid #145016;
+  box-shadow: -4px 0 12px rgba(0,0,0,0.25);
+  padding: 2rem 1.2rem;
+  transition: right 0.4s ease;
+  z-index: 2000;
+  overflow-y: auto;
+}
+.menu-lateral.active { right: 0; }
+
+.menu-header {
+  font-weight: bold;
+  margin-bottom: 1rem;
+  font-size: 1.1rem;
+  color: #ffffff;
+  border-bottom: 1px solid rgba(255,255,255,0.2);
+  padding-bottom: 0.5rem;
+}
+
+.menu-stack .btn {
+  display: block;
+  width: 100%;
+  margin-bottom: 1rem;
+  font-size: 1rem;
+  font-weight: 500;
+  text-align: left;
+  padding: 0.8rem 1rem;
+  border-radius: 8px;
+  background-color: rgba(255,255,255,0.1);
+  color: #ffffff;
+  transition: background 0.3s ease, transform 0.2s ease;
+}
+.menu-stack .btn:hover {
+  background-color: rgba(255,255,255,0.2);
+  transform: translateX(5px);
+}
+
+
+/* ===========================
+  🌫️ Desenfoque y bloqueo al abrir menú
+   =========================== */
+body.menu-abierto {
+  overflow: hidden;
+  pointer-events: none;
+}
+body.menu-abierto #menu-lateral,
+body.menu-abierto #menu-toggle,
+body.menu-abierto #menu-overlay {
+  pointer-events: auto;
+}
+body.menu-abierto main,
+body.menu-abierto header,
+body.menu-abierto nav,
+body.menu-abierto .carousel,
+body.menu-abierto .container {
+  filter: blur(3px);
+  transition: filter 0.3s ease;
+}
+
+/* ===========================
+  🌍 Navbar personalizada
+   =========================== */
+.bg-azul {
+  background-color: #2e7d32 !important; /* verde oscuro */
+}
+
+.navbar .nav-link {
+  color: #ffffff !important;
+  font-weight: 500;
+  transition: color 0.3s ease;
+}
+
+.navbar .nav-link:hover {
+  color: #c8e6c9 !important; /* verde claro al pasar el mouse */
+}
