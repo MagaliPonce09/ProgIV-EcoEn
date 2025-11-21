@@ -1,6 +1,7 @@
 from django import forms
 from django.contrib.auth.models import User
 from .models import Perfil
+from .models import Producto
 
 class EditarPerfilForm(forms.ModelForm):
     username = forms.CharField(max_length=150)
@@ -38,3 +39,9 @@ class EditarPerfilForm(forms.ModelForm):
         if User.objects.exclude(pk=self.instance.user.pk).filter(email=email).exists():
             raise forms.ValidationError("Este correo ya está registrado.")
         return email
+    
+
+class ProductoForm(forms.ModelForm):
+    class Meta:
+        model = Producto
+        fields = "__all__"

@@ -12,6 +12,7 @@ from .models import Producto, Opinion, Compra, Puntuacion, Perfil
 from .forms import EditarPerfilForm
 from allauth.account.views import LoginView, SignupView
 from django.utils import timezone
+from .forms import ProductoForm
 
 # =========================
 # CHATBOT VIEW (flujo educativo + compra + opciones dinámicas)
@@ -97,21 +98,21 @@ def chatbot_response(request):
     elif "tips de sostenibilidad" in user_message or user_message.startswith("tip:"):
         if "ahorro de energía" in user_message:
             reply = ("⚡ Apaga dispositivos en standby y usa lámparas LED para reducir consumo. "
-                     "👉 Sugerido: Lámparas LED eco.")
+                    "👉 Sugerido: Lámparas LED eco.")
             options = [
                 {"label": "Ver lámparas LED 💡", "send": "Categoría: Iluminación LED"},
                 {"label": "Más tips", "send": "Más tips energía"},
             ]
         elif "reciclaje" in user_message:
             reply = ("♻️ Separa residuos orgánicos e inorgánicos; vidrio y aluminio se reciclan infinitamente. "
-                     "👉 Sugerido: Bolsas reciclables y kits de separación.")
+                    "👉 Sugerido: Bolsas reciclables y kits de separación.")
             options = [
                 {"label": "Ver bolsas reciclables 📦", "send": "Categoría: Packaging reciclable"},
                 {"label": "Más tips", "send": "Más tips reciclaje"},
             ]
         elif "movilidad verde" in user_message:
             reply = ("🚲 Usa bici o transporte público para reducir emisiones. "
-                     "👉 Sugerido: Mochilas eco resistentes al agua.")
+                    "👉 Sugerido: Mochilas eco resistentes al agua.")
             options = [
                 {"label": "Explorar accesorios 🌿", "send": "Recomendación de productos"},
                 {"label": "Más tips", "send": "Más tips movilidad"},
@@ -126,7 +127,7 @@ def chatbot_response(request):
 
     else:
         reply = ("Soy EcoBot 🌍. Puedo ayudar con asistencia técnica, recomendación de productos, "
-                 "realizar compra y tips de sostenibilidad.")
+                "realizar compra y tips de sostenibilidad.")
         options = [
             {"label": "🔧 Asistencia técnica", "send": "Asistencia técnica"},
             {"label": "🌱 Recomendación de productos", "send": "Recomendación de productos"},
@@ -164,4 +165,85 @@ class CustomLoginView(LoginView):
 class CustomSignupView(SignupView):
     template_name = "account/signup.html"
 
-# ... (el resto de tus vistas se mantiene igual)
+from django.contrib.auth import logout
+from django.shortcuts import redirect
+
+def cerrar_sesion(request):
+    logout(request)
+    return redirect('home')  # Cambia 'home' por el nombre de tu página principal
+
+from django.shortcuts import render
+from .models import Producto
+
+def productos(request):
+    productos = Producto.objects.all()
+    return render(request, "productos.html", {"productos": productos})
+
+from django.shortcuts import render, get_object_or_404
+from .models import Producto
+
+def producto_detalle(request, id):
+    producto = get_object_or_404(Producto, id=id)
+    return render(request, "producto_detalle.html", {"producto": producto})
+
+def crear_producto(request):
+    if request.method == "POST":
+        form = ProductoForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            return redirect("productos")  # o la vista que quieras
+    else:
+        form = ProductoForm()
+
+    return render(request, "crear_producto.html", {"form": form})
+# PERFIL
+# =========================
+@login_required
+def mi_perfil(request):
+    perfil = Perfil.objects.get(usuario=request.user)
+    return render(request, "mi_perfil.html", {"perfil": perfil})
+
+
+@login_required
+def editar_perfil(request):
+    perfil = Perfil.objects.get(usuario=request.user)
+
+    if request.method == "POST":
+        form = EditarPerfilForm(request.POST, request.FILES, instance=perfil)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Perfil actualizado correctamente")
+            return redirect("mi_perfil")
+    else:
+        form = EditarPerfilForm(instance=perfil)
+
+    return render(request, "editar_perfil.html", {"form": form})
+
+# CARRITO DE COMPRAS
+# =========================
+@login_required
+def carrito(request):
+    compras = Compra.objects.filter(usuario=request.user, pagado=False)
+    return render(request, "carrito.html", {"compras": compras})
+
+
+@login_required
+def confirmar_pago(request, metodo):
+    # Aquí iría tu lógica real
+    return render(request, "confirmar_pago.html", {"metodo": metodo})
+
+
+@login_required
+def resumen_compra(request):
+    compras = Compra.objects.filter(usuario=request.user, pagado=True)
+    return render(request, "resumen_compra.html", {"compras": compras})
+
+@login_required
+def opinion_view(request):
+    if request.method == "POST":
+        texto = request.POST.get("opinion")
+        Opinion.objects.create(usuario=request.user, texto=texto)
+        return redirect("index")
+
+    opiniones = Opinion.objects.all()
+    return render(request, "opiniones.html", {"opiniones": opiniones})
