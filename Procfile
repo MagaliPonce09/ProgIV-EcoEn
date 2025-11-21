@@ -1,1 +1,1 @@
-web: gunicorn Prog_EcoEn.wsgi
+web: gunicorn ecoen_project.wsgi --workers 3 --bind 0.0.0.0:$PORT
