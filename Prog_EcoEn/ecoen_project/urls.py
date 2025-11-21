@@ -13,7 +13,7 @@ urlpatterns = [
     path('accounts/', include('allauth.urls')),
      
     # App principal
-    path('', include('ecoen_app.urls')),   # tu app principal
+    path('', include('Prog_EcoEn.ecoen_app.urls')),   # tu app principal
 
     # Chatbot (solo si tienes una app llamada "chatbot")
     # Si no existe, elimina esta línea
