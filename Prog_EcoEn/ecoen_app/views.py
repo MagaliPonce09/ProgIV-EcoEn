@@ -210,5 +210,6 @@ class CustomSignupView(SignupView):
     template_name = "account/signup.html"
 
 
+
 def resumen_compra(request):
     return render(request, "resumen_compra.html", {"now": timezone.now()})

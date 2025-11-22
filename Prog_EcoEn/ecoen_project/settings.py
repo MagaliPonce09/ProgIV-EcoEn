@@ -99,7 +99,9 @@ MIDDLEWARE = [
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        "DIRS": [BASE_DIR / "ecoen_app" / "templates"],
+        "DIRS": [BASE_DIR / "ecoen_app" / "templates",
+                 BASE_DIR / "chatbot",
+        ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
