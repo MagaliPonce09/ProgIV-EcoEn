@@ -1,4 +1,4 @@
-<!-- chatbot/templates/chatbot/chat.html -->
+<!-- chatbot/templates/chatbot/chat.html 
 
 <!DOCTYPE html>
 <html lang="es">
@@ -7,27 +7,27 @@
   <meta charset="UTF-8">
   <title>EcoBot Chat</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <!-- Estilos del chatbot -->
+ Estilos del chatbot 
   <link rel="stylesheet" href="{% static 'css/chatbot.css' %}">
 </head>
 <body>
 
-  <!-- Botón flotante con mascotita (abre/cierra el panel) -->
+   Botón flotante con mascotita (abre/cierra el panel) 
   <div id="chatbot-button" aria-label="Abrir EcoBot" title="Abrir EcoBot">
     <img src="{% static 'img/ecobot.png' %}" alt="EcoBot" style="width: 50px; height: 50px; cursor: pointer;" />
   </div>
 
-  <!-- Panel lateral vertical (glassmorphism + slide-in) -->
+   Panel lateral vertical (glassmorphism + slide-in) 
   <div id="chatbot-window" class="hidden" role="dialog" aria-label="EcoBot">
     <div id="chatbot-header">
-      <span>EcoBot 🌍</span>
-      <button id="chatbot-close" aria-label="Cerrar">✖</button>
+      <span>EcoBot 🌱</span>
+      
     </div>
 
-    <!-- Área de mensajes -->
+     Área de mensajes 
     <div id="chatbot-messages" aria-live="polite"></div>
 
-    <!-- Botones rápidos iniciales -->
+     Botones rápidos iniciales 
     <div id="chatbot-quick-replies">
       <button data-action="asistencia">🔧 Asistencia técnica</button>
       <button data-action="recomendacion">🌱 Recomendación de productos</button>
@@ -35,16 +35,16 @@
       <button data-action="tips">📘 Tips de sostenibilidad</button>
     </div>
 
-    <!-- Input -->
+     Input 
     <div id="chatbot-input-row">
       <input id="chatbot-input" type="text" placeholder="Escribe tu mensaje..." />
       <button id="chatbot-send">Enviar</button>
     </div>
   </div>
 
-  <!-- Script del chatbot (lógica de apertura/cierre y flujo) -->
+   Script del chatbot (lógica de apertura/cierre y flujo) 
   <script src="{% static 'js/chatbot.js' %}"></script>
 </body>
-</html>
+</html> -->
 
 
