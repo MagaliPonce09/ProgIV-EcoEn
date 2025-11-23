@@ -3,7 +3,7 @@
 <head>
     {% load static %}
     {% load socialaccount %}
-    {% include 'chatbot.html' %}
+    
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>EcoEn</title>
@@ -153,6 +153,7 @@
     btn.addEventListener("click", cerrarMenu);
   });
 </script>
-
+ <!-- Aquí incluimos el chatbot en TODAS las páginas -->
+ {% include "chatbot/chat.html" %}
 </body>
 </html>

@@ -3,6 +3,8 @@
 // =========================
 // Referencias a elementos
 // =========================
+
+document.addEventListener("DOMContentLoaded", () => {
 const btn = document.getElementById("chatbot-button");
 const win = document.getElementById("chatbot-window");
 const closeBtn = document.getElementById("chatbot-close");
@@ -14,13 +16,14 @@ const quickReplies = document.getElementById("chatbot-quick-replies");
 // =========================
 /* Apertura / cierre con slide-in */
 // =========================
-btn?.addEventListener("click", () => {
-  win?.classList.toggle("hidden"); // usa clase .hidden del CSS para slide-in
-});
+chatbotButton.addEventListener("click", () => {
+    chatbotWindow.classList.remove("hidden");
+  });
 
-closeBtn?.addEventListener("click", () => {
-  win?.classList.add("hidden");
-});
+  // Cerrar chatbot
+  chatbotClose.addEventListener("click", () => {
+    chatbotWindow.classList.add("hidden");
+  });
 
 // =========================
 /* Utilidades de mensajes */
@@ -126,7 +129,7 @@ function renderQuickOptions(options) {
 window.addEventListener("DOMContentLoaded", () => {
   addMessage("EcoBot", "Hola 👋 Soy EcoBot. ¿En que puedo ayudarte hoy?
   ¿Buscas asistencia técnica, recomendaciones, comprar, o tips de sostenibilidad?");
-
+  }
 });
 
 

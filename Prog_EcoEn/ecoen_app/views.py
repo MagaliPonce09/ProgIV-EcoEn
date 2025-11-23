@@ -13,14 +13,14 @@ from .forms import EditarPerfilForm
 from allauth.account.views import LoginView, SignupView
 from django.utils import timezone
 
-
-# ---------------- CHATBOT ----------------
 @csrf_exempt
 def chatbot_view(request):
+
+    # Configura tu API key (mejor usar variables de entorno)
     client = AzureOpenAI(
-        api_key=settings.AZURE_OPENAI_API_KEY,
-        azure_endpoint=settings.AZURE_OPENAI_ENDPOINT,
-        api_version=settings.AZURE_OPENAI_API_VERSION,
+    api_key=settings.AZURE_OPENAI_API_KEY,
+    azure_endpoint=settings.AZURE_OPENAI_ENDPOINT,
+    api_version=settings.AZURE_OPENAI_API_VERSION,
     )
     
     if request.method == "POST":
@@ -28,15 +28,13 @@ def chatbot_view(request):
         user_message = data.get("message", "")
 
         response = client.chat.completions.create(
-            model="gpt-4o-mini",
+            model="gpt-4o-mini",  # motor que usa Copilot
             messages=[{"role": "user", "content": user_message}]
         )
 
         bot_reply = response.choices[0].message.content
         return JsonResponse({"reply": bot_reply})
 
-
-# ---------------- INDEX ----------------
 def index(request):
     productos = Producto.objects.all()
     puntuaciones_usuario = {}
@@ -57,7 +55,6 @@ def index(request):
     return render(request, "index.html", context)
 
 
-# ---------------- AUTENTICACIÓN ----------------
 def iniciar_sesion(request):
     if request.method == "POST":
         form = AuthenticationForm(data=request.POST)
@@ -67,7 +64,7 @@ def iniciar_sesion(request):
             return redirect("productos")
     else:
         form = AuthenticationForm()
-    return render(request, "account/login.html", {"form": form})  # corregido
+    return render(request, "login.html", {"form": form})
 
 
 def cerrar_sesion(request):
@@ -75,26 +72,6 @@ def cerrar_sesion(request):
     return redirect("index")
 
 
-def registro(request):
-    if request.method == "POST":
-        form = UserCreationForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect("custom_login")  # corregido
-    else:
-        form = UserCreationForm()
-    return render(request, "account/signup.html", {"form": form})  # corregido
-
-
-class CustomLoginView(LoginView):
-    template_name = "account/login.html"
-
-
-class CustomSignupView(SignupView):
-    template_name = "account/signup.html"
-
-
-# ---------------- PRODUCTOS ----------------
 def productos(request):
     query = request.GET.get("q", "")
     productos = Producto.objects.filter(nombre__icontains=query) if query else Producto.objects.all()
@@ -135,21 +112,7 @@ def crear_producto(request):
     return render(request, "crear_producto.html")
 
 
-def producto_detalle(request, id):
-    producto = get_object_or_404(Producto, id=id)
-    puntuacion_usuario = 0
-    if request.user.is_authenticated:
-        try:
-            puntuacion_usuario = Puntuacion.objects.get(producto=producto, usuario=request.user).valor
-        except Puntuacion.DoesNotExist:
-            pass
-    return render(request, "detalle_producto.html", {
-        "producto": producto,
-        "puntuacion_usuario": puntuacion_usuario
-    })
 
-
-# ---------------- OPINIONES ----------------
 def opinion_view(request):
     if request.method == "POST":
         nombre = request.POST.get("nombre")
@@ -159,8 +122,6 @@ def opinion_view(request):
     opiniones = Opinion.objects.all()
     return render(request, "opinion.html", {"opiniones": opiniones})
 
-
-# ---------------- CARRITO ----------------
 @login_required
 def carrito(request):
     mostrar_pago = request.GET.get("comprar") == "1"
@@ -185,7 +146,31 @@ def calcular_total_carrito(request):
     return 1000.00  # valor simulado en ARS
 
 
-# ---------------- PERFIL ----------------
+def registro(request):
+    if request.method == "POST":
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect("custom_login")  # corregido
+    else:
+        form = UserCreationForm()
+    return render(request, "registro.html", {"form": form})
+
+
+def producto_detalle(request, id):
+    producto = get_object_or_404(Producto, id=id)
+    puntuacion_usuario = 0
+    if request.user.is_authenticated:
+        try:
+            puntuacion_usuario = Puntuacion.objects.get(producto=producto, usuario=request.user).valor
+        except Puntuacion.DoesNotExist:
+            pass
+    return render(request, "detalle_producto.html", {
+        "producto": producto,
+        "puntuacion_usuario": puntuacion_usuario
+    })
+
+
 @login_required
 def mi_perfil(request):
     perfil, _ = Perfil.objects.get_or_create(user=request.user)
@@ -217,6 +202,14 @@ def editar_perfil(request):
     return render(request, "editar_perfil.html", {"form": form})
 
 
-# ---------------- RESUMEN ----------------
+class CustomLoginView(LoginView):
+    template_name = "account/login.html"
+
+
+class CustomSignupView(SignupView):
+    template_name = "account/signup.html"
+
+
+
 def resumen_compra(request):
     return render(request, "resumen_compra.html", {"now": timezone.now()})
