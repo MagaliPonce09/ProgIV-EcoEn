@@ -2,6 +2,7 @@ from django.urls import path, include
 from . import views
 from .views import CustomLoginView, CustomSignupView
 
+
 urlpatterns = [
     # Página principal
     path('', views.index, name='index'),

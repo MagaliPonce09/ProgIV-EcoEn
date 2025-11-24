@@ -1,98 +1,147 @@
 
 <!DOCTYPE html>
 <html lang="es">
-<head>
-    {% load static %}
-    {% load socialaccount %}
-    
+  <head>
+    {% load static %} {% load socialaccount %}
+
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>EcoEn</title>
 
     <!-- Favicon -->
-    <link rel="icon" type="image/png" href="{% static 'images/faviconTT.png' %}" />
+    <link
+      rel="icon"
+      type="image/png"
+      href="{% static 'images/faviconTT.png' %}"
+    />
 
     <!-- Fuentes -->
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
 
     <!-- Bootstrap primero -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
 
     <!-- Estilos propios DESPUÉS de Bootstrap -->
     <link rel="stylesheet" href="{% static 'css/styles.css' %}" />
     <link rel="stylesheet" href="{% static 'css/chatbot.css' %}" />
     <link rel="stylesheet" href="{% static 'css/animations.css' %}" />
-</head>
-<body class="light-mode">
+  </head>
+  <body class="light-mode">
+    <!-- Botón flotante hamburguesa -->
+    <div
+      id="menu-toggle"
+      onclick="toggleMenu()"
+      class="menu-toggle"
+      aria-controls="menu-lateral"
+      aria-expanded="false"
+      aria-label="Abrir menú"
+    >
+      <span id="menu-icon">☰</span>
+    </div>
 
-<!-- Botón flotante hamburguesa -->
-<div id="menu-toggle" onclick="toggleMenu()" class="menu-toggle"
-     aria-controls="menu-lateral"
-     aria-expanded="false"
-     aria-label="Abrir menú">
-  <span id="menu-icon">☰</span>
-</div>
+    <!-- Overlay -->
+    <div id="menu-overlay" class="menu-overlay"></div>
 
-<!-- Overlay -->
-<div id="menu-overlay" class="menu-overlay"></div>
+    <!-- Menú lateral derecho -->
+    <div
+      id="menu-lateral"
+      class="menu-lateral"
+      role="dialog"
+      aria-modal="true"
+      aria-label="Menú lateral"
+    >
+      <div class="menu-stack">
+        {% if user.is_authenticated %}
+        <p class="menu-header">👋 Hola, {{ user.username }}</p>
+        <a href="{% url 'custom_logout' %}" class="btn btn-danger"
+          >Cerrar sesión</a
+        >
+        {% else %}
+        <button onclick="toggleLoginOptions()" class="btn btn-primary">
+          🔐 Iniciar sesión
+        </button>
+        <div id="login-options" class="collapse-area">
+          <a href="{% url 'custom_login' %}" class="btn btn-outline-primary"
+            >Iniciar sesión con usuario</a
+          >
+          <p class="text-center mt-2">
+            ¿No tienes una cuenta?
+            <a href="{% url 'custom_signup' %}" class="text-success"
+              >Regístrate aquí</a
+            >
+          </p>
+        </div>
+        {% endif %}
 
-<!-- Menú lateral derecho -->
-<div id="menu-lateral" class="menu-lateral" role="dialog" aria-modal="true" aria-label="Menú lateral">
-  <div class="menu-stack">
-    {% if user.is_authenticated %}
-      <p class="menu-header">👋 Hola, {{ user.username }}</p>
-      <a href="{% url 'custom_logout' %}" class="btn btn-danger">Cerrar sesión</a>
-    {% else %}
-      <button onclick="toggleLoginOptions()" class="btn btn-primary">🔐 Iniciar sesión</button>
-      <div id="login-options" class="collapse-area">
-        <a href="{% url 'custom_login' %}" class="btn btn-outline-primary">Iniciar sesión con usuario</a>
-        <p class="text-center mt-2">
-          ¿No tienes una cuenta?
-          <a href="{% url 'custom_signup' %}" class="text-success">Regístrate aquí</a>
-        </p>
+        <a href="{% url 'mi_perfil' %}" class="btn btn-outline-secondary"
+          >👤 Ver perfil</a
+        >
+
+        <button onclick="toggleConfig()" class="btn btn-secondary">
+          ⚙️ Configuración
+        </button>
+        <div id="config-options" class="collapse-area">
+          <button onclick="toggleDarkMode()" class="btn btn-dark">
+            🌙 Modo oscuro / claro
+          </button>
+        </div>
       </div>
-    {% endif %}
-
-    <a href="{% url 'mi_perfil' %}" class="btn btn-outline-secondary">👤 Ver perfil</a>
-
-    <button onclick="toggleConfig()" class="btn btn-secondary">⚙️ Configuración</button>
-    <div id="config-options" class="collapse-area">
-      <button onclick="toggleDarkMode()" class="btn btn-dark">🌙 Modo oscuro / claro</button>
     </div>
-  </div>
-</div>
 
-<!-- Header -->
-<header class="text-center p-4 bg-azul">
-  {% block header_title %}
-    <h1 class="m-0">🌱 Energía Renovable</h1>
-  {% endblock %}
-</header>
+    <!-- Header -->
+    <header class="text-center p-4 bg-azul">
+      {% block header_title %}
+      <h1 class="m-0">🌱 Energía Renovable</h1>
+      {% endblock %}
+    </header>
 
-<!-- Navbar -->
-<nav class="navbar navbar-expand-lg navbar-dark bg-azul">
-  <div class="container-fluid">
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarEcoEn" aria-controls="navbarEcoEn" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarEcoEn">
-      <ul class="navbar-nav mx-auto">
-        <li class="nav-item"><a class="nav-link" href="{% url 'index' %}">Inicio</a></li>
-        <li class="nav-item"><a class="nav-link" href="{% url 'productos' %}">Productos</a></li>
-        <li class="nav-item"><a class="nav-link" href="#reseñas">Reseñas</a></li>
-        <li class="nav-item"><a class="nav-link" href="#contacto">Contacto</a></li>
-      </ul>
-    </div>
-  </div>
-</nav>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-azul">
+      <div class="container-fluid">
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarEcoEn"
+          aria-controls="navbarEcoEn"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarEcoEn">
+          <ul class="navbar-nav mx-auto">
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'index' %}">Inicio</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'productos' %}">Productos</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#reseñas">Reseñas</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#contacto">Contacto</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
 
-<!-- Contenido dinámico -->
-<main>{% block content %}{% endblock %}</main>
+    <!-- Contenido dinámico -->
+    <main>{% block content %}{% endblock %}</main>
 
-<!-- =========================
+    <!-- =========================
      ECOBOT: BOTÓN + PANEL LATERAL
      ========================= -->
 
+<<<<<<< HEAD
 <!-- Botón flotante con mascotita (abre/cierra el panel) -->
 <div id="chatbot-button" class="chatbot-icon ecobot-mascot" aria-label="Abrir EcoBot" title="Abrir EcoBot">
   <img src="{% static 'images/ecobot_mascot.png' %}" alt="EcoBot" />
@@ -118,40 +167,83 @@
    <button data-action="precios" style="--i:6">💲 Precios</button>
 
   </div>
+=======
+    <!-- Botón flotante con mascotita (abre/cierra el panel) -->
+    <div id="chatbot-button" aria-label="Abrir EcoBot" title="Abrir EcoBot">
+      <img
+        src="{% static 'img/ecobot.png' %}"
+        alt="EcoBot"
+        style="width: 50px; height: 50px; cursor: pointer"
+      />
+    </div>
 
-  <!-- Input -->
-  <div id="chatbot-input-row">
-    <input id="chatbot-input" type="text" placeholder="Escribe tu mensaje..." />
-    <button id="chatbot-send">Enviar</button>
-  </div>
-</div>
+    <!-- Panel lateral vertical (glassmorphism + slide-in) -->
+    <div id="chatbot-window" class="hidden" role="dialog" aria-label="EcoBot">
+      <div id="chatbot-header">
+        <span>EcoBot 🌍</span>
+        <button id="chatbot-close" aria-label="Cerrar">✖</button>
+      </div>
 
+      <!-- Área de mensajes -->
+      <div id="chatbot-messages" aria-live="polite"></div>
+
+      <!-- Botones rápidos iniciales -->
+      <div id="chatbot-quick-replies">
+        <button data-action="asistencia">🔧 Asistencia técnica</button>
+        <button data-action="recomendacion">
+          🌱 Recomendación de productos
+        </button>
+        <button data-action="compra">🛒 Realizar compra</button>
+        <button data-action="tips">📘 Tips de sostenibilidad</button>
+      </div>
+>>>>>>> 13d79944a7656eae80a70e1c4525016e6ffca39d
+
+      <!-- Input -->
+      <div id="chatbot-input-row">
+        <input
+          id="chatbot-input"
+          type="text"
+          placeholder="Escribe tu mensaje..."
+        />
+        <button id="chatbot-send">Enviar</button>
+      </div>
+    </div>
+
+<<<<<<< HEAD
 <!-- Scripts globales -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 <script src="{% static 'js/chatbot.js' %}" defer></script>
+=======
+    <!-- Scripts globales -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{% static 'js/chatbot.js' %}"></script>
+>>>>>>> 13d79944a7656eae80a70e1c4525016e6ffca39d
 
-<script>
-  function toggleMenu() {
-    const menu = document.getElementById("menu-lateral");
-    const overlay = document.getElementById("menu-overlay");
-    const toggle = document.getElementById("menu-toggle");
-    const body = document.body;
+    <script>
+      function toggleMenu() {
+        const menu = document.getElementById("menu-lateral");
+        const overlay = document.getElementById("menu-overlay");
+        const toggle = document.getElementById("menu-toggle");
+        const body = document.body;
 
-    const isActive = menu.classList.contains("active");
+        const isActive = menu.classList.contains("active");
 
-    menu.classList.toggle("active");
-    overlay.classList.toggle("active");
-    toggle.setAttribute("aria-expanded", !isActive);
-    body.classList.toggle("menu-abierto", !isActive);
-  }
+        menu.classList.toggle("active");
+        overlay.classList.toggle("active");
+        toggle.setAttribute("aria-expanded", !isActive);
+        body.classList.toggle("menu-abierto", !isActive);
+      }
 
-  function cerrarMenu() {
-    document.getElementById("menu-lateral").classList.remove("active");
-    document.getElementById("menu-overlay").classList.remove("active");
-    document.getElementById("menu-toggle").setAttribute("aria-expanded", false);
-    document.body.classList.remove("menu-abierto");
-  }
+      function cerrarMenu() {
+        document.getElementById("menu-lateral").classList.remove("active");
+        document.getElementById("menu-overlay").classList.remove("active");
+        document
+          .getElementById("menu-toggle")
+          .setAttribute("aria-expanded", false);
+        document.body.classList.remove("menu-abierto");
+      }
 
+<<<<<<< HEAD
   document.getElementById("menu-overlay").addEventListener("click", cerrarMenu);
   document.querySelectorAll("#menu-lateral .btn").forEach(btn => {
     btn.addEventListener("click", cerrarMenu);
@@ -162,4 +254,16 @@
 {% block extra_scripts %}{% endblock %}
 
 </body>
+=======
+      document
+        .getElementById("menu-overlay")
+        .addEventListener("click", cerrarMenu);
+      document.querySelectorAll("#menu-lateral .btn").forEach((btn) => {
+        btn.addEventListener("click", cerrarMenu);
+      });
+    </script>
+    <!-- Aquí incluimos el chatbot en TODAS las páginas -->
+    {% include "chatbot/chat.html" %}
+  </body>
+>>>>>>> 13d79944a7656eae80a70e1c4525016e6ffca39d
 </html>
