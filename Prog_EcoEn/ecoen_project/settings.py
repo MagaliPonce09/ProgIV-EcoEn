@@ -142,18 +142,11 @@ USE_I18N = True
 USE_TZ = True
 
 # Archivos estáticos
-<<<<<<< HEAD
 #STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR / "ecoen_app/static"]
 #STATIC_ROOT = BASE_DIR / "staticfiles"
 STATIC_URL = "/static/"
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
-=======
-STATIC_URL = '/static/'
-STATICFILES_DIRS = [BASE_DIR / "static"]
-STATIC_ROOT = BASE_DIR / "staticfiles"
-
->>>>>>> 13d79944a7656eae80a70e1c4525016e6ffca39d
 
 
 # Whitenoise config

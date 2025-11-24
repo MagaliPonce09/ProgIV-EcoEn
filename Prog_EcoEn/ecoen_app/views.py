@@ -13,10 +13,7 @@ from .forms import EditarPerfilForm
 from allauth.account.views import LoginView, SignupView
 from django.utils import timezone
 
-@csrf_exempt
 def chatbot_view(request):
-
-   def chatbot_view(request):
     return render(request, "ecoen_app/chatbot.html") 
 def index(request):
     productos = Producto.objects.all()
