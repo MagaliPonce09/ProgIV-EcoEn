@@ -1,234 +1,331 @@
-/* =========================
-   Animaciones base
-   ========================= */
-@keyframes fadeInUp {
-  from { opacity: 0; transform: translateY(30px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-@keyframes fadeOutDown {
-  from { opacity: 1; transform: translateY(0); }
-  to { opacity: 0; transform: translateY(30px); }
-}
-.fadeInUp { animation: fadeInUp 0.4s ease forwards; }
-.fadeOutDown { animation: fadeOutDown 0.4s ease forwards; }
-
-/* =========================
-   Botón flotante del chatbot
-   ========================= */
-#chatbot-button {
+/* Ícono flotante EcoBot */
+.chatbot-icon.ecobot-mascot {
   position: fixed;
   bottom: 20px;
   right: 20px;
-  background: linear-gradient(135deg, #4CAF50, #2E7D32);
+  backdrop-filter: blur(10px);
+  background: rgba(76, 175, 80, 0.25); /* verde translúcido */
+  border: 2px solid rgba(255,255,255,0.3);
   border-radius: 50%;
-  padding: 12px;
+  width: 70px;
+  height: 70px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   cursor: pointer;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-  z-index: 100000;
-}
-#chatbot-button img {
-  width: 50px;
-  height: 50px;
-  display: block;
-}
-#chatbot-button:hover {
-  transform: scale(1.08);
-  box-shadow: 0 6px 16px rgba(0,0,0,0.4);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+  transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
+  z-index: 1000;
+  animation: bounce 3s infinite;
 }
 
-/* =========================
-   Overlay opcional (si lo usas)
-   ========================= */
-#chatbot-overlay,
-.chatbot-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.25);
-  z-index: 100002;
-  opacity: 0;
-  visibility: hidden;
-  transition: opacity 0.3s ease;
-}
-#chatbot-overlay.active,
-.chatbot-overlay.active {
-  opacity: 1;
-  visibility: visible;
+.chatbot-icon.ecobot-mascot {
+  background: radial-gradient(circle at center, #6ee7b7, #34d399);
+  box-shadow: 0 0 12px rgba(52, 211, 153, 0.6);
+  animation: bounce 2s infinite ease-in-out;
 }
 
-/* =========================
-   Panel lateral vertical (Glassmorphism + Slide-in)
-   ========================= */
-#chatbot-window {
+.chatbot-icon.ecobot-mascot:hover {
+  box-shadow: 0 0 20px rgba(52, 211, 153, 0.8);
+  transform: scale(1.1);
+}
+
+
+.chatbot-icon.ecobot-mascot img {
+  animation: wink 5s infinite ease-in-out;
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  25% { transform: translateY(-10px); }
+  50% { transform: translateY(5px); }
+  75% { transform: translateY(-5px); }
+}
+
+@keyframes wink {
+  0%, 90%, 100% { transform: scaleY(1); }
+  95% { transform: scaleY(0.5); }
+}
+
+
+/* Animación rebote */
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  30% { transform: translateY(-6px); }
+  60% { transform: translateY(3px); }
+}
+
+/* Animación guiño (reduce altura del ojo simulando parpadeo) */
+@keyframes wink {
+  0%, 90%, 100% { transform: scaleY(1); }
+  95% { transform: scaleY(0.6); }
+}
+
+/* Ventana del chatbot */
+.chatbot-window {
   position: fixed;
-  top: 0;
-  right: 0;
-  width: 360px;
-  max-width: 100vw;
-  height: 100%;
-  background: rgba(255, 255, 255, 0.15);       /* transparencia */
-  backdrop-filter: blur(12px);                  /* efecto vidrio */
-  -webkit-backdrop-filter: blur(12px);
-  border-left: 2px solid rgba(255, 255, 255, 0.3);
-  border-radius: 12px 0 0 12px;
+  bottom: 90px;
+  right: 20px;
+  width: 500px;
+  height: 900px;
+  background: rgba(255,255,255,0.15);
+  backdrop-filter: blur(12px);
+  border-radius: 20px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.2);
   display: flex;
   flex-direction: column;
-  box-shadow: -4px 0 20px rgba(0,0,0,0.25);
-  font-family: 'Montserrat', 'Segoe UI', 'Roboto', sans-serif;
-  transition: transform 0.4s ease, opacity 0.4s ease;
-  z-index: 100001; /* por encima del menú lateral */
+  overflow: hidden;
+  transform: translateX(120%); /* Oculta inicialmente */
+  opacity: 0;
+  transition: transform 0.4s ease-out, opacity 0.4s ease-out;
+  z-index: 999;
+}
+
+/* Estado visible: se activa con JS */
+.chatbot-window.show {
   transform: translateX(0);
   opacity: 1;
 }
-#chatbot-window.hidden {
-  transform: translateX(100%);
-  opacity: 0;
-}
 
-/* =========================
-   Header del chatbot
-   ========================= */
+/* Header */
 #chatbot-header {
-  background: linear-gradient(135deg, rgba(76,175,80,0.85), rgba(129,199,132,0.7));
+  background: rgba(76, 175, 80, 0.9);
   color: white;
-  padding: 14px 16px;
-  font-size: 18px;
-  font-weight: 600;
+  padding: 12px;
+  font-weight: bold;
   display: flex;
-  align-items: center;
   justify-content: space-between;
-  border-bottom: 1px solid rgba(255,255,255,0.3);
-  border-radius: 12px 0 0 0;
-}
-#chatbot-close {
-  background: transparent;
-  border: none;
-  color: white;
-  font-size: 16px;
-  cursor: pointer;
-  line-height: 1;
-}
-#chatbot-close:hover {
-  color: #ffe082;
+  align-items: center;
 }
 
-/* =========================
-   Área de mensajes y burbujas
-   ========================= */
+/* Área de mensajes */
 #chatbot-messages {
   flex: 1;
-  padding: 14px;
+  padding: 10px;
   overflow-y: auto;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-/* Burbujas */
-.message {
-  margin: 2px 0;
-  padding: 10px 12px;
-  border-radius: 12px;
-  max-width: 78%;
   font-size: 14px;
-  line-height: 1.35;
-  word-wrap: break-word;
-}
-.message.user {
-  background: rgba(255,255,255,0.35);
-  color: #1b1b1b;
-  align-self: flex-end;
-  backdrop-filter: blur(4px);
-}
-.message.bot {
-  background: rgba(76,175,80,0.45);
-  color: #fff;
-  align-self: flex-start;
 }
 
-/* =========================
-   Botones rápidos
-   ========================= */
-#chatbot-quick-replies {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  padding: 10px 14px;
-}
-#chatbot-quick-replies button {
-  flex: 1 1 calc(50% - 8px);
-  background: rgba(76,175,80,0.75);
-  color: white;
-  border: none;
-  padding: 8px 10px;
-  border-radius: 10px;
-  cursor: pointer;
-  font-size: 13px;
-  transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
-}
-#chatbot-quick-replies button:hover {
-  background: rgba(56,142,60,0.9);
-  transform: scale(1.03);
-  box-shadow: 0 6px 14px rgba(0,0,0,0.2);
+.user-msg {
+  background: rgba(76, 175, 80, 0.2);
+  padding: 8px;
+  border-radius: 12px;
+  margin: 6px 0;
+  text-align: right;
 }
 
-/* =========================
-   Input del chatbot
-   ========================= */
+.bot-msg {
+  background: rgba(255,255,255,0.3);
+  padding: 8px;
+  border-radius: 12px;
+  margin: 6px 0;
+  text-align: left;
+}
+
+/* Input */
 #chatbot-input-row {
   display: flex;
-  gap: 8px;
-  padding: 10px 14px 16px;
-  border-top: 1px solid rgba(255,255,255,0.3);
-  background: rgba(255,255,255,0.18);
+  padding: 10px;
+  background: rgba(255,255,255,0.2);
 }
+
 #chatbot-input {
   flex: 1;
   border: none;
-  padding: 10px;
-  border-radius: 10px;
-  background: rgba(255,255,255,0.35);
-  font-size: 14px;
-  color: #222;
+  padding: 8px;
+  border-radius: 8px;
   outline: none;
 }
+
 #chatbot-send {
+  margin-left: 8px;
   background: #4CAF50;
   color: white;
   border: none;
-  padding: 10px 14px;
-  border-radius: 10px;
+  padding: 8px 12px;
+  border-radius: 8px;
   cursor: pointer;
-  font-weight: 600;
-  transition: background 0.2s ease, transform 0.1s ease;
-}
-#chatbot-send:hover { background: #388E3C; }
-#chatbot-send:active { transform: scale(0.98); }
-
-/* =========================
-   Responsive
-   ========================= */
-@media (max-width: 768px) {
-  #chatbot-window { width: 88vw; }
-}
-@media (max-width: 480px) {
-  #chatbot-window { width: 100vw; border-radius: 0; }
-  #chatbot-quick-replies button { flex: 1 1 100%; }
-  #chatbot-header { font-size: 16px; padding: 12px; }
-  #chatbot-input { font-size: 13px; }
+  transition: background 0.3s;
 }
 
-/* =========================
-   Asegurar que el chatbot quede por encima
-   ========================= */
-.menu-overlay,
-.menu-lateral,
-.carousel,
-.carousel-item img,
-.carousel-control-prev,
-.carousel-control-next,
-.carousel-indicators {
-  z-index: 1000; /* El chatbot usa 100001 y 100000 */
+#chatbot-send:hover {
+  background: #45a049;
 }
+
+/* Botones rápidos */
+#chatbot-quick-replies {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 8px;
+}
+
+#chatbot-quick-replies button {
+  flex: 1;
+  background: rgba(76,175,80,0.2);
+  border: none;
+  border-radius: 8px;
+  padding: 6px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+#chatbot-quick-replies button:hover {
+  background: rgba(76,175,80,0.4);
+}
+
+/* Animación de entrada para mensajes */
+@keyframes msgFadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.msg {
+  animation: msgFadeIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+#chatbot-quick-replies button {
+  opacity: 0; /* invisible al inicio */
+  animation: slideIn 0.5s ease forwards;
+}
+
+#chatbot-quick-replies button:nth-child(1) { animation-delay: 0.1s; }
+#chatbot-quick-replies button:nth-child(2) { animation-delay: 0.2s; }
+#chatbot-quick-replies button:nth-child(3) { animation-delay: 0.3s; }
+#chatbot-quick-replies button:nth-child(4) { animation-delay: 0.4s; }
+#chatbot-quick-replies button:nth-child(5) { animation-delay: 0.5s; }
+
+@keyframes bounceHover {
+  0%, 100% { transform: translateY(0); }
+  30% { transform: translateY(-6px); }
+  60% { transform: translateY(3px); }
+}
+
+#chatbot-quick-replies button:hover {
+  animation: bounceHover 0.5s ease;
+  background: rgba(76,175,80,0.4); /* mantiene tu efecto hover */
+}
+
+/* Indicador de escritura del bot */
+.typing-indicator {
+  display: inline-block;
+  margin: 6px 0;
+  padding: 8px;
+  border-radius: 12px;
+  background: rgba(255,255,255,0.3);
+  font-size: 18px;
+  letter-spacing: 2px;
+  animation: fadeIn 0.3s ease-out;
+}
+
+.typing-indicator span {
+  display: inline-block;
+  animation: blink 1.2s infinite;
+}
+
+.typing-indicator span:nth-child(2) {
+  animation-delay: 0.2s;
+}
+.typing-indicator span:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+@keyframes blink {
+  0% { opacity: 0.2; }
+  20% { opacity: 1; }
+  100% { opacity: 0.2; }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(5px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.msg {
+  display: flex;
+  align-items: flex-start;
+  margin: 6px 0;
+}
+
+.msg .avatar {
+  width: 28px;
+  height: 28px;
+  margin-right: 8px;
+}
+
+.user-msg {
+  justify-content: flex-end;
+}
+
+.user-msg .avatar {
+  margin-left: 8px;
+  margin-right: 0;
+}
+
+/* ==== Avatares en mensajes ==== */
+.msg {
+  display: flex;
+  align-items: flex-start;
+  margin: 6px 0;
+}
+
+.msg span {
+  max-width: 80%;
+  word-wrap: break-word;
+}
+
+.msg .avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+/* Bot: avatar a la izquierda */
+.bot-msg {
+  justify-content: flex-start;
+}
+.bot-msg .avatar {
+  margin-right: 8px;
+}
+
+/* Usuario: avatar a la derecha */
+.user-msg {
+  justify-content: flex-end;
+}
+.user-msg .avatar {
+  margin-left: 8px;
+  margin-right: 0;
+}
+
+#chatbot-quick-replies {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 8px;
+  max-height: 120px; /* límite de altura */
+  overflow-y: auto;  /* scroll si hay demasiados */
+}
+
+#chatbot-quick-replies button {
+  opacity: 0;
+  animation: slideIn 0.5s ease forwards;
+}
+
+#chatbot-quick-replies button:nth-child(n) {
+  animation-delay: calc(0.1s * var(--i));
+}
+
 
 
