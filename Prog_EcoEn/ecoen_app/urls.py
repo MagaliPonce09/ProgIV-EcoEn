@@ -1,7 +1,6 @@
-# ecoen_app/urls.py
 from django.urls import path, include
 from . import views
-from .views import CustomLoginView, CustomSignupView, chatbot_view
+from .views import CustomLoginView, CustomSignupView
 
 urlpatterns = [
     # Página principal
@@ -21,8 +20,8 @@ urlpatterns = [
     path("perfil/", views.mi_perfil, name="mi_perfil"),
     path("perfil/editar/", views.editar_perfil, name="editar_perfil"),
 
-    # Chatbot
-    path("api/chatbot", chatbot_view, name="chatbot_view"),
+    # Chatbot (usa las rutas de la app chatbot)
+    path("chatbot/", include("chatbot.urls")),
 
     # Carrito y compras
     path("carrito/", views.carrito, name="carrito"),
@@ -35,3 +34,4 @@ urlpatterns = [
     # Allauth
     path("accounts/", include("allauth.urls")),
 ]
+

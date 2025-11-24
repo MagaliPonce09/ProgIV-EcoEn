@@ -16,25 +16,8 @@ from django.utils import timezone
 @csrf_exempt
 def chatbot_view(request):
 
-    # Configura tu API key (mejor usar variables de entorno)
-    client = AzureOpenAI(
-    api_key=settings.AZURE_OPENAI_API_KEY,
-    azure_endpoint=settings.AZURE_OPENAI_ENDPOINT,
-    api_version=settings.AZURE_OPENAI_API_VERSION,
-    )
-    
-    if request.method == "POST":
-        data = json.loads(request.body)
-        user_message = data.get("message", "")
-
-        response = client.chat.completions.create(
-            model="gpt-4o-mini",  # motor que usa Copilot
-            messages=[{"role": "user", "content": user_message}]
-        )
-
-        bot_reply = response.choices[0].message.content
-        return JsonResponse({"reply": bot_reply})
-
+   def chatbot_view(request):
+    return render(request, "ecoen_app/chatbot.html") 
 def index(request):
     productos = Producto.objects.all()
     puntuaciones_usuario = {}
