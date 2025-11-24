@@ -22,14 +22,10 @@ AZURE_OPENAI_API_KEY = os.getenv("AZURE_OPENAI_API_KEY")
 AZURE_OPENAI_API_VERSION = "2024-08-01-preview"  # versión estable
 
 # Seguridad
-#SECRET_KEY = os.getenv("SECRET_KEY")
-SECRET_KEY = os.environ.get("SECRET_KEY", "dev-secret-key-por-defecto")
-#DEBUG = os.getenv("DEBUG", "False") == "True"
-DEBUG = os.environ.get("DEBUG", "False") == "True"
+SECRET_KEY = os.getenv("SECRET_KEY")
+DEBUG = os.getenv("DEBUG", "False") == "True"
 
-#ALLOWED_HOSTS = ["magaliPonce09.pythonanywhere.com", "localhost", "127.0.0.1"]
-ALLOWED_HOSTS = ["*"]
-
+ALLOWED_HOSTS = ["magaliPonce09.pythonanywhere.com", "localhost", "127.0.0.1"]
 
 # Aplicaciones instaladas
 INSTALLED_APPS = [
@@ -89,10 +85,6 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'allauth.account.middleware.AccountMiddleware',
 
-    #MIDDLEWARE = este es el que puse para el deploy
-    "django.middleware.security.SecurityMiddleware",
-    "whitenoise.middleware.WhiteNoiseMiddleware", 
-
 ]
 
 # Templates
@@ -150,22 +142,18 @@ USE_I18N = True
 USE_TZ = True
 
 # Archivos estáticos
-#STATIC_URL = '/static/'
+STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR / "static"]
-#STATIC_ROOT = BASE_DIR / "staticfiles"
-STATIC_URL = "/static/"
-STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
+STATIC_ROOT = BASE_DIR / "staticfiles"
+
 
 
 # Whitenoise config
-#STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 # Archivos multimedia
-#MEDIA_URL = '/media/'
-#MEDIA_ROOT = BASE_DIR / "media"
-MEDIA_URL = "/media/"
-MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / "media"
 
 # Configuración por defecto de IDs
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'

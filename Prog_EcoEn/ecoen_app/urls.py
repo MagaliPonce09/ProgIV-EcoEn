@@ -3,6 +3,7 @@ from django.urls import path, include
 from . import views
 from .views import CustomLoginView, CustomSignupView, chatbot_view
 
+
 urlpatterns = [
     # Página principal
     path('', views.index, name='index'),
