@@ -213,3 +213,37 @@ class CustomSignupView(SignupView):
 
 def resumen_compra(request):
     return render(request, "resumen_compra.html", {"now": timezone.now()})
+
+import mercadopago
+from django.http import JsonResponse
+from django.conf import settings
+
+import mercadopago
+from django.http import JsonResponse
+from django.conf import settings
+
+def crear_preferencia(request):
+    sdk = mercadopago.SDK(settings.MERCADOPAGO_ACCESS_TOKEN)
+
+    carrito = [
+        {
+            "title": "Kit Solar Ecoen",
+            "quantity": 1,
+            "unit_price": 150000
+        }
+    ]
+
+    preference_data = {
+        "items": carrito,
+        "back_urls": {
+            "success": "https://TUUSUARIO.pythonanywhere.com/pago/exito/",
+            "failure": "https://TUUSUARIO.pythonanywhere.com/pago/error/",
+            "pending": "https://TUUSUARIO.pythonanywhere.com/pago/pendiente/"
+        },
+        "auto_return": "approved"
+    }
+
+    preference_response = sdk.preference().create(preference_data)
+    preference = preference_response["response"]
+
+    return JsonResponse({"id": preference["id"]})

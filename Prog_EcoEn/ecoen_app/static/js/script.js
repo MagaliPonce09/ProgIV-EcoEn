@@ -122,21 +122,33 @@ document.addEventListener("DOMContentLoaded", () => {
   const metodosPago = document.getElementById("metodos-pago");
   const datosTransferencia = document.getElementById("datos-transferencia");
 
-  btnComprar?.addEventListener("click", () => {
-    if (carritoLista.children.length === 0) {
-      alert("Tu carrito está vacío.");
-      return;
-    }
-    metodosPago.classList.remove("d-none");
-  });
+  document
+    .getElementById("btn-mercado-pago")
+    ?.addEventListener("click", async () => {
+      if (carritoLista.children.length === 0) {
+        alert("Tu carrito está vacío.");
+        return;
+      }
 
-  document.getElementById("btn-mercado-pago")?.addEventListener("click", () => {
-    window.location.href = "/confirmar-pago/mercado_pago/";
-  });
+      try {
+        // Llamamos al backend para crear la preferencia
+        const response = await fetch("/crear-preferencia/");
+        const data = await response.json();
 
-  document.getElementById("btn-transferencia")?.addEventListener("click", () => {
-    datosTransferencia.classList.remove("d-none");
-  });
+        // Inicializamos Mercado Pago con tu Public Key
+        const mp = new MercadoPago("TU_PUBLIC_KEY", { locale: "es-AR" });
+
+        // Abrimos el checkout
+        mp.checkout({
+          preference: {
+            id: data.id,
+          },
+        });
+      } catch (error) {
+        console.error("Error al iniciar Mercado Pago:", error);
+        alert("Hubo un problema al iniciar el pago.");
+      }
+    });
 
   // === PUNTUACIÓN DE PRODUCTOS ===
   document.querySelectorAll(".rating").forEach((ratingBlock) => {

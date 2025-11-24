@@ -2,7 +2,7 @@
 from django.urls import path, include
 from . import views
 from .views import CustomLoginView, CustomSignupView, chatbot_view
-
+from .views import crear_preferencia
 
 urlpatterns = [
     # Página principal
@@ -35,4 +35,9 @@ urlpatterns = [
 
     # Allauth
     path("accounts/", include("allauth.urls")),
+
+    #mercado pago
+    
+    path('crear-preferencia/', crear_preferencia, name='crear_preferencia'),
+
 ]
