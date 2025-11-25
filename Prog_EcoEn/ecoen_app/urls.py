@@ -1,12 +1,8 @@
 from django.urls import path, include
 from . import views
-<<<<<<< HEAD
 from .views import CustomLoginView, CustomSignupView, chatbot_view
 from .views import crear_preferencia
-=======
-from .views import CustomLoginView, CustomSignupView
 
->>>>>>> 5c57e6207be8fa553d7a738335efd897feb55558
 
 urlpatterns = [
     # Página principal
