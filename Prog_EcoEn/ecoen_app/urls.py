@@ -1,16 +1,20 @@
 from django.urls import path, include
+<<<<<<< HEAD
 from . import views
 from .views import CustomLoginView, CustomSignupView, chatbot_view
 from .views import crear_preferencia
 
+=======
+from . import views   # UNA sola importación limpia desde la app
+>>>>>>> c43d47dc798135ab99e238266f9bbe7c3497154c
 
 urlpatterns = [
     # Página principal
     path('', views.index, name='index'),
 
     # Autenticación personalizada
-    path("login/", CustomLoginView.as_view(), name="custom_login"),
-    path("signup/", CustomSignupView.as_view(), name="custom_signup"),
+    path("login/", views.CustomLoginView.as_view(), name="custom_login"),
+    path("signup/", views.CustomSignupView.as_view(), name="custom_signup"),
     path("logout/", views.cerrar_sesion, name="custom_logout"),
 
     # Productos
@@ -22,8 +26,13 @@ urlpatterns = [
     path("perfil/", views.mi_perfil, name="mi_perfil"),
     path("perfil/editar/", views.editar_perfil, name="editar_perfil"),
 
+<<<<<<< HEAD
     # Chatbot (usa las rutas de la app chatbot)
     path("chatbot/", include("chatbot.urls")),
+=======
+    # Chatbot
+    path("chat/", views.chatbot_view, name="chatbot"),
+>>>>>>> c43d47dc798135ab99e238266f9bbe7c3497154c
 
     # Carrito y compras
     path("carrito/", views.carrito, name="carrito"),
