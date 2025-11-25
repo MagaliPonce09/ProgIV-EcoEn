@@ -1,14 +1,13 @@
 from django.urls import path, include
-from Prog_EcoEn.ecoen_app import views
-from .views import CustomLoginView, CustomSignupView, chatbot_view
+from . import views   # UNA sola importación limpia desde la app
 
 urlpatterns = [
     # Página principal
     path('', views.index, name='index'),
 
     # Autenticación personalizada
-    path("login/", CustomLoginView.as_view(), name="custom_login"),
-    path("signup/", CustomSignupView.as_view(), name="custom_signup"),
+    path("login/", views.CustomLoginView.as_view(), name="custom_login"),
+    path("signup/", views.CustomSignupView.as_view(), name="custom_signup"),
     path("logout/", views.cerrar_sesion, name="custom_logout"),
 
     # Productos
@@ -21,7 +20,7 @@ urlpatterns = [
     path("perfil/editar/", views.editar_perfil, name="editar_perfil"),
 
     # Chatbot
-    path("chat/", chatbot_view, name="chatbot"),
+    path("chat/", views.chatbot_view, name="chatbot"),
 
     # Carrito y compras
     path("carrito/", views.carrito, name="carrito"),
