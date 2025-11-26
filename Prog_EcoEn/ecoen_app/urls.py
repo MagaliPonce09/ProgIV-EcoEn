@@ -1,12 +1,11 @@
 from django.urls import path, include
- HEAD
 from . import views
 from .views import CustomLoginView, CustomSignupView, chatbot_view
 from .views import crear_preferencia
 
 
-from . import views   # UNA sola importación limpia desde la app
- c43d47dc798135ab99e238266f9bbe7c3497154c
+from . import views   # UNA sola importación limpia desde la app 
+
 
 
 urlpatterns = [
