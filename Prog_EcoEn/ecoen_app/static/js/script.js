@@ -73,6 +73,13 @@ document.addEventListener("DOMContentLoaded", () => {
   let carrito = [];
   const tasaCambio = { USD: 1, EUR: 0.92, ARS: 880 };
 
+  // Inicializar carrito con lo que ya está en el DOM
+  carrito = Array.from(carritoLista.querySelectorAll("li")).map(li => {
+    const nombre = li.querySelector("span")?.textContent || "";
+    const precio = parseFloat(li.querySelector("span:last-child")?.textContent.replace("$","")) || 0;
+    return { nombre, precio };
+  });
+
   function actualizarCarrito() {
     carritoLista.innerHTML = "";
     let totalUSD = 0;
@@ -93,6 +100,7 @@ document.addEventListener("DOMContentLoaded", () => {
       btnEliminar.className = "btn btn-sm btn-danger";
       btnEliminar.textContent = "🗑️";
       btnEliminar.addEventListener("click", () => {
+        // Eliminar del array y actualizar DOM
         carrito.splice(index, 1);
         actualizarCarrito();
       });
@@ -196,3 +204,4 @@ function toggleMenu() {
     ? "✖"
     : icon.dataset.default || "☰";
 }
+
